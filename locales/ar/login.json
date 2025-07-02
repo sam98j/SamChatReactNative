@@ -1,0 +1,13 @@
+{
+  "app_name": "سام شات",
+  "sign_in_with_google": "تسجيل الدخول باستخدام جوجل",
+  "or_sign_in_with_email": "او قم بالدخول بإستخدام الايميل وكلمة السر",
+  "email_placeholder": "البريد الالكتروني",
+  "email_hint": "لن نقوم بمشاركة بريدك الالكتروني مع اي شخص",
+  "password_placeholder": "كلمة السر",
+  "password_hint": "يجب ان تحتوي كلمة السر على 8 احرف على الاقل",
+  "sign_in_button": "تسجيل الدخول لحسابك",
+  "no_account": "ليس لديك حساب؟",
+  "register_now": "سجل الان",
+  "forgot_password": "نسيت كلمة السر؟"
+}

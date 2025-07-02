@@ -1,0 +1,13 @@
+{
+  "app_name": "Sam Chat",
+  "sign_in_with_google": "Sign in with Google",
+  "or_sign_in_with_email": "Or sign in using email and password",
+  "email_placeholder": "Email Address",
+  "email_hint": "We will not share your email with anyone.",
+  "password_placeholder": "Password",
+  "password_hint": "Password must be at least 8 characters long.",
+  "sign_in_button": "Sign in to your account",
+  "no_account": "Don't have an account?",
+  "register_now": "Register now",
+  "forgot_password": "Forgot your password?"
+}

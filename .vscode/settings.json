@@ -1,0 +1,12 @@
+{
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 125,
+  "prettier.bracketSameLine": false,
+  "editor.renderWhitespace": "boundary",
+  "workbench.colorCustomizations": {
+    "editorWhitespace.foreground": "#a3a3a3"
+  },
+  "whitespacepp.renderEOF": false,
+  "todoist.projectId": "2307184890"
+}
