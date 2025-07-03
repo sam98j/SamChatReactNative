@@ -60,7 +60,27 @@ export default function SettingsScreen() {
             }}
           >
             {/* icon */}
-            <Icon name='information-circle-outline' size={22} color='#8E8E93' />
+            <Icon name='moon-outline' size={21} color='#8E8E93' />
+            {/* Text container */}
+            <Text style={{ flexGrow: 1, fontFamily: 'BalooBhaijaan2', color: '#8E8E93' }}>Dark Theme</Text>
+            {/* Switch container */}
+            <Icon name='chevron-forward-outline' size={22} color='#8E8E93' />
+          </View>
+          {/* theme option */}
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              flexGrow: 1,
+              borderBottomColor: '#ddd',
+              paddingVertical: 10,
+              gap: 10,
+              borderBottomWidth: 1,
+            }}
+          >
+            {/* icon */}
+            <Icon name='sunny-outline' size={22} color='#8E8E93' />
             {/* Text container */}
             <Text style={{ flexGrow: 1, fontFamily: 'BalooBhaijaan2', color: '#8E8E93' }}>Light Theme</Text>
             {/* Switch container */}
