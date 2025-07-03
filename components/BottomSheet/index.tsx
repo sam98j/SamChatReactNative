@@ -1,71 +1,23 @@
-import React, { useRef, useMemo, useCallback, useEffect, useState } from 'react';
-import { NativeSyntheticEvent, StyleSheet, Text, TextInput, TextInputChangeEventData, View } from 'react-native';
+import React, { useRef, useMemo, useCallback, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleBottomSheet } from '@/store/system.slice';
-import { RootState } from '@/store';
-import SearchBar from 'react-native-platform-searchbar';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { UIActivityIndicator } from 'react-native-indicators';
-import { LoggedInUserData } from '@/store/auth.slice';
-import useUsersApi from './hooks';
-import NewChatUserCard from '../NewChatUserCard';
 import { useSystemStore } from '@/store/zuSystem';
-
-// component state
-type State = {
-  searchqr: string;
-  fetchedUsers: Omit<LoggedInUserData, 'email'>[];
-  loading: boolean;
-};
+import NewChatSearch from '../NewChatSearch';
 
 const CustomBottomSheet = () => {
   // Bottom sheet ref
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  // componet state
-  const [state, setState] = useState<State>({
-    searchqr: '',
-    fetchedUsers: [],
-    loading: false,
-  });
-
   // Snap points for the bottom sheet
   const snapPoints = useMemo(() => ['80%'], []);
-  // handle user search
-  const handleFormChange = async (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-    const query = e.nativeEvent.text;
-    if (query) {
-      setState((prevState) => ({
-        ...prevState,
-        loading: true,
-      }));
-    }
-    const fetchedUsers = await fetchUsers(query);
-    setState((prevState) => ({
-      ...prevState,
-      searchqr: query,
-      fetchedUsers,
-      loading: false,
-    }));
-  };
-  // fetch users hooks
-  const { fetchUsers } = useUsersApi();
-
   // State to track if the bottom sheet is open
   const { isBottomSheetOpen, toggleBottomSheet } = useSystemStore();
 
   // Handle bottom sheet index changes
-  const handleSheetChanges = useCallback((index: number) => {
-    // Check if the bottom sheet is closed
-    if (index === -1) toggleBottomSheet();
-  }, []);
+  const handleSheetChanges = useCallback((index: number) => index === -1 && toggleBottomSheet(), []);
 
   // Open the bottom sheet
-  const openSheet = () => {
-    // log 'run'
-    bottomSheetRef.current?.snapToIndex(0); // Open to the first snap point
-  };
+  const openSheet = () => bottomSheetRef.current?.snapToIndex(0); // Open to the first snap point
 
   // observe if the bottom sheet is open
   useEffect(
@@ -86,29 +38,7 @@ const CustomBottomSheet = () => {
         backgroundStyle={styles.bottomSheetBackground}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <View style={styles.searchContainer}>
-            <Icon name='search' size={20} color='#8e8e93' style={styles.icon} />
-            <TextInput
-              style={styles.input}
-              placeholder={'Search'}
-              placeholderTextColor='#8e8e93'
-              cursorColor='dodgerblue'
-              onChange={(e) => handleFormChange(e)}
-              value={state.searchqr}
-              clearButtonMode='while-editing'
-            />
-            {state.loading && <UIActivityIndicator size={20} color='black' style={{ alignItems: 'flex-end' }} />}
-          </View>
-          {/* loop throge fetched user using flatlist */}
-          {state.fetchedUsers.map((user) => (
-            <NewChatUserCard
-              key={user._id}
-              name={user.name}
-              avatarUrl={user.avatar}
-              usrname={user.usrname!}
-              _id={user._id}
-            />
-          ))}
+          <NewChatSearch />
           {/* Additional Content */}
         </BottomSheetView>
       </BottomSheet>
