@@ -1,3 +1,10 @@
 {
-  "no-messages-yet": "لا توجد رسائل بعد !!"
+  "no-messages-yet": "لا توجد رسائل بعد !!",
+  "chatActionsMessages": {
+    "creation": {
+      "youPronoun": "أنت",
+      "created": "أنشئت",
+      "theGroup": "المجموعة"
+    }
+  }
 }

@@ -1,3 +1,10 @@
 {
-  "no-messages-yet": "No messages yet !!"
+  "no-messages-yet": "No messages yet !!",
+  "chatActionsMessages": {
+    "creation": {
+      "youPronoun": "You",
+      "created": "Created",
+      "theGroup": "The Group"
+    }
+  }
 }

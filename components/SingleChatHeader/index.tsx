@@ -1,4 +1,4 @@
-import { ChatTypes } from '@/interfaces/chats';
+import { ChatActionsTypes, ChatTypes } from '@/interfaces/chats';
 import { RootState } from '@/store';
 import { Avatar } from '@rneui/themed';
 import { Link, useRouter } from 'expo-router';
@@ -24,13 +24,10 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = ({ title, onBackPress 
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   // get opened chat from redux
-  const { openedChat, setUserOnlineStatus, chatUsrStatus } = useChatsStore();
+  const { openedChat, setUserOnlineStatus, chatUsrStatus, isChatUsrDoingAction } = useChatsStore();
   // dispatch method
   // logged in user id from zustand zuAuth
   const loggedInUser = useAuthStore().currentUser?._id;
-  // get chatAction from redux\
-  // chatUserStatus
-  const chatAction = useSelector((state: RootState) => state.chatsSlice.isChatUsrDoingAction);
   // chat name
   const [chatUser] = useState(() => openedChat!.members.filter((member) => member._id !== loggedInUser)[0]);
   // chat avatar
@@ -71,8 +68,8 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = ({ title, onBackPress 
   }, [openedChat]);
   // observe chatAction
   React.useEffect(() => {
-    console.log('chatAction', chatAction);
-  }, [chatAction]);
+    console.log('chatAction', isChatUsrDoingAction);
+  }, [isChatUsrDoingAction]);
   // observe chatUserStatus
   return (
     <View style={styles.headerContainer}>
@@ -88,6 +85,8 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = ({ title, onBackPress 
         {isChatUsrOffline && <Text style={styles.lastseen}>{isChatUsrOffline}</Text>}
         {/* user online status */}
         {isChatUsrOnline && <Text style={styles.onlineStatus}>{isChatUsrOnline}</Text>}
+        {/* chat usr doing action */}
+        {isChatUsrDoingAction?.type === ChatActionsTypes.TYPEING && <Text>{i18n.t('chatHeader.usr_typing')}</Text>}
       </View>
       {/* chats calls */}
       <View style={styles.chatsCallsContainer}>

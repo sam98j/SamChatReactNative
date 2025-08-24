@@ -134,8 +134,11 @@ export default function TabLayout() {
   useEffect(() => {
     // check for usr and socket
     if (!socketClient) return;
+    socketClient?.removeAllListeners('chatusr_typing_status');
     // listen for chat usr doing action
-    socketClient?.on('chatusr_typing_status', (actionData) => setChatUsrDoingAction(actionData));
+    socketClient?.on('chatusr_typing_status', (actionData) => {
+      console.log('chat usr doing action', actionData);
+    });
     // listen for new chat created
     socketClient?.on('new_chat_created', (newChat: ChatCard) => {
       // add the new chat to the user's chats list
@@ -160,13 +163,14 @@ export default function TabLayout() {
     <Tabs
       initialRouteName='chats/index'
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: 'dodgerblue',
         headerStyle: { shadowColor: 'white' },
         headerTitleAlign: 'center',
         headerTitleStyle: { fontFamily: 'BalooBhaijaan2', display: isUserLoggedIn ? 'flex' : 'none' },
-        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2' },
+        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 14 },
         headerShown: isUserLoggedIn ? true : false, // Dynamically control header visibility
         tabBarStyle: {
+          height: 60,
           display: isUserLoggedIn ? 'flex' : 'none', // Dynamically control tabBar visibility
         },
       })}
@@ -183,7 +187,7 @@ export default function TabLayout() {
         name='profile/index'
         options={{
           title: i18n.t('tabsLayout.profile'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='person-circle-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='person-circle-outline' color={color} />,
         }}
       />
       {/* chats screen */}
@@ -191,7 +195,7 @@ export default function TabLayout() {
         name='chats/index'
         options={{
           title: i18n.t('tabsLayout.chats'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='chatbubbles-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='chatbubbles-outline' color={color} />,
           headerRight: () => isUserLoggedIn && <ChatsHeaderBtns />,
         }}
       />
@@ -199,7 +203,7 @@ export default function TabLayout() {
         name='calls/index'
         options={{
           title: i18n.t('tabsLayout.calls'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='call-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='call-outline' color={color} />,
         }}
       />
       {/* setting screen */}
@@ -207,7 +211,7 @@ export default function TabLayout() {
         name='settings/index'
         options={{
           title: i18n.t('tabsLayout.settings'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='settings-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='settings-outline' color={color} />,
         }}
       />
     </Tabs>
