@@ -1,4 +1,8 @@
 {
   "last_seen": "آخر ظهور",
-  "online": "متصل"
+  "online": "متصل",
+  "chat_actions": {
+    "usr_typing": "يكتب ...",
+    "recording_voice": "تسجيل صوت ..."
+  }
 }

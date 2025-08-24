@@ -1,4 +1,8 @@
 {
   "last_seen": "Last seen",
-  "online": "Online"
+  "online": "Online",
+  "chat_actions": {
+    "usr_typing": "typing ...",
+    "recording_voice": "recording voice ..."
+  }
 }

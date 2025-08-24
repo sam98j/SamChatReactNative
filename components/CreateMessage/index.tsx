@@ -60,13 +60,17 @@ const CreateMessage = () => {
   // chat action
   const [chatAction, setChatAction] = useState<ChatActions | null>(null);
   // handleInputFocus
-  const handleInputFocus = () =>
+  const handleInputFocus = () => {
     setCurrentUsrDoingAction({
       ...chatAction!,
       type: ChatActionsTypes.TYPEING,
     });
+  };
   // handleInputBlur
-  const handleInputBlur = () => setCurrentUsrDoingAction({ ...chatAction!, type: null });
+  const handleInputBlur = () => {
+    console.log('handleInputBlur');
+    setCurrentUsrDoingAction({ ...chatAction!, type: null });
+  };
   //  check if it's recording
   const showSendMsgBtn = isRec || textMessage;
   //   input change handler

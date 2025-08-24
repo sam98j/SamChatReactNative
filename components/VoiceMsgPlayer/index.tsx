@@ -25,7 +25,6 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
   // width
   const [progressWidth, setProgressWidth] = useState('0');
 
-  console.log('VoiceMsgPlayer rendered');
   // get audio player status
   // expo audio player status
   // progress bar width
