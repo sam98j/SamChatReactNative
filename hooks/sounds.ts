@@ -43,7 +43,7 @@ export function useChatSounds() {
 }
 
 export const usePlayChatSound = () => {
-  const audioFilePath = require('@/assets/sounds/uggg_sent_message.mp3');
+  const audioFilePath = require('@/assets/sounds/imessage_send.mp3');
   // use the audio player hook from expo
   const audioPlayer = useAudioPlayer(audioFilePath);
 

@@ -182,7 +182,7 @@ const CreateMessage = () => {
     stopRecording();
   };
   // interval variable
-  let interval: number;
+  let interval: any;
 
   // observe isRec
   React.useEffect(() => {

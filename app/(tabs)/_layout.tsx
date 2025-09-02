@@ -41,7 +41,7 @@ export default function TabLayout() {
     addNewChat,
   } = useChatsStore();
   // audio file path
-  const audioFilePath = require('@/assets/sounds/uggg_sent_message.mp3');
+  const audioFilePath = require('@/assets/sounds/imessage_send.mp3');
   // audio player
   const audioPlayer = useAudioPlayer(audioFilePath);
   // listen fro socket clietn and current user and opened chat

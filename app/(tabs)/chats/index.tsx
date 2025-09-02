@@ -23,15 +23,15 @@ export default function Chats() {
         onChangeText={(text) => console.log(text)}
         value=''
         containerStyle={{
-          backgroundColor: '#ddd',
+          backgroundColor: '#eee',
           padding: 0,
           borderTopWidth: 0,
           borderBottomWidth: 0,
           marginHorizontal: 15,
           borderRadius: 10,
         }}
-        inputContainerStyle={{ backgroundColor: '#ddd' }}
-        inputStyle={{ backgroundColor: '#ddd' }}
+        inputContainerStyle={{ backgroundColor: '#eee' }}
+        inputStyle={{ backgroundColor: '#eee' }}
         searchIcon={<FeatherIcon name='search' size={20} color='gray' />}
         clearIcon={{ color: 'black' }}
         platform='default'

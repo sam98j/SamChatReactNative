@@ -8,7 +8,7 @@ export default {
     slug: 'todo-list',
     version: pkg.version,
     orientation: 'portrait',
-    icon: './assets/images/appIcons/icon.png',
+    icon: './assets/images/icon.png',
     scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
@@ -18,8 +18,8 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: './assets/images/appIcons/adaptive-icon/foreground.png',
-        backgroundImage: './assets/images/appIcons/adaptive-icon/background.png',
+        foregroundImage: './assets/images/adaptive-icon/foreground.png',
+        backgroundImage: './assets/images/adaptive-icon/background.png',
         backgroundColor: '#ffffff',
       },
       package: 'com.sam_98j.samchat',
@@ -54,7 +54,7 @@ export default {
       [
         'expo-splash-screen',
         {
-          image: './assets/images/appIcons/splash.png',
+          image: './assets/images/splash.png',
           imageWidth: 200,
           resizeMode: 'contain',
           backgroundColor: '#ffffff',

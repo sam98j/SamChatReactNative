@@ -24,6 +24,7 @@ export default function Index() {
   const { currentUser } = useAuthStore();
   // access token
   const accessToken = SecureStore.getItem('access_token');
+
   // zustand store
   const { setCurrentUser } = useAuthStore();
 
