@@ -6,19 +6,22 @@ import CustomBottomSheet from '@/components/BottomSheet';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useChatsStore } from '@/store/zuChats';
 import NoChatsVector from '@/components/NoChatsVector';
+import i18n from '@/i18n';
 
 export default function Chats() {
   // get chats from zustand zuChats
   const { chats } = useChatsStore();
-
+  // get lang from i18n
+  const lang = i18n.locale; // replace with actual i18n language detection
   // log chat
   return (
     <View style={styles.container}>
       {/* Overlay */}
       <SearchBar
-        placeholder='Search Conversations'
+        placeholder={`${i18n.t('chatsListScreen.search-bar-placeholder')}`}
         onChangeText={(text) => console.log(text)}
         value=''
+        textAlign={`${lang === 'ar' ? 'right' : 'left'}`}
         containerStyle={{
           backgroundColor: '#eee',
           padding: 0,
@@ -28,7 +31,7 @@ export default function Chats() {
           borderRadius: 10,
         }}
         inputContainerStyle={{ backgroundColor: '#eee' }}
-        inputStyle={{ backgroundColor: '#eee' }}
+        inputStyle={{ backgroundColor: '#eee', fontFamily: 'BalooBhaijaan2' }}
         searchIcon={<FeatherIcon name='search' size={20} color='gray' />}
         clearIcon={{ color: 'black' }}
         platform='default'
