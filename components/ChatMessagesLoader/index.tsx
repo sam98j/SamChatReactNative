@@ -1,11 +1,8 @@
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
-import { RootState } from '@/store';
 import { MessagesGroubedByDate } from '@/utils/chats';
 import React, { FC } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { useSelector } from 'react-redux';
 import ChatMessageViewer from '../ChatMessageViewer';
-import { View } from 'react-native';
 
 // component props
 type Props = { messages: MessagesGroubedByDate };
@@ -13,8 +10,6 @@ type Props = { messages: MessagesGroubedByDate };
 const ChatMessagesLoader: FC<Props> = ({ messages }) => {
   // log messeages
   console.log('messages', !messages ? 'no messages' : messages);
-  // get opened chat name
-  const groupName = useSelector((state: RootState) => state.chatsSlice.openedChat?.name)!;
   return (
     <>
       {messages.dates?.map((date, i) => {
@@ -26,7 +21,6 @@ const ChatMessagesLoader: FC<Props> = ({ messages }) => {
             </Text>
             {messages.messages[i].map((msg: ChatMessage) => {
               // destruct
-              const { sender, actionMsgType, status } = msg;
               // log msg state
               // check for chat action message
               if (msg.type === MessagesTypes.ACTION) {

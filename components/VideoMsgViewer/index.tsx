@@ -1,8 +1,7 @@
 import { ChatMessage } from '@/interfaces/chats';
-import { useEvent } from 'expo';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Modal, StatusBar, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Modal, StatusBar, TouchableOpacity, Text } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -38,7 +37,7 @@ const VideoScreen = ({ msg }: Props) => {
     // otherwize
     return `${apiHost}${content}`;
   });
-  const player = useVideoPlayer(fileUrl, (player) => {
+  const player = useVideoPlayer(fileUrl, () => {
     // player.loop = true;
     // player.play();
   });
@@ -50,8 +49,6 @@ const VideoScreen = ({ msg }: Props) => {
     // otherwise pause the video
     player.pause();
   }, [isVideoPlayerOpen]);
-
-  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
 
   return (
     <View>

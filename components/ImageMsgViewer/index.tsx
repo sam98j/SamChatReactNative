@@ -1,9 +1,6 @@
 import { ChatMessage } from '@/interfaces/chats';
-import { RootState } from '@/store';
-import { toggleImageViewer } from '@/store/system.slice';
 import React, { useState } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, Dimensions, Modal, StatusBar } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { Image, Text, View, StyleSheet, TouchableOpacity, Modal, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EnTypoIcon from 'react-native-vector-icons/Entypo';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -30,8 +27,6 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
     }
   });
   // dimentinos
-  // dispatch method
-  const dispatch = useDispatch();
   // api url  expo e  nv variable
   const apiHost = process.env.EXPO_PUBLIC_API_URL;
 

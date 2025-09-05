@@ -1,20 +1,7 @@
-import React, { useRef, useMemo, useCallback, useEffect, useState } from 'react';
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TextInput,
-  TextInputChangeEventData,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { useRef, useMemo, useCallback, useEffect } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import SearchBar from 'react-native-platform-searchbar';
-import Icon from 'react-native-vector-icons/Entypo';
 import IonicIcons from 'react-native-vector-icons/Ionicons';
-import { UIActivityIndicator } from 'react-native-indicators';
-import { LoggedInUserData } from '@/store/auth.slice';
-import NewChatUserCard from '../NewChatUserCard';
 import { useFilePicker } from '@/hooks/filesPicker';
 import { v4 as uuid } from 'uuid';
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
@@ -25,13 +12,6 @@ import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
 // import { useUsersApi } from '@/hooks/chats';
 
-// component state
-type State = {
-  searchqr: string;
-  fetchedUsers: Omit<LoggedInUserData, 'email'>[];
-  loading: boolean;
-};
-
 const AttchFileBottomSheet = () => {
   // url search params
   const urlSearchParams = useSearchParams(); // Access the chat_id parameter
@@ -39,18 +19,10 @@ const AttchFileBottomSheet = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const { pickImage, pickVideo } = useFilePicker();
 
-  // componet state
-  const [state, setState] = useState<State>({
-    searchqr: '',
-    fetchedUsers: [],
-    loading: false,
-  });
   // current loggedIn user
   const currentUsr = useAuthStore().currentUser;
   // Snap points for the bottom sheet
   const snapPoints = useMemo(() => ['40%', '50%'], []);
-  // handle user search
-  const handleFormChange = async (e: NativeSyntheticEvent<TextInputChangeEventData>) => {};
   // response to message
   const { responseToMessage, addMessageToChat, setChatLastMessage } = useChatsStore();
   // State to track if the bottom sheet is open

@@ -10,7 +10,7 @@ type ChatCardLastMsgPreviewProps = {
 
 const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg }) => {
   // destruct last message
-  const { content, type, date, status } = lastMsg;
+  const { content, type } = lastMsg;
   //   destruct messages types
   const { TEXT, VOICENOTE, PHOTO, VIDEO } = MessagesTypes;
   //   last message container
@@ -21,7 +21,7 @@ const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg
       {/* if it's voice note message */}
       {type === VOICENOTE && (
         <View style={styles.voice_note_container}>
-          <Image source={require('@/assets/icons/sound.png')} style={{ width: 25, height: 25, tintColor: 'dodgerblue' }} />
+          <Image source={{ uri: '@/assets/icons/sound.png' }} style={{ width: 25, height: 25, tintColor: 'dodgerblue' }} />
           <Text style={styles.voice_note_text}>{i18n.t('chatCard.voice-note-preview-text')}</Text>
         </View>
       )}

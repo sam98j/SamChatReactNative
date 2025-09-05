@@ -1,9 +1,8 @@
 import { Avatar } from '@rneui/themed';
 import { FC, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { ChatCard, ChatTypes, MessagesTypes } from '@/interfaces/chats';
+import { ChatCard, ChatTypes } from '@/interfaces/chats';
 import i18n from '@/i18n';
-import NonTextMsgPreview from '../NonTextMsgPreview';
 import { useRouter } from 'expo-router';
 import { getTime, TimeUnits } from '@/utils/time';
 import { useAuthStore } from '@/store/zuAuth';

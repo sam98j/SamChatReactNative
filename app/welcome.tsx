@@ -3,7 +3,7 @@ import { Button } from '@rneui/themed';
 import { Link, useRouter } from 'expo-router';
 import { Text, View, StyleSheet, Image, StatusBar } from 'react-native';
 import i18n from '../i18n.js';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function WelcomeScreen() {
@@ -11,16 +11,16 @@ export default function WelcomeScreen() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#1ecefa', '#6ad54f']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+      <LinearGradient colors={['#1ecefa', '#4fccd5']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
         <SafeAreaView edges={['top', 'left', 'right']}>
           <StatusBar barStyle='light-content' backgroundColor={'transparent'} translucent={true} />
           {/* image container */}
           <View>
             <View style={styles.logoContainer}>
-              <Image source={require('../assets/icon.png')} style={{ width: 60, height: 60 }} />
+              <Image source={{ uri: '../assets/icon.png' }} style={{ width: 60, height: 60 }} />
             </View>
             <Image
-              source={require('../assets/images/onboarding/onboarding-image.png')}
+              source={{ uri: '../assets/images/onboarding/onboarding-image.png' }}
               style={styles.vectorImageContainer}
             />
           </View>
@@ -41,7 +41,7 @@ export default function WelcomeScreen() {
           {/* no account */}
           {i18n.t('welcome.no_account')}
           {/* link */}
-          <Link href={'/login'} style={{ color: 'dodgerblue' }}>
+          <Link href={'/signup'} style={{ color: 'dodgerblue' }}>
             {i18n.t('welcome.create_account')}
           </Link>
         </Text>

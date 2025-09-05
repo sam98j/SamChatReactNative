@@ -7,6 +7,9 @@ import welcomeScreenEn from './locales/en/welcome.json';
 // login screen
 import loginScreenAr from './locales/ar/login.json';
 import loginScreenEn from './locales/en/login.json';
+// signup screen
+import signupScreenAr from './locales/ar/signup.json';
+import signupScreenEn from './locales/en/signup.json';
 // import tranlations files for tabsLayout
 import tabsLayoutAr from './locales/ar/tabsLayout.json';
 import tabsLayoutEn from './locales/en/tabsLayout.json';
@@ -33,6 +36,7 @@ const translations = {
     openedChat: openedChatEn,
     chatsListScreen: chatsListScreenEn,
     chatCard: chatCardEn,
+    signup: signupScreenEn,
   },
   ar: {
     welcome: welcomeScreenAr,
@@ -42,6 +46,7 @@ const translations = {
     openedChat: openedChatAr,
     chatsListScreen: chatsListScreenAr,
     chatCard: chatCardAr,
+    signup: signupScreenAr,
   },
 };
 

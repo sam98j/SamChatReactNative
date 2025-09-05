@@ -1,9 +1,6 @@
 import ChatCardContainer from '@/components/ChatCard';
-import { Text, View, StyleSheet, FlatList, Button } from 'react-native';
-import { RootState } from '@/store';
-import { useSelector } from 'react-redux';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { SearchBar } from '@rneui/themed';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import CustomBottomSheet from '@/components/BottomSheet';
 // feather icons
 import FeatherIcon from 'react-native-vector-icons/Feather';

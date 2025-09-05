@@ -1,36 +1,18 @@
-import { getChatMessages, getUsrOnlineStatus } from '@/api/chats';
 import AttchFileBottomSheet from '@/components/AttackFileMenu';
 import ChatMessagesLoader from '@/components/ChatMessagesLoader';
-import ChatMessageViewer from '@/components/ChatMessageViewer';
 import CreateMessage from '@/components/CreateMessage';
 import NoMessages from '@/components/NoMessages';
 import SingleChatHeader from '@/components/SingleChatHeader';
-import { ChangeMessageStatusDTO, ChatMessage, ChatTypes, MessageStatus, MessagesTypes } from '@/interfaces/chats';
-import { RootState } from '@/store';
-import { setMessageToBeMarketAsReaded } from '@/store/chats.slice';
+import { ChangeMessageStatusDTO, ChatMessage, MessageStatus, MessagesTypes } from '@/interfaces/chats';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
 import { groupChatMessagesByDate } from '@/utils/chats';
-import { AnyAction } from '@reduxjs/toolkit';
-import { useNavigation } from 'expo-router';
 import { useSearchParams } from 'expo-router/build/hooks';
 import React, { useEffect, useRef, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  SafeAreaView,
-  KeyboardAvoidingView,
-} from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { UIActivityIndicator } from 'react-native-indicators';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { useDispatch, useSelector } from 'react-redux';
 import { v4 } from 'uuid';
 
 const SingleChat = () => {
@@ -51,7 +33,6 @@ const SingleChat = () => {
   } = useChatsStore();
   // loop throw chatmessages
   // chat ref
-  const chatRef = useRef<KeyboardAvoidingView>(null); // chat usr id
   // scroll view ref
   const messagesContainerRef = useRef<ScrollView>(null);
   // is fetching chat messages
@@ -61,7 +42,6 @@ const SingleChat = () => {
   // split chat messages with dates
   const messages = groupChatMessagesByDate(chatMessages as ChatMessage[], 'ar' as never)!;
   // chat name
-  const chatUser = openedChat?.members.filter((member) => member._id !== loggedInUser?._id)[0];
   // get them from zustand zuChats
   // loggedIn user
   const loggedInUser = useAuthStore().currentUser;

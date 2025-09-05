@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, FlatList, Text, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
+import { View, TextInput, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import useUsersApi from './hooks';
 import { UIActivityIndicator } from 'react-native-indicators';

@@ -1,15 +1,11 @@
 import { ChatTypes } from '@/interfaces/chats';
 import { RootState } from '@/store';
 import { Avatar } from '@rneui/themed';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useDispatch, useSelector } from 'react-redux';
-import { BlurView } from 'expo-blur';
-import { Action } from '@reduxjs/toolkit';
-import { getUsrOnlineStatus } from '@/api/chats';
-import { setChatUsrStatus } from '@/store/chats.slice';
+import { useSelector } from 'react-redux';
 import { getTime, TimeUnits } from '@/utils/time';
 import i18n from '../../i18n';
 import { useChatsStore } from '@/store/zuChats';
@@ -20,7 +16,7 @@ type SingleChatHeaderProps = {
   onBackPress: () => void;
 };
 
-const SingleChatHeader: React.FC<SingleChatHeaderProps> = ({ title, onBackPress }) => {
+const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   // get opened chat from redux

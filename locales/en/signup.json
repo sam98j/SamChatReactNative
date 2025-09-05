@@ -1,0 +1,16 @@
+{
+  "app_name": "SamChat",
+  "signup_with_google": "Sign Up with Google",
+  "full_name_placeholder": "Full Name",
+  "email_placeholder": "Email",
+  "email_hint": "We will never share your email with anyone",
+  "or_sign_up_with_email": "Or sign up with email and password",
+  "username_placeholder": "Username",
+  "password_placeholder": "Password",
+  "password_hint": "Password must be at least 8 characters long",
+  "confirm_password_placeholder": "Confirm Password",
+  "uplaod_profile_picture": "Upload Profile Picture",
+  "signup_button": "Sign Up",
+  "already_have_account": "Already have an account? ",
+  "login_link": "Log In"
+}

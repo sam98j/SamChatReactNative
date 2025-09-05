@@ -1,20 +1,11 @@
-import { Avatar, Button } from '@rneui/themed';
-
-import ChatCard from '@/components/ChatCard';
-import { Text, View, StyleSheet } from 'react-native';
-import { RootState } from '@/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { View, StyleSheet } from 'react-native';
 import { useEffect } from 'react';
 import WelcomeScreen from '../welcome';
 import * as SecureStore from 'expo-secure-store';
-import Chats from './chats';
-import { AnyAction } from '@reduxjs/toolkit';
-import { getUserChats } from '@/api/chats';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/zuAuth';
 
 export default function Index() {
-  const dispatch = useDispatch();
   // check if the user is logged in
   // get user chats
   // zustand store
@@ -44,7 +35,7 @@ export default function Index() {
   // is user is logged in
   const isUserLoggedIn = accessToken !== null;
 
-  return <View style={styles.container}>{!Boolean(isUserLoggedIn) && <WelcomeScreen />}</View>;
+  return <View style={styles.container}>{!isUserLoggedIn && <WelcomeScreen />}</View>;
 }
 
 // styles

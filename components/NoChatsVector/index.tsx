@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import i18n from '@/i18n';
+// import no chasts vector image from assets
+import no_chats_vector from '@/assets/images/no-chats.png';
 
 const NoChatsVector: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/no-chats.png')} style={styles.image} resizeMode='contain' />
+      <Image source={no_chats_vector} style={styles.image} resizeMode='contain' />
       <Text style={styles.text}>{i18n.t('chatsListScreen.no-chats')}</Text>
     </View>
   );

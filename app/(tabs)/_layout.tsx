@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ChangeMessageStatusDTO, ChatCard, ChatMessage, MessageStatus } from '@/interfaces/chats';
 import useChatMessagesSender from '@/hooks/chats';
-import { useChatSounds, usePlayChatSound } from '@/hooks/sounds';
+import { usePlayChatSound } from '@/hooks/sounds';
 import { useAudioPlayer } from 'expo-audio';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
@@ -40,10 +40,8 @@ export default function TabLayout() {
     setChatUsrDoingAction,
     addNewChat,
   } = useChatsStore();
-  // audio file path
-  const audioFilePath = require('@/assets/sounds/imessage_send.mp3');
   // audio player
-  const audioPlayer = useAudioPlayer(audioFilePath);
+  const audioPlayer = useAudioPlayer('@/assets/sounds/imessage_send.mp3');
   // listen fro socket clietn and current user and opened chat
   useEffect(() => {
     // when one of the chats is go online
@@ -159,7 +157,7 @@ export default function TabLayout() {
   return (
     <Tabs
       initialRouteName='chats/index'
-      screenOptions={({ route }) => ({
+      screenOptions={() => ({
         tabBarActiveTintColor: 'blue',
         headerStyle: { shadowColor: 'white' },
         headerTitleAlign: 'center',

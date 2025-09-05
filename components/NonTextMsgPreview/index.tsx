@@ -11,31 +11,31 @@ type NonTextMsgPreviewProps = {
 const NonTextMsgPreview: React.FC<NonTextMsgPreviewProps> = ({ type, contentUri, fileName }) => {
   const renderPreview = () => {
     switch (type) {
-      case 'image':
-        return <Image source={{ uri: contentUri }} />;
-      case 'video':
-        return (
-          <View style={styles.previewContainer}>
-            <Icon name='videocam' size={30} color='dodgerblue' />
-            <Text style={styles.previewText}>Video Preview</Text>
-          </View>
-        );
-      case 'audio':
-        return (
-          <View style={styles.previewContainer}>
-            <Icon name='musical-notes' size={30} color='dodgerblue' />
-            <Text style={styles.previewText}>Audio Message</Text>
-          </View>
-        );
-      case 'file':
-        return (
-          <View style={styles.previewContainer}>
-            <Icon name='document' size={20} color='dodgerblue' />
-            <Text style={styles.previewText}>{fileName || 'File Attachment'}</Text>
-          </View>
-        );
-      default:
-        return <Text style={styles.previewText}>Unsupported Message Type</Text>;
+    case 'image':
+      return <Image source={{ uri: contentUri }} />;
+    case 'video':
+      return (
+        <View style={styles.previewContainer}>
+          <Icon name='videocam' size={30} color='dodgerblue' />
+          <Text style={styles.previewText}>Video Preview</Text>
+        </View>
+      );
+    case 'audio':
+      return (
+        <View style={styles.previewContainer}>
+          <Icon name='musical-notes' size={30} color='dodgerblue' />
+          <Text style={styles.previewText}>Audio Message</Text>
+        </View>
+      );
+    case 'file':
+      return (
+        <View style={styles.previewContainer}>
+          <Icon name='document' size={20} color='dodgerblue' />
+          <Text style={styles.previewText}>{fileName || 'File Attachment'}</Text>
+        </View>
+      );
+    default:
+      return <Text style={styles.previewText}>Unsupported Message Type</Text>;
     }
   };
 

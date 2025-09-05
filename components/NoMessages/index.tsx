@@ -6,7 +6,7 @@ import i18n from '@/i18n';
 const NoMessages = () => {
   return (
     <View style={styles.container}>
-      <Image source={require('@/assets/images/no-messages-vector.png')} style={{ width: 250, height: 250, opacity: 0.6 }} />
+      <Image source={{ uri: '@/assets/images/no-messages-vector.png' }} style={{ width: 250, height: 250, opacity: 0.6 }} />
       <Text style={styles.noMessagesText}>{i18n.t('openedChat.no-messages-yet')}</Text>
     </View>
   );

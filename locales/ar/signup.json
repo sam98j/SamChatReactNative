@@ -1,0 +1,16 @@
+{
+  "app_name": "سام شات",
+  "signup_with_google": "سجّل باستخدام جوجل",
+  "full_name_placeholder": "الاسم الكامل",
+  "email_placeholder": "البريد الإلكتروني",
+  "email_hint": "لن نشارك بريدك الإلكتروني مع أي شخص",
+  "or_sign_up_with_email": "او قم بالتسجيل بإستخدام الايميل وكلمة السر",
+  "username_placeholder": "اسم المستخدم",
+  "password_placeholder": "كلمة المرور",
+  "password_hint": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+  "confirm_password_placeholder": "تأكيد كلمة المرور",
+  "uplaod_profile_picture": "تحميل صورة الملف الشخصي",
+  "signup_button": "إنشاء حساب",
+  "already_have_account": "لديك حساب بالفعل؟ ",
+  "login_link": "تسجيل الدخول"
+}

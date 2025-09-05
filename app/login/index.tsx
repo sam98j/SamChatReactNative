@@ -8,10 +8,11 @@ import { RootState } from '@/store';
 import i18n from '../../i18n';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { AnyAction } from '@reduxjs/toolkit';
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
-  const { apiResponse, currentUser } = useSelector((state: RootState) => state.authSlice);
+  const { currentUser } = useSelector((state: RootState) => state.authSlice);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const prefLang = i18n.locale;
@@ -19,7 +20,7 @@ export default function LoginScreen() {
   const router = useRouter();
 
   const handleFormSubmition = () => {
-    dispatch(loginUser({ email, password }) as unknown as any);
+    dispatch(loginUser({ email, password }) as unknown as AnyAction);
     setIsLoading(true);
   };
 
@@ -34,7 +35,7 @@ export default function LoginScreen() {
       {/* Header */}
       <View style={styles.pageHeader}>
         <Text style={styles.pageHeaderText}>{i18n.t('login.app_name')}</Text>
-        <Image source={require('../../assets/icon.png')} style={styles.pageHeaderImage} />
+        <Image source={{ uri: '../../assets/icon.png' }} style={styles.pageHeaderImage} />
       </View>
 
       {/* Sign in with Google */}

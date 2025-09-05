@@ -1,4 +1,4 @@
-import { Slot, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
 import { Provider } from 'react-redux';
@@ -6,6 +6,9 @@ import { store } from '../store';
 import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+// i cant use module there
+// import font baloo
+import BalooBhaijaan2 from '@/assets/fonts/BalooBhaijaan2-Regular.ttf';
 
 export default function RootLayout() {
   // check if the user is logged in
@@ -13,7 +16,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     Font.loadAsync({
-      BalooBhaijaan2: require('../assets/fonts/BalooBhaijaan2-Regular.ttf'),
+      BalooBhaijaan2,
     }).then(() => setFontsLoaded(true));
     // check if the user is logged in
   }, []);

@@ -1,17 +1,6 @@
 // basic imports
-import { RootState } from '@/store';
-import React, { FC, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
-  KeyboardAvoidingView,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { v4 as uuid } from 'uuid';
 import { useSearchParams } from 'expo-router/build/hooks';
@@ -23,11 +12,6 @@ import { secondsToDurationConverter } from '@/utils/time';
 import { useAuthStore } from '@/store/zuAuth';
 import { ChatActions, useChatsStore } from '@/store/zuChats';
 import { useSystemStore } from '@/store/zuSystem';
-
-// component props
-type Props = {
-  groupName: string;
-};
 
 const CreateMessage = () => {
   // url search params
@@ -58,7 +42,7 @@ const CreateMessage = () => {
   //   is recording
   const [isRec, setIsRec] = useState(false);
   // chat action
-  const [chatAction, setChatAction] = useState<ChatActions | null>(null);
+  const [chatAction] = useState<ChatActions | null>(null);
   // handleInputFocus
   const handleInputFocus = () =>
     setCurrentUsrDoingAction({
@@ -182,7 +166,7 @@ const CreateMessage = () => {
     stopRecording();
   };
   // interval variable
-  let interval: any;
+  let interval: number;
 
   // observe isRec
   React.useEffect(() => {
@@ -241,7 +225,7 @@ const CreateMessage = () => {
         {/* sound png image text field is empty*/}
         {!textMessage && !isRec && (
           <TouchableOpacity onPress={handleRecordStopRecording}>
-            <Image source={require('@/assets/icons/sound.png')} style={styles.recordVoiceBtn} />
+            <Image source={{ uri: '@/assets/icons/sound.png' }} style={styles.recordVoiceBtn} />
           </TouchableOpacity>
         )}
       </TouchableOpacity>

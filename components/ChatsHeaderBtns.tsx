@@ -2,8 +2,6 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { toggleBottomSheet } from '@/store/system.slice';
-import { useDispatch } from 'react-redux';
 import { useSystemStore } from '@/store/zuSystem';
 
 export default function ChatsHeaderBtns() {

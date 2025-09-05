@@ -1,9 +1,6 @@
 // basic imports
-import { RootState } from '@/store';
 import React, { FC } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { useSelector } from 'react-redux';
-import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ChatMessage, MessageStatus, MessagesTypes } from '@/interfaces/chats';
 import VoiceMsgPlayer from '../VoiceMsgPlayer';
@@ -34,12 +31,12 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
           <View>
             {/* svg icon from assets as image */}
             {status === DELEVERED && (
-              <Image source={require('@/assets/icons/check-read.png')} style={styles.messageDelevered} />
+              <Image source={{ uri: '@/assets/icons/check-read.png' }} style={styles.messageDelevered} />
             )}
             {/* check or msg status readed */}
-            {status === READED && <Image source={require('@/assets/icons/check-read.png')} style={styles.messageReaded} />}
+            {status === READED && <Image source={{ uri: '@/assets/icons/check-read.png' }} style={styles.messageReaded} />}
             {/* check or msg status sent */}
-            {status === SENT && <Image source={require('@/assets/icons/check.png')} style={styles.messageSent} />}
+            {status === SENT && <Image source={{ uri: '@/assets/icons/check.png' }} style={styles.messageSent} />}
             {/* check for msg status null */}
             {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
           </View>

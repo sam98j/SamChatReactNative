@@ -4,8 +4,6 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { v4 } from 'uuid';
-import { Action } from '@reduxjs/toolkit';
-import { createChat } from '@/api/chats';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
 

@@ -1,9 +1,6 @@
 // react native functional component
 // with typescript
-import { Avatar, Button } from '@rneui/themed';
 import { Text, View, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
 
 export default function Calls() {
   // check if the user is logged in

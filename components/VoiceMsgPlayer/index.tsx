@@ -1,9 +1,6 @@
 // basic imports
 import React, { useEffect, useState, FC } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, DimensionValue } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
-import { useChatSounds } from '@/hooks/sounds';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ChatMessage } from '@/interfaces/chats';
 import { useAudioPlayer } from 'expo-audio';
@@ -22,8 +19,6 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
   const progressRef = React.useRef<View>(null);
   // expo audio imports
   const player = useAudioPlayer(apiUrl + content);
-  // width
-  const [progressWidth, setProgressWidth] = useState('0');
 
   console.log('VoiceMsgPlayer rendered');
   // get audio player status
@@ -32,8 +27,6 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
   // get current user from store
   // is audio playing state
   const [isPlaying, setIsPlaying] = useState(false);
-  // voice note duration in seconds
-  const [voiceNoteDurationMillis, setVoiceNoteDurationMillis] = useState(0);
   // handle audio play/pause
   const handlePress = () => {
     // if it's playing, pause it
@@ -64,7 +57,7 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
 
       progressRef.current?.setNativeProps({ style: { width: progressWidth } });
       // check if counter is greater than or eqaul to voiceNoteDuration
-      if (!Boolean(counter >= Number(voiceNoteDuration))) return;
+      if (!(counter >= Number(voiceNoteDuration))) return;
       clearInterval(intervalId);
       setIsPlaying(false);
       progressRef.current?.setNativeProps({ style: { width: '0%' } });
