@@ -5,6 +5,8 @@ import { Text, View, StyleSheet, Image, StatusBar } from 'react-native';
 import i18n from '../i18n.js';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import SamChatLogo from '../assets/icon.png';
+import VectorImage from '../assets/images/onboarding/onboarding-image.png';
 
 export default function WelcomeScreen() {
   // router
@@ -17,12 +19,9 @@ export default function WelcomeScreen() {
           {/* image container */}
           <View>
             <View style={styles.logoContainer}>
-              <Image source={{ uri: '../assets/icon.png' }} style={{ width: 60, height: 60 }} />
+              <Image source={SamChatLogo} style={{ width: 60, height: 60, tintColor: 'white' }} />
             </View>
-            <Image
-              source={{ uri: '../assets/images/onboarding/onboarding-image.png' }}
-              style={styles.vectorImageContainer}
-            />
+            <Image source={VectorImage} style={styles.vectorImageContainer} />
           </View>
         </SafeAreaView>
       </LinearGradient>

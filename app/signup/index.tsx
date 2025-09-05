@@ -12,6 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useAuthStore } from '@/store/zuAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SignUpDto } from '@/interfaces/auth';
+import SamChatLogo from '@/assets/icon.png';
 
 export default function LoginScreen() {
   const { currentUser } = useSelector((state: RootState) => state.authSlice);
@@ -72,7 +73,7 @@ export default function LoginScreen() {
         {/* Header */}
         <View style={styles.pageHeader}>
           <Text style={styles.pageHeaderText}>{i18n.t('signup.app_name')}</Text>
-          <Image source={{ uri: '../../assets/icon.png' }} style={styles.pageHeaderImage} />
+          <Image source={SamChatLogo} style={styles.pageHeaderImage} />
         </View>
 
         {/* Sign in with Google */}
@@ -234,7 +235,7 @@ export default function LoginScreen() {
 // styles
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    // height: '100%',
     padding: 30,
     display: 'flex',
     gap: 30,
