@@ -52,6 +52,12 @@ export default {
     plugins: [
       'expo-router',
       [
+        '@react-native-google-signin/google-signin',
+        {
+          iosUrlScheme: 'com.googleusercontent.apps._some_id_here_',
+        },
+      ],
+      [
         'expo-splash-screen',
         {
           image: './assets/images/splash.png',

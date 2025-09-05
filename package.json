@@ -19,6 +19,7 @@
     "@expo/react-native-action-sheet": "^4.1.1",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5",
+    "@react-native-google-signin/google-signin": "^15.0.0",
     "@reduxjs/toolkit": "^2.7.0",
     "@rneui/base": "^4.0.0-rc.8",
     "@rneui/themed": "^4.0.0-rc.8",
