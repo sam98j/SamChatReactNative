@@ -2,17 +2,16 @@ import { Link, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '@/api/auth';
-import { RootState } from '@/store';
 import i18n from '../../i18n';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { AnyAction } from '@reduxjs/toolkit';
+import { useAuthStore } from '@/store/zuAuth';
+import SamChatIcon from '@/assets/icon.png';
+import startSignInFlow from '@/utils/auth';
 
 export default function LoginScreen() {
-  const dispatch = useDispatch();
-  const { currentUser } = useSelector((state: RootState) => state.authSlice);
+  // get current user from zustand store
+  const { currentUser, googleOAuth, loginUser } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const prefLang = i18n.locale;
@@ -20,27 +19,32 @@ export default function LoginScreen() {
   const router = useRouter();
 
   const handleFormSubmition = () => {
-    dispatch(loginUser({ email, password }) as unknown as AnyAction);
+    // call loginUser from zustand store
+    loginUser({ email, password });
     setIsLoading(true);
   };
 
   useEffect(() => {
-    if (currentUser) {
-      router.push('/chats');
-    }
+    if (currentUser) router.push('/chats');
   }, [currentUser]);
+
+  // handle Google Sign In
+  const handleGoogleSignIn = async () => {
+    const token = await startSignInFlow();
+    await googleOAuth(token!);
+  };
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.pageHeader}>
         <Text style={styles.pageHeaderText}>{i18n.t('login.app_name')}</Text>
-        <Image source={{ uri: '../../assets/icon.png' }} style={styles.pageHeaderImage} />
+        <Image source={SamChatIcon} style={styles.pageHeaderImage} />
       </View>
 
       {/* Sign in with Google */}
       <View style={styles.signInWithGoogleContainer}>
-        <TouchableOpacity style={styles.signInWithGoogleBtn}>
+        <TouchableOpacity style={styles.signInWithGoogleBtn} onPress={handleGoogleSignIn}>
           <Text style={styles.signInWithGoogleText}>{i18n.t('login.sign_in_with_google')}</Text>
           <FontAwesome name='google' size={20} />
         </TouchableOpacity>
@@ -102,7 +106,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         {/* Links */}
-        <Link href='/' style={styles.link}>
+        <Link href='/signup' style={styles.link}>
           <Text>{i18n.t('login.no_account')} </Text>
           <Text style={styles.linkHighlight}>{i18n.t('login.register_now')}</Text>
         </Link>

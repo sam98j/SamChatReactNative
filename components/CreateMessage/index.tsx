@@ -12,6 +12,7 @@ import { secondsToDurationConverter } from '@/utils/time';
 import { useAuthStore } from '@/store/zuAuth';
 import { ChatActions, useChatsStore } from '@/store/zuChats';
 import { useSystemStore } from '@/store/zuSystem';
+import SoundIcon from '@/assets/icons/sound.png';
 
 const CreateMessage = () => {
   // url search params
@@ -225,7 +226,7 @@ const CreateMessage = () => {
         {/* sound png image text field is empty*/}
         {!textMessage && !isRec && (
           <TouchableOpacity onPress={handleRecordStopRecording}>
-            <Image source={{ uri: '@/assets/icons/sound.png' }} style={styles.recordVoiceBtn} />
+            <Image source={SoundIcon} style={styles.recordVoiceBtn} />
           </TouchableOpacity>
         )}
       </TouchableOpacity>

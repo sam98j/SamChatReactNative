@@ -29,6 +29,8 @@ export const ChatCardContainer: FC<Props> = ({ chat }) => {
   const [chatAvatar] = useState(() => {
     // get chat member
     const chatMember = chat.members.filter((member) => member._id !== loggedInUser)[0];
+    // check if the chat avatar has https
+    if (chatMember.avatar?.includes('https')) return chatMember.avatar;
     // return
     return `${apiUrl}${chat.type === ChatTypes.GROUP ? chat.avatar : chatMember.avatar}`;
   });

@@ -13,6 +13,7 @@ import { useAuthStore } from '@/store/zuAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SignUpDto } from '@/interfaces/auth';
 import SamChatLogo from '@/assets/icon.png';
+import startSignInFlow from '@/utils/auth';
 
 export default function LoginScreen() {
   const { currentUser } = useSelector((state: RootState) => state.authSlice);
@@ -26,7 +27,7 @@ export default function LoginScreen() {
   const prefLang = i18n.locale;
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { signupUser } = useAuthStore();
+  const { signupUser, googleOAuth } = useAuthStore();
 
   const pickImage = async () => {
     // Ask for permission
@@ -67,6 +68,11 @@ export default function LoginScreen() {
     }
   }, [currentUser]);
 
+  const handleGoogleSignIn = async () => {
+    const token = await startSignInFlow();
+    await googleOAuth(token!);
+  };
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
@@ -78,7 +84,7 @@ export default function LoginScreen() {
 
         {/* Sign in with Google */}
         <View style={styles.signInWithGoogleContainer}>
-          <TouchableOpacity style={styles.signInWithGoogleBtn}>
+          <TouchableOpacity style={styles.signInWithGoogleBtn} onPress={handleGoogleSignIn}>
             <Text style={styles.signInWithGoogleText}>{i18n.t('signup.signup_with_google')}</Text>
             <FontAwesome name='google' size={20} />
           </TouchableOpacity>

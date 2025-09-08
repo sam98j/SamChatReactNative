@@ -1,26 +1,23 @@
 import { Button } from '@rneui/themed';
 
 import { Text, View, StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { logout } from '@/store/auth.slice';
+import { useAuthStore } from '@/store/zuAuth';
 
 export default function Profile() {
   // expo router
   const router = useRouter();
-  // dispatch method
-  const dispatch = useDispatch();
+  // zustand
+  const { logout, currentUser } = useAuthStore();
   // check if the user is logged in
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // check if the user is not logged in
+    if (!currentUser) router.push('/');
+  }, [currentUser]);
   // remove access token
-  const btnPressHandler = async () => {
-    // logout user
-    dispatch(logout());
-    // remove access token
-    // push to welcome screen
-    router.push('/');
-  };
+  const btnPressHandler = async () => logout();
+
   return (
     <View style={styles.container}>
       <Button radius={10} color='red' onPress={btnPressHandler}>

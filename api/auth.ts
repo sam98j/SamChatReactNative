@@ -1,18 +1,16 @@
-import { SignUpDto } from '@/interfaces/auth';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { LoginDto, SignUpDto } from '@/interfaces/auth';
 import { fetch } from 'expo/fetch';
-import * as FileSystem from 'expo-file-system';
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
-export const loginUser = async (userCred: any) => {
+export const loginUser = async (loginDto: LoginDto) => {
   // fetch request
   const response = await fetch(`${apiUrl}/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'Application/json',
     },
-    body: JSON.stringify(userCred),
+    body: JSON.stringify(loginDto),
   });
 
   // check for internal serval error
@@ -43,6 +41,27 @@ export const signupUser = async (user: SignUpDto) => {
     // headers: {
     //   'Content-Type': 'multipart/form-data',
     // },
+  });
+
+  // check for internal serval error
+  if (response.status >= 500) {
+    return 'Internal Server Error';
+  }
+  // if the login failed
+  if (response.status >= 400) {
+    return 'Email Or Password is Not Correct!';
+  }
+  return (await response).json();
+};
+
+// google OAuth
+export const googleOAuth = async (token: string) => {
+  // fetch request
+  const response = await fetch(`${apiUrl}/auth/signup_with_google`, {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 
   // check for internal serval error
