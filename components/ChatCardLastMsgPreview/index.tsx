@@ -1,6 +1,6 @@
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import i18n from '@/i18n';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -21,7 +21,7 @@ const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg
       {/* if it's voice note message */}
       {type === VOICENOTE && (
         <View style={styles.voice_note_container}>
-          <Image source={{ uri: '@/assets/icons/sound.png' }} style={{ width: 25, height: 25, tintColor: 'dodgerblue' }} />
+          <Icon name='mic-outline' size={18} color='dodgerblue' />
           <Text style={styles.voice_note_text}>{i18n.t('chatCard.voice-note-preview-text')}</Text>
         </View>
       )}
@@ -33,7 +33,6 @@ const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg
         </View>
       )}
       {/* if it's video message */}
-      {/* if it's image message */}
       {type === VIDEO && (
         <View style={styles.voice_note_container}>
           <Icon name='videocam-outline' size={18} color='dodgerblue' />

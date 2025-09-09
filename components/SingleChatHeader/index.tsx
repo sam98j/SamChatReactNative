@@ -33,6 +33,8 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   const [chatAvatar] = useState(() => {
     // get chat member
     const chatMember = openedChat!.members.filter((member) => member._id !== loggedInUser)[0];
+    // return chat avatar if it's contain https
+    if (chatMember.avatar?.startsWith('https://')) return chatMember.avatar;
     // return
     return `${apiUrl}${openedChat!.type === ChatTypes.GROUP ? openedChat!.avatar : chatMember.avatar}`;
   });

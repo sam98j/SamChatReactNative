@@ -1,4 +1,3 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { fetch, FetchRequestInit } from 'expo/fetch';
 import * as SecureStore from 'expo-secure-store';
 import { SingleChat } from '@/interfaces/chats';

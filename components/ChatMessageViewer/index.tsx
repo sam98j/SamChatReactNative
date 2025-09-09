@@ -7,6 +7,8 @@ import VoiceMsgPlayer from '../VoiceMsgPlayer';
 import ImageMsgViewer from '../ImageMsgViewer';
 import { useAuthStore } from '@/store/zuAuth';
 import VideoScreen from '../VideoMsgViewer';
+import ReadCheckIcon from '@/assets/icons/check-read.png';
+import SentCheckIcon from '@/assets/icons/check.png';
 
 const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   const { sender, content, _id, status, type } = msg;
@@ -30,13 +32,11 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
         {isFromMe && (
           <View>
             {/* svg icon from assets as image */}
-            {status === DELEVERED && (
-              <Image source={{ uri: '@/assets/icons/check-read.png' }} style={styles.messageDelevered} />
-            )}
+            {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
             {/* check or msg status readed */}
-            {status === READED && <Image source={{ uri: '@/assets/icons/check-read.png' }} style={styles.messageReaded} />}
+            {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
             {/* check or msg status sent */}
-            {status === SENT && <Image source={{ uri: '@/assets/icons/check.png' }} style={styles.messageSent} />}
+            {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
             {/* check for msg status null */}
             {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
           </View>
