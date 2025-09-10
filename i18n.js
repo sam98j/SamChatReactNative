@@ -1,4 +1,3 @@
-import * as Localization from 'expo-localization';
 import { I18n } from 'i18n-js';
 
 // Import translations
@@ -25,6 +24,9 @@ import chatsListScreenEn from './locales/en/chatsListScreen.json';
 // import tranlations files for chatCard
 import chatCardAr from './locales/ar/chatCard.json';
 import chatCardEn from './locales/en/chatCard.json';
+// import tranlations files for settings screen
+import settingsScreenAr from './locales/ar/settings.json';
+import settingsScreenEn from './locales/en/settings.json';
 
 // Set translations
 const translations = {
@@ -37,6 +39,7 @@ const translations = {
     chatsListScreen: chatsListScreenEn,
     chatCard: chatCardEn,
     signup: signupScreenEn,
+    settings: settingsScreenEn,
   },
   ar: {
     welcome: welcomeScreenAr,
@@ -47,6 +50,7 @@ const translations = {
     chatsListScreen: chatsListScreenAr,
     chatCard: chatCardAr,
     signup: signupScreenAr,
+    settings: settingsScreenAr,
   },
 };
 
