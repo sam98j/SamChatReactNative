@@ -1,13 +1,12 @@
 import { AudioModule, RecordingPresets, useAudioPlayer, useAudioRecorder } from 'expo-audio';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Alert } from 'react-native';
+import recieve_messages_sound from '@/assets/sounds/imessage_recieve.mp3';
 
 // create a custom hook to play a sound
 export function useChatSounds() {
   // expo recorder
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
-  // is recording
-  const [isRecording, setIsRecording] = useState<boolean>(false);
   // recording uri
   // recording audio
   const record = async () => {
@@ -43,9 +42,8 @@ export function useChatSounds() {
 }
 
 export const usePlayChatSound = () => {
-  const audioFilePath = require('@/assets/sounds/imessage_send.mp3');
   // use the audio player hook from expo
-  const audioPlayer = useAudioPlayer(audioFilePath);
+  const audioPlayer = useAudioPlayer(recieve_messages_sound);
 
   // play the sound
   const playReceivedMessageSound = () => {

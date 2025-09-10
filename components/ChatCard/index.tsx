@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   // chat name
   chatCardName: {
-    fontSize: 20,
+    fontSize: 16,
     flexGrow: 1,
     fontFamily: 'BalooBhaijaan2',
   },

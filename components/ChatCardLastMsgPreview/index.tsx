@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   text: {
+    fontSize: 16,
     fontFamily: 'BalooBhaijaan2',
     color: 'gray',
   },

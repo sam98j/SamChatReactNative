@@ -6,10 +6,12 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ChangeMessageStatusDTO, ChatCard, ChatMessage, MessageStatus } from '@/interfaces/chats';
 import useChatMessagesSender from '@/hooks/chats';
-import { usePlayChatSound } from '@/hooks/sounds';
+// import { usePlayChatSound } from '@/hooks/sounds';
 import { useAudioPlayer } from 'expo-audio';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
+import sentSound from '@/assets/sounds/imessage_send.mp3';
+import recieve_msg_sound from '@/assets/sounds/imessage_recieve.mp3';
 
 export default function TabLayout() {
   // api url
@@ -19,7 +21,7 @@ export default function TabLayout() {
   // check if currentUser is truthy
   const isUserLoggedIn = currentUser !== null ? true : false;
   // use playchatsound hook
-  const { playReceivedMessageSound } = usePlayChatSound();
+  // const { playReceivedMessageSound } = usePlayChatSound();
   // socket instance
   const [socketClient, setSocket] = useState<Socket | null>(null);
   // multichunk msg
@@ -40,8 +42,10 @@ export default function TabLayout() {
     setChatUsrDoingAction,
     addNewChat,
   } = useChatsStore();
-  // audio player
-  const audioPlayer = useAudioPlayer('@/assets/sounds/imessage_send.mp3');
+  // sent message audio player
+  const sentMsgAudioPlayer = useAudioPlayer(sentSound);
+  // recieve message audio player
+  const recieveMsgAudioPlayer = useAudioPlayer(recieve_msg_sound);
   // listen fro socket clietn and current user and opened chat
   useEffect(() => {
     // when one of the chats is go online
@@ -60,11 +64,15 @@ export default function TabLayout() {
     // receive message status
     socketClient?.on('message_status_changed', (data: ChangeMessageStatusDTO) => {
       // check for message sent status
-      if (data.msgStatus === MessageStatus.SENT) audioPlayer.play();
+      if (data.msgStatus === MessageStatus.SENT) {
+        sentMsgAudioPlayer.play();
+        sentMsgAudioPlayer.seekTo(0);
+      }
       // set message status
       setMessageStatus(data);
     });
   }, [socketClient, currentUser, openedChat]);
+
   // listen for incoming messages
   useEffect(() => {
     // clear listener
@@ -95,10 +103,13 @@ export default function TabLayout() {
       if (message.sender._id !== chatUserId && message.receiverId !== chatUserId) return;
       // if the message is not a multichunk message, add it to the chat messages
       addMessageToChat(message);
+      // expo audio
       // play sound
-      playReceivedMessageSound();
+      recieveMsgAudioPlayer.play();
+      recieveMsgAudioPlayer.seekTo(0);
     });
   }, [socketClient, openedChat]);
+
   // make socket connection
   useEffect(() => {
     // disconnect the web socket when usr logged out
@@ -110,6 +121,7 @@ export default function TabLayout() {
     // set socket
     setSocket(socket);
   }, [currentUser]);
+
   // listen for multichunk msg
   useEffect(() => {
     // terminate if chat's messages not fetched yet
@@ -121,6 +133,7 @@ export default function TabLayout() {
     // send
     sendChatMessage(messagesToSent[0]);
   }, [chatMessages]);
+
   // listen for message to be mark as readed
   useEffect(() => {
     // terminate if there is no message
@@ -128,6 +141,7 @@ export default function TabLayout() {
     // tell the server about readed message
     socketClient?.emit('message_status_changed', messageToBeMarketAsReaded);
   }, [messageToBeMarketAsReaded]);
+
   // listen for chat user doing action
   useEffect(() => {
     // check for usr and socket
@@ -149,11 +163,13 @@ export default function TabLayout() {
       socketClient.emit('message_status_changed', changeMessageStatusData);
     });
   }, [socketClient]);
+
   // listen to isCurrentUsrDoingAction
   useEffect(() => {
     // chatusr_start_typing
     socketClient?.emit('chatusr_typing_status', isCurrentUsrDoingAction);
   }, [isCurrentUsrDoingAction]);
+
   return (
     <Tabs
       initialRouteName='chats/index'

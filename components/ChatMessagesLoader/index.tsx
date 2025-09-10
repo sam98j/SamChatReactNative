@@ -9,7 +9,6 @@ type Props = { messages: MessagesGroubedByDate };
 
 const ChatMessagesLoader: FC<Props> = ({ messages }) => {
   // log messeages
-  console.log('messages', !messages ? 'no messages' : messages);
   return (
     <>
       {messages.dates?.map((date, i) => {

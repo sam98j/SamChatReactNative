@@ -31,8 +31,6 @@ const SingleChat = () => {
     setUserOnlineStatus,
     setMessageToBeMarketAsReaded,
   } = useChatsStore();
-  // loop throw chatmessages
-  // chat ref
   // scroll view ref
   const messagesContainerRef = useRef<ScrollView>(null);
   // is fetching chat messages
@@ -41,17 +39,10 @@ const SingleChat = () => {
   const chat_id = useSearchParams().get('chat_id'); // Access the chat_id parameter
   // split chat messages with dates
   const messages = groupChatMessagesByDate(chatMessages as ChatMessage[], 'ar' as never)!;
-  // chat name
-  // get them from zustand zuChats
+
   // loggedIn user
   const loggedInUser = useAuthStore().currentUser;
-  // loggedInUser
-  // const { loggedInUserName, loggedInUserAvatar } = useSelector((state: RootState) => {
-  //   return {
-  //     loggedInUserName: state.authSlice.currentUser?.name,
-  //     loggedInUserAvatar: state.authSlice.currentUser?.avatar,
-  //   };
-  // });
+
   // scroll to the bottom of the view
   useEffect(() => {
     // set is fetching chat messages
@@ -135,6 +126,11 @@ const SingleChat = () => {
       setUserOnlineStatus(undefined, null);
     };
   }, []);
+
+  // scroll to the bottom of the view when chatmessages change
+  useEffect(() => {
+    if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
+  }, [chatMessages]);
   // scroll to the bottom of the view
   const onScrollEndHandler = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -156,6 +152,7 @@ const SingleChat = () => {
       }
     }
   };
+
   return (
     <View style={styles.container}>
       <SingleChatHeader onBackPress={() => {}} title='' />
