@@ -1,4 +1,4 @@
-import AttchFileBottomSheet from '@/components/AttackFileMenu';
+import ChatActions from '@/components/ChatActions';
 import ChatMessagesLoader from '@/components/ChatMessagesLoader';
 import CreateMessage from '@/components/CreateMessage';
 import NoMessages from '@/components/NoMessages';
@@ -24,6 +24,7 @@ const SingleChat = () => {
     isLastChatMessagesBatch,
     createChatAPIres,
     openedChat,
+    isChatUsrDoingAction,
     addMessageToChat,
     setOpenedChatMessages,
     clearChatMessages,
@@ -131,6 +132,7 @@ const SingleChat = () => {
   useEffect(() => {
     if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
   }, [chatMessages]);
+
   // scroll to the bottom of the view
   const onScrollEndHandler = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -174,9 +176,10 @@ const SingleChat = () => {
         {isFetchingChatMessages && <UIActivityIndicator size={20} color='gray' />}
         {/* loop messages and display them in flat list */}
         {messages !== undefined && <ChatMessagesLoader messages={messages} />}
+        {/* chat actions */}
+        {isChatUsrDoingAction.type !== null && <ChatActions />}
       </ScrollView>
       {/* messages container */}
-      <AttchFileBottomSheet />
       <KeyboardAvoidingView style={styles.createMessageContainer}>
         <CreateMessage />
       </KeyboardAvoidingView>

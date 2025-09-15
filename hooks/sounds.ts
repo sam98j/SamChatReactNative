@@ -31,14 +31,8 @@ export function useChatSounds() {
       }
     })();
   }, []);
-  // playSentMessageSound
-  const playSentMessageSound = () => {
-    // play the audio file using Expo Audio
-    // play the sound
-  };
 
-  return { playSentMessageSound, record, stopRecording };
-  // return the audioplayer instance
+  return { record, stopRecording };
 }
 
 export const usePlayChatSound = () => {

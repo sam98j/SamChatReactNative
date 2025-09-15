@@ -13,13 +13,13 @@ export interface ChatActions {
   chatId: string;
   chatMembers: string[];
 }
-
+// TODO: linting
 export interface ChatState {
   chats: ChatCard[] | null | undefined;
   chatMessages: ChatMessage[] | null;
   isLastChatMessagesBatch: boolean | null;
   openedChat: SingleChat | null | undefined;
-  isChatUsrDoingAction: any;
+  isChatUsrDoingAction: ChatActions;
   isCurrentUsrDoingAction: any;
   chatUsrStatus: string | null | undefined;
   messageToBeMarketAsReaded: null | any;

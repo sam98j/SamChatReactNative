@@ -6,9 +6,6 @@ import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/zuAuth';
 
 export default function Index() {
-  // check if the user is logged in
-  // get user chats
-  // zustand store
   // expo router
   const router = useRouter();
   // current user from zustand zuAuth
@@ -21,7 +18,6 @@ export default function Index() {
 
   // get user chats
   useEffect(() => {
-    console.log('run');
     // get usr chats
     setCurrentUser();
   }, []);

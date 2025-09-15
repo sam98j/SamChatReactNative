@@ -19,7 +19,6 @@ export function voiceMemoTimer(setState: React.Dispatch<string>) {
   let counter = 0;
   let minites = 0;
   const interval = setInterval(() => {
-    console.log('run');
     counter++;
     if (counter > 59) {
       minites++;

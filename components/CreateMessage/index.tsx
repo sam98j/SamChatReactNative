@@ -43,7 +43,7 @@ const CreateMessage = () => {
   //   is recording
   const [isRec, setIsRec] = useState(false);
   // chat action
-  const [chatAction] = useState<ChatActions | null>(null);
+  const [chatAction, setChatAction] = useState<ChatActions | null>(null);
   // handleInputFocus
   const handleInputFocus = () =>
     setCurrentUsrDoingAction({
@@ -51,7 +51,10 @@ const CreateMessage = () => {
       type: ChatActionsTypes.TYPEING,
     });
   // handleInputBlur
-  const handleInputBlur = () => setCurrentUsrDoingAction({ ...chatAction!, type: null });
+  const handleInputBlur = () => {
+    console.log('blurred');
+    setCurrentUsrDoingAction({ ...chatAction!, type: null });
+  };
   //  check if it's recording
   const showSendMsgBtn = isRec || textMessage;
   //   input change handler
@@ -178,16 +181,34 @@ const CreateMessage = () => {
       clearInterval(interval);
       return;
     }
+    // set loggedInUser Doing Action
+    setCurrentUsrDoingAction({
+      ...chatAction!,
+      type: ChatActionsTypes.RECORDING_VOICE,
+    });
     // interval
     interval = setInterval(() => {
-      setCurrentUsrDoingAction({
-        ...chatAction!,
-        type: ChatActionsTypes.RECORDING_VOICE,
-      });
       // log isRec
       setVoiceNoteDurationMillis((prev) => prev + 1);
     }, 1000);
   }, [isRec]);
+
+  // listen for opened chat
+  React.useEffect(() => {
+    // if no opened chat
+    if (!openedChat) return;
+    // chat members IDs
+    const openedChatMembersIDs = openedChat?.members.map((member) => member._id);
+    // chat action
+    const chatAction = {
+      type: null,
+      chatId: openedChat!._id,
+      chatMembers: openedChatMembersIDs!,
+      senderId: currentUsr!._id,
+    };
+    // setChatAction
+    setChatAction(chatAction);
+  }, [openedChat]);
 
   return (
     <KeyboardAvoidingView style={styles.container}>

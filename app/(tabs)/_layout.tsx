@@ -46,6 +46,7 @@ export default function TabLayout() {
   const sentMsgAudioPlayer = useAudioPlayer(sentSound);
   // recieve message audio player
   const recieveMsgAudioPlayer = useAudioPlayer(recieve_msg_sound);
+
   // listen fro socket clietn and current user and opened chat
   useEffect(() => {
     // when one of the chats is go online

@@ -1,11 +1,9 @@
 import { ChatTypes } from '@/interfaces/chats';
-import { RootState } from '@/store';
 import { Avatar } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
 import { getTime, TimeUnits } from '@/utils/time';
 import i18n from '../../i18n';
 import { useChatsStore } from '@/store/zuChats';
@@ -25,8 +23,6 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // logged in user id from zustand zuAuth
   const loggedInUser = useAuthStore().currentUser?._id;
   // get chatAction from redux\
-  // chatUserStatus
-  const chatAction = useSelector((state: RootState) => state.chatsSlice.isChatUsrDoingAction);
   // chat name
   const [chatUser] = useState(() => openedChat!.members.filter((member) => member._id !== loggedInUser)[0]);
   // chat avatar
@@ -67,10 +63,6 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     // // get usr online status
     // if (openedChat?.type === ChatTypes.GROUP) dispatch(setChatUsrStatus(undefined));
   }, [openedChat]);
-  // observe chatAction
-  React.useEffect(() => {
-    console.log('chatAction', chatAction);
-  }, [chatAction]);
   // observe chatUserStatus
   return (
     <View style={styles.headerContainer}>

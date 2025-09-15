@@ -1,6 +1,4 @@
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
-import { RootState } from '@/store';
-import { setResponseToMessage } from '@/store/chats.slice';
 import { useChatsStore } from '@/store/zuChats';
 import { chunkFile } from '@/utils/files';
 import { useEffect, useState } from 'react';
@@ -26,8 +24,6 @@ const useChatMessagesSender = (socket: Socket) => {
   const [chunkIndex, setChunkIndex] = useState<number>(0);
   // send multi chunks msg
   const sendChatMessage = (message: ChatMessage) => {
-    // log message
-    console.log('sending message', message);
     // set chunk index
     setChunkIndex(0);
     // set message to send
