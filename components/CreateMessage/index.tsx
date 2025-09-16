@@ -251,6 +251,7 @@ const CreateMessage = () => {
           </TouchableOpacity>
         )}
       </TouchableOpacity>
+      {/* stop recording btn */}
       {isRec && (
         <TouchableOpacity style={styles.stopRecBtn} onPress={handleRecordStopRecording}>
           <Icon name='stop-circle-outline' size={28} color='white' />

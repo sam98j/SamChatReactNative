@@ -1,3 +1,4 @@
+import AttchFileBottomSheet from '@/components/AttackFileMenu';
 import ChatActions from '@/components/ChatActions';
 import ChatMessagesLoader from '@/components/ChatMessagesLoader';
 import CreateMessage from '@/components/CreateMessage';
@@ -32,6 +33,7 @@ const SingleChat = () => {
     setUserOnlineStatus,
     setMessageToBeMarketAsReaded,
   } = useChatsStore();
+
   // scroll view ref
   const messagesContainerRef = useRef<ScrollView>(null);
   // is fetching chat messages
@@ -95,15 +97,12 @@ const SingleChat = () => {
       };
       addMessageToChat(actionMessage);
     }
-    // if (chatMessagesBatchNo > 1) return;
-    if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
     // scroll to the bottom of the view
   }, [chatMessages, createChatAPIres]);
 
   // listen for opened chat
   useEffect(() => {
     if (!openedChat) return;
-    // get usr online status
     // get usr online status
     // if (openedChat?.type === ChatTypes.GROUP) dispatch(setChatUsrStatus(undefined));
     // terminate if there is chat messages
@@ -115,10 +114,19 @@ const SingleChat = () => {
     });
   }, [openedChat]);
 
+  // observer chat messages to scroll to the bottom
+  useEffect(() => {
+    // Only run when chatMessages is loaded for the first time
+    if (chatMessagesBatchNo !== 1) return;
+    // scroll to the bottom of the view
+    if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
+  }, [chatMessages]);
+
   // component un mount
   useEffect(() => {
     // set is fetching chat messages
     setIsFetchingChatMessages(true);
+    // scroll to the end
     return () => {
       // log component un mount
       console.log('SingleChat unmounted');
@@ -128,9 +136,14 @@ const SingleChat = () => {
     };
   }, []);
 
+  // TODO: refactor this code
   // scroll to the bottom of the view when chatmessages change
   useEffect(() => {
-    if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
+    // chatMessages last item
+    const lastMessage = chatMessages?.length ? chatMessages[chatMessages.length - 1] : null;
+    if (lastMessage?.status === null) {
+      if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
+    }
   }, [chatMessages]);
 
   // scroll to the bottom of the view
@@ -179,6 +192,8 @@ const SingleChat = () => {
         {/* chat actions */}
         {isChatUsrDoingAction.type !== null && <ChatActions />}
       </ScrollView>
+      {/* attach file bottom sheet */}
+      <AttchFileBottomSheet />
       {/* messages container */}
       <KeyboardAvoidingView style={styles.createMessageContainer}>
         <CreateMessage />

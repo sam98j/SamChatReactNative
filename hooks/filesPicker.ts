@@ -1,12 +1,12 @@
 // basice picker
-import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import * as FilePicker from 'expo-document-picker';
 
 // use file picker
 export const useFilePicker = () => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 3],
@@ -17,7 +17,7 @@ export const useFilePicker = () => {
   };
   // pick a video
   const pickVideo = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['videos'],
       allowsEditing: true,
       aspect: [4, 3],
@@ -26,6 +26,17 @@ export const useFilePicker = () => {
     if (!result.canceled) return { uri: result.assets[0].uri, name: result.assets[0].fileName || 'video.mp4' };
     return '';
   };
+
+  // pick a file
+  const pickFile = async () => {
+    const result = await FilePicker.getDocumentAsync({
+      type: '*/*',
+      copyToCacheDirectory: true,
+      multiple: false,
+    });
+    if (!result.canceled) return { uri: result.assets[0].uri, name: result.assets[0].name };
+    return '';
+  };
   // retturn
-  return { pickImage, pickVideo };
+  return { pickImage, pickVideo, pickFile };
 };

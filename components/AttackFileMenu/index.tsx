@@ -17,7 +17,7 @@ const AttchFileBottomSheet = () => {
   const urlSearchParams = useSearchParams(); // Access the chat_id parameter
   // Bottom sheet ref
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const { pickImage, pickVideo } = useFilePicker();
+  const { pickImage, pickVideo, pickFile } = useFilePicker();
 
   // current loggedIn user
   const currentUsr = useAuthStore().currentUser;
@@ -37,16 +37,13 @@ const AttchFileBottomSheet = () => {
   }, []);
 
   // Open the bottom sheet
-  const openSheet = () => {
-    // log 'run'
-    bottomSheetRef.current?.snapToIndex(0); // Open to the first snap point
-  };
+  const openSheet = () => bottomSheetRef.current?.snapToIndex(0);
+
   // observe if the bottom sheet is open
-  useEffect(
-    useCallback(() => {
-      if (isAttachFileBottomSheetOpen) openSheet();
-    }, [isAttachFileBottomSheetOpen])
-  );
+  useEffect(() => {
+    if (isAttachFileBottomSheetOpen) openSheet();
+  }, [isAttachFileBottomSheetOpen]);
+
   // Handle image picking
   const handlePickImage = async (msg: ChatMessage) => {
     try {
@@ -74,6 +71,7 @@ const AttchFileBottomSheet = () => {
       console.error('Error picking image:', error);
     }
   };
+
   // Handle video picking
   const handlePickVideo = async (msg: ChatMessage) => {
     try {
@@ -101,6 +99,34 @@ const AttchFileBottomSheet = () => {
       console.error('Error picking video:', error);
     }
   };
+
+  // Handle image picking
+  const handlePickDocument = async (msg: ChatMessage) => {
+    try {
+      const doc = await pickFile();
+      if (doc) {
+        // read file as data url expo file system
+        const fileData = await readFileAsDataURL(doc.uri);
+        // image message
+        const docMessage: ChatMessage = {
+          ...msg,
+          fileName: doc.name,
+          fileSize: getFileSize(fileData as string),
+          status: null,
+          content: fileData as string,
+          type: MessagesTypes.FILE,
+          voiceNoteDuration: '',
+        };
+        console.log('Selected document:', doc);
+        // Dispatch the message to the chat (you can implement this function)
+        addMessageToChat(docMessage);
+        setChatLastMessage({ msg: docMessage, currentUserId: currentUsr!._id });
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+    }
+  };
+
   // send picked file
   const sendPickedFile = async (msgType: MessagesTypes) => {
     // chat message
@@ -117,6 +143,8 @@ const AttchFileBottomSheet = () => {
     if (msgType === MessagesTypes.PHOTO) return handlePickImage(message);
     // if video
     if (msgType === MessagesTypes.VIDEO) return handlePickVideo(message);
+    // if file
+    if (msgType === MessagesTypes.FILE) return handlePickDocument(message);
     // send file
   };
 
@@ -141,6 +169,16 @@ const AttchFileBottomSheet = () => {
           <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.VIDEO)} style={styles.fileTypeContainer}>
             <IonicIcons name='videocam-outline' size={28} color='lightgreen' style={styles.icon} />
             <Text style={styles.fontFamily}>فديو</Text>
+          </TouchableOpacity>
+          {/* icon container */}
+          <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.FILE)} style={styles.fileTypeContainer}>
+            <IonicIcons name='document-text-outline' size={28} color='blue' style={styles.icon} />
+            <Text style={styles.fontFamily}>ملف</Text>
+          </TouchableOpacity>
+          {/* icon container */}
+          <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.VIDEO)} style={styles.fileTypeContainer}>
+            <IonicIcons name='musical-notes-outline' size={28} color='red' style={styles.icon} />
+            <Text style={styles.fontFamily}>صوتي</Text>
           </TouchableOpacity>
           {/* Additional Content */}
         </BottomSheetView>

@@ -10,9 +10,9 @@ type ChatCardLastMsgPreviewProps = {
 
 const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg }) => {
   // destruct last message
-  const { content, type } = lastMsg;
+  const { content, type, fileName } = lastMsg;
   //   destruct messages types
-  const { TEXT, VOICENOTE, PHOTO, VIDEO } = MessagesTypes;
+  const { TEXT, VOICENOTE, PHOTO, VIDEO, FILE } = MessagesTypes;
   //   last message container
   return (
     <View style={styles.container}>
@@ -37,6 +37,13 @@ const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg
         <View style={styles.voice_note_container}>
           <Icon name='videocam-outline' size={18} color='dodgerblue' />
           <Text style={styles.voice_note_text}>{i18n.t('chatCard.video-preview-text')}</Text>
+        </View>
+      )}
+      {/* if it's file message */}
+      {type === FILE && (
+        <View style={styles.voice_note_container}>
+          <Icon name='document-text-outline' size={18} color='dodgerblue' />
+          <Text style={styles.voice_note_text}>{fileName}</Text>
         </View>
       )}
     </View>

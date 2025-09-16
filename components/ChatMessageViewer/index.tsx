@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/zuAuth';
 import VideoScreen from '../VideoMsgViewer';
 import ReadCheckIcon from '@/assets/icons/check-read.png';
 import SentCheckIcon from '@/assets/icons/check.png';
+import DocMessage from '../DocMessage';
 
 const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   const { sender, content, _id, status, type } = msg;
@@ -21,12 +22,16 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   const isFromMe = loggedInUser?._id === sender._id;
   return (
     <View style={[styles.container, isFromMe ? styles.myMessage : styles.theirMessage]} key={_id}>
+      {/* Text */}
       {type === MessagesTypes.TEXT && <Text style={styles.messageText}>{content}</Text>}
+      {/* voice note message viewer */}
       {type === MessagesTypes.VOICENOTE && <VoiceMsgPlayer msg={msg} />}
       {/* image message viewer */}
       {type === MessagesTypes.PHOTO && <ImageMsgViewer msg={msg} />}
       {/* video message viewer */}
       {type === MessagesTypes.VIDEO && <VideoScreen msg={msg} />}
+      {/* document message viewer */}
+      {type === MessagesTypes.FILE && <DocMessage msg={msg} />}
       {/* message data */}
       <View style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
         {isFromMe && (
