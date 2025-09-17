@@ -50,6 +50,7 @@ export interface ChatState {
   setCurrentUserChats: (chats: ChatCard[]) => void;
   setOpenedChatMessages: (data: { chatId: string; msgBatch: number }) => Promise<void>;
   setUserOnlineStatus: (userId?: string, status?: string | null | undefined) => Promise<void>;
+  setFileMessageUploadIndicator: (n: number) => void;
 }
 
 export const useChatsStore = create<ChatState>((set, get) => ({
@@ -166,4 +167,5 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     // log
     set({ chatUsrStatus: usrOnlineStatus });
   },
+  setFileMessageUploadIndicator: (n: number) => set({ fileMessageUploadIndicator: n }),
 }));

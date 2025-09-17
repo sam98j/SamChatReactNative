@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import EnTypoIcon from 'react-native-vector-icons/Entypo';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
+import FileMsgUploadIndicator from '../FileMsgUploadIndicator';
 
 // props
 type Props = {
@@ -16,6 +17,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
   const { content } = msg;
   // is image viewer open useState
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+
   // handle click to open image viewer and close it if it is already open
   const handleClick = () => setIsImageViewerOpen(!isImageViewerOpen);
   // swipe up detection
@@ -73,7 +75,8 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
           </View>
         </GestureHandlerRootView>
       </Modal>
-      <TouchableOpacity onPress={handleClick}>
+      <TouchableOpacity onPress={handleClick} style={styles.imageContainer}>
+        <FileMsgUploadIndicator _id={msg._id} />
         <Image source={{ uri: fileUrl }} style={styles.image} />
       </TouchableOpacity>
     </View>
@@ -105,6 +108,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  // image container
+  imageContainer: {
+    position: 'relative',
   },
   image: {
     margin: 2,

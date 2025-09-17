@@ -13,7 +13,7 @@ const useChatMessagesSender = (socket: Socket) => {
   // mulitChunksMessage
   const [chatMessage, setChatMessage] = useState<ChatMessage | null>(null);
   // message replyed to
-  const { responseToMessage, setResponseToMessage } = useChatsStore();
+  const { responseToMessage, setResponseToMessage, setFileMessageUploadIndicator } = useChatsStore();
   // multi chunks status
   const [chatMsgStatus, setChatMsgStatus] = useState<ChatMsgStatus>({
     delevered: null,
@@ -61,7 +61,7 @@ const useChatMessagesSender = (socket: Socket) => {
     // check for invalid case
     if (chatMessage!.type === MessagesTypes.TEXT || chatMessage!.type === MessagesTypes.ACTION) return;
     // send chatMessage chunks lenght to the redux store
-    // dispatch(setFileMessageUploadIndicator(((chunkIndex + 1) / chunks?.length) * 100));
+    setFileMessageUploadIndicator(((chunkIndex + 1) / chunks?.length) * 100);
   }, [chunks, chatMsgStatus]);
   // listen for chunk delevery res
   useEffect(() => {
