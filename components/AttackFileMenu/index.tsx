@@ -25,14 +25,12 @@ const AttchFileBottomSheet = () => {
   // response to message
   const { responseToMessage, addMessageToChat, setChatLastMessage } = useChatsStore();
   // State to track if the bottom sheet is open
-  const { isAttachFileBottomSheetOpen, toggleAttachFileBottomSheet } = useSystemStore();
+  const { isAttachFileBottomSheetOpen, openAttachFileBottomSheet } = useSystemStore();
 
   // Handle bottom sheet index changes
   const handleSheetChanges = useCallback((index: number) => {
     // Check if the bottom sheet is closed
-    if (index === -1) {
-      toggleAttachFileBottomSheet(); // Update Redux state
-    }
+    if (index === -1) openAttachFileBottomSheet(false);
   }, []);
 
   // Open the bottom sheet
@@ -40,7 +38,9 @@ const AttchFileBottomSheet = () => {
 
   // observe if the bottom sheet is open
   useEffect(() => {
-    if (isAttachFileBottomSheetOpen) openSheet();
+    if (isAttachFileBottomSheetOpen) return openSheet();
+    // close the bottom sheet
+    bottomSheetRef.current?.close();
   }, [isAttachFileBottomSheetOpen]);
 
   // Handle image picking
@@ -138,12 +138,15 @@ const AttchFileBottomSheet = () => {
       msgReplyedTo: responseToMessage,
       replyTo: responseToMessage?._id,
     } as ChatMessage;
+
     // if photo
-    if (msgType === MessagesTypes.PHOTO) return handlePickImage(message);
+    if (msgType === MessagesTypes.PHOTO) handlePickImage(message);
     // if video
-    if (msgType === MessagesTypes.VIDEO) return handlePickVideo(message);
+    if (msgType === MessagesTypes.VIDEO) handlePickVideo(message);
     // if file
-    if (msgType === MessagesTypes.FILE) return handlePickDocument(message);
+    if (msgType === MessagesTypes.FILE) handlePickDocument(message);
+    // close attach file menu
+    openAttachFileBottomSheet(false);
     // send file
   };
 
@@ -191,8 +194,7 @@ export default AttchFileBottomSheet;
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    // dark yellow hex code
-    bottom: 0,
+    bottom: 60,
     left: 0,
     right: 0,
     height: '100%',

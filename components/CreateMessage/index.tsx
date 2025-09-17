@@ -32,7 +32,7 @@ const CreateMessage = () => {
     setChatLastMessage,
   } = useChatsStore();
   // zustand system
-  const { toggleAttachFileBottomSheet } = useSystemStore();
+  const { openAttachFileBottomSheet, isAttachFileBottomSheetOpen } = useSystemStore();
   // text message input
   const [textMessage, setTextMessage] = useState('');
   // voice note duration
@@ -225,6 +225,7 @@ const CreateMessage = () => {
         {/* if it's not recording */}
         {!isRec && (
           <View style={styles.inputContainer}>
+            <Icon name='camera-outline' size={26} color={'gray'} />
             <TextInput
               style={styles.input}
               placeholder={i18n.t('openedChat.create-message-input.type-message-input-placeholder')}
@@ -235,7 +236,7 @@ const CreateMessage = () => {
               onChangeText={(e) => inputChangeHandler(e)}
             />
             <MIcon name='sticker-circle-outline' size={26} color='gray' />
-            <TouchableOpacity onPress={() => toggleAttachFileBottomSheet()}>
+            <TouchableOpacity onPress={() => openAttachFileBottomSheet(!isAttachFileBottomSheetOpen)}>
               <Icon name='attach' size={28} color='gray' style={{ transform: [{ rotate: '45deg' }] }} />
             </TouchableOpacity>
           </View>

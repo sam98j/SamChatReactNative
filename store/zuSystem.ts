@@ -5,7 +5,7 @@ type SystemState = {
   isAttachFileBottomSheetOpen: boolean;
   isImageViewerOpen: boolean;
   toggleBottomSheet: () => void;
-  toggleAttachFileBottomSheet: () => void;
+  openAttachFileBottomSheet: (state: boolean) => void;
   toggleImageViewer: () => void;
 };
 
@@ -14,6 +14,6 @@ export const useSystemStore = create<SystemState>((set) => ({
   isAttachFileBottomSheetOpen: false,
   isImageViewerOpen: false,
   toggleBottomSheet: () => set((state) => ({ isBottomSheetOpen: !state.isBottomSheetOpen })),
-  toggleAttachFileBottomSheet: () => set((state) => ({ isAttachFileBottomSheetOpen: !state.isAttachFileBottomSheetOpen })),
+  openAttachFileBottomSheet: (state: boolean) => set({ isAttachFileBottomSheetOpen: state }),
   toggleImageViewer: () => set((state) => ({ isImageViewerOpen: !state.isImageViewerOpen })),
 }));

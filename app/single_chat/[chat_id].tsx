@@ -190,7 +190,7 @@ const SingleChat = () => {
         {/* chat actions */}
         {isChatUsrDoingAction.type !== null && <ChatActions />}
       </ScrollView>
-      {/* attach file bottom sheet */}
+      {/* bottom sheet */}
       <AttchFileBottomSheet />
       {/* messages container */}
       <KeyboardAvoidingView style={styles.createMessageContainer}>
