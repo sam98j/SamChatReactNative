@@ -40,6 +40,8 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   const router = useRouter();
   // get locale
   const locale = i18n.locale;
+
+  // TODO: handle loading state
   // chat usr last seen
   const chatUsrLastSeen = `${i18n.t('chatHeader.last_seen')} ${getTime(
     chatUsrStatus!,
@@ -65,10 +67,10 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   }, [openedChat]);
   // observe chatUserStatus
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, locale === 'ar' && styles.arDirection]}>
       {/* Back Button */}
       <TouchableOpacity onPress={handleBackPress}>
-        <Icon name='chevron-back' size={30} color='dodgerblue' />
+        <Icon name='chevron-back' size={30} color='dodgerblue' style={styles.flipDir} />
       </TouchableOpacity>
       <Avatar source={{ uri: chatAvatar }} size={'small'} containerStyle={{ backgroundColor: '#bbb' }} rounded />
       {/* Title */}
@@ -108,11 +110,19 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 
+  // ardir
+  arDirection: {
+    direction: 'rtl',
+  },
+  // flip dir
+  flipDir: {
+    transform: [{ scaleX: -1 }],
+  },
   //   title container
   titleContainer: {
     flex: 1,
     display: 'flex',
-    paddingLeft: 10,
+    paddingHorizontal: 10,
   },
   title: {
     fontFamily: 'BalooBhaijaan2',
