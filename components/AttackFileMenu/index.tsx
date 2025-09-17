@@ -10,7 +10,6 @@ import { getFileSize, readFileAsDataURL } from '@/utils/files';
 import { useSystemStore } from '@/store/zuSystem';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
-// import { useUsersApi } from '@/hooks/chats';
 
 const AttchFileBottomSheet = () => {
   // url search params
@@ -106,7 +105,8 @@ const AttchFileBottomSheet = () => {
       const doc = await pickFile();
       if (doc) {
         // read file as data url expo file system
-        const fileData = await readFileAsDataURL(doc.uri);
+        const fileData = await readFileAsDataURL(doc.uri, doc.mimeType);
+        console.log(doc.mimeType);
         // image message
         const docMessage: ChatMessage = {
           ...msg,
@@ -117,7 +117,6 @@ const AttchFileBottomSheet = () => {
           type: MessagesTypes.FILE,
           voiceNoteDuration: '',
         };
-        console.log('Selected document:', doc);
         // Dispatch the message to the chat (you can implement this function)
         addMessageToChat(docMessage);
         setChatLastMessage({ msg: docMessage, currentUserId: currentUsr!._id });

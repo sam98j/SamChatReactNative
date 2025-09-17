@@ -133,6 +133,8 @@ const SingleChat = () => {
       clearChatMessages();
       // clear usr ononline status
       setUserOnlineStatus(undefined, null);
+      // reset chat messages batch no
+      setChatMessagesBatchNo(1);
     };
   }, []);
 
@@ -151,13 +153,9 @@ const SingleChat = () => {
     const offsetY = event.nativeEvent.contentOffset.y;
 
     if (offsetY <= 0) {
-      console.log('Scrolled to top');
-      // when usr scroll throwout the messages
       // when usr reach last oldest message
       if (isLastChatMessagesBatch) return;
       if (!isLastChatMessagesBatch) {
-        // terminate if it's last batch of chat messages
-        console.log('fetching new messages', isLastChatMessagesBatch);
         // get chat messages based on page no
         setOpenedChatMessages({
           chatId: chat_id!,

@@ -20,7 +20,7 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
     // terminate if no content
     if (!content) return;
     // open the file link
-    Linking.openURL(content);
+    Linking.openURL(fileUrl);
     console.log('Opening file:', fileUrl);
   };
   return (
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginVertical: 6,
+    maxWidth: '100%',
     alignSelf: 'flex-start',
   },
   //   icon container

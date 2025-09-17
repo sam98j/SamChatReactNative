@@ -34,8 +34,12 @@ export const useFilePicker = () => {
       copyToCacheDirectory: true,
       multiple: false,
     });
-    if (!result.canceled) return { uri: result.assets[0].uri, name: result.assets[0].name };
-    return '';
+    // terminate if it's cancled
+    if (result.canceled) return '';
+    // selected file
+    const { uri, name, mimeType } = result.assets[0];
+    // return
+    return { uri, name, mimeType };
   };
   // retturn
   return { pickImage, pickVideo, pickFile };

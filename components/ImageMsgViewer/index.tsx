@@ -64,7 +64,6 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
               <TouchableOpacity>
                 <EnTypoIcon name='dots-three-vertical' size={20} color='white' />
               </TouchableOpacity>
-              +
             </View>
           </View>
           <View style={styles.modalImageContainer}>
