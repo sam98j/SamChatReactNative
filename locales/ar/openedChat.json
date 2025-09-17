@@ -1,3 +1,7 @@
 {
-  "no-messages-yet": "لا توجد رسائل بعد !!"
+  "no-messages-yet": "لا توجد رسائل بعد !!",
+  "create-message-input": {
+    "type-message-input-placeholder": "اكتب رسالة . . . ",
+    "recording-voice-message-alert": "جار تسجيل رسالة صوتية . . . "
+  }
 }

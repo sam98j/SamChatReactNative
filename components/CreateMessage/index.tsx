@@ -1,5 +1,5 @@
 // basic imports
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { v4 as uuid } from 'uuid';
@@ -13,6 +13,7 @@ import { useAuthStore } from '@/store/zuAuth';
 import { ChatActions, useChatsStore } from '@/store/zuChats';
 import { useSystemStore } from '@/store/zuSystem';
 import SoundIcon from '@/assets/icons/sound.png';
+import i18n from '@/i18n';
 
 const CreateMessage = () => {
   // url search params
@@ -170,7 +171,7 @@ const CreateMessage = () => {
     stopRecording();
   };
   // interval variable
-  let interval: number;
+  const intervalRef = useRef<number | null>(null);
 
   // observe isRec
   React.useEffect(() => {
@@ -178,7 +179,8 @@ const CreateMessage = () => {
     if (!isRec) {
       // set loggedInUser Doing Action
       setCurrentUsrDoingAction({ ...chatAction!, type: null });
-      clearInterval(interval);
+      clearInterval(intervalRef.current!);
+      setVoiceNoteDurationMillis(0);
       return;
     }
     // set loggedInUser Doing Action
@@ -187,10 +189,7 @@ const CreateMessage = () => {
       type: ChatActionsTypes.RECORDING_VOICE,
     });
     // interval
-    interval = setInterval(() => {
-      // log isRec
-      setVoiceNoteDurationMillis((prev) => prev + 1);
-    }, 1000);
+    intervalRef.current = setInterval(() => setVoiceNoteDurationMillis((prev) => prev + 1), 1000);
   }, [isRec]);
 
   // listen for opened chat
@@ -217,7 +216,9 @@ const CreateMessage = () => {
         {/* if it's recording */}
         {isRec && (
           <View style={styles.inputContainer}>
-            <Text style={{ color: 'gray', fontFamily: 'BalooBhaijaan2', flexGrow: 1 }}>جار تسجيل رسالة صوتية ...</Text>
+            <Text style={{ color: 'gray', fontFamily: 'BalooBhaijaan2', flexGrow: 1 }}>
+              {i18n.t('openedChat.create-message-input.recording-voice-message-alert')}
+            </Text>
             <Text style={{ color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{voiceNoteTime}</Text>
           </View>
         )}
@@ -226,7 +227,7 @@ const CreateMessage = () => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder='Type a message...'
+              placeholder={i18n.t('openedChat.create-message-input.type-message-input-placeholder')}
               cursorColor={'dodgerblue'}
               value={textMessage}
               onFocus={handleInputFocus}

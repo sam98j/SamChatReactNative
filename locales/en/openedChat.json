@@ -1,3 +1,7 @@
 {
-  "no-messages-yet": "No messages yet !!"
+  "no-messages-yet": "No messages yet !!",
+  "create-message-input": {
+    "type-message-input-placeholder": "Type a message...",
+    "recording-voice-message-alert": "Recording voice message ... "
+  }
 }
