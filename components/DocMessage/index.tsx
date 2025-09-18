@@ -2,6 +2,7 @@ import { ChatMessage } from '@/interfaces/chats';
 import React from 'react';
 import { View, Text, StyleSheet, Linking, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FileMsgUploadIndicator from '../FileMsgUploadIndicator';
 
 interface DocMessageProps {
   msg: ChatMessage;
@@ -26,10 +27,11 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress}>
+      {/* file data container */}
+      <TouchableOpacity onPress={handlePress} style={{ width: '100%' }}>
         {/* icon container */}
         <View style={styles.iconContainer}>
-          <Ionicons name='document-text-outline' size={25} color='blue' />
+          <Ionicons name='document-text-outline' size={25} color='dodgerblue' />
           <Text style={[styles.title, styles.fontFamily]}>{fileName}</Text>
         </View>
         {/* file type and size container*/}
@@ -39,6 +41,10 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
           <Text style={[styles.description, styles.fontFamily]}>{fileSize}KB</Text>
         </View>
       </TouchableOpacity>
+      {/* file uplaod indicator container */}
+      <View style={styles.fileMsgUploadIndicatorContainer}>
+        <FileMsgUploadIndicator _id={msg._id} isFile={true} />
+      </View>
     </View>
   );
 };
@@ -46,11 +52,13 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f2f2f2',
-    padding: 12,
+    paddingHorizontal: 12,
     borderRadius: 8,
     marginVertical: 6,
-    maxWidth: '100%',
-    alignSelf: 'flex-start',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
   },
   //   icon container
   iconContainer: {
@@ -80,6 +88,14 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   fontFamily: { fontFamily: 'BalooBhaijaan2' },
+  //   file msg upload indicator container
+  fileMsgUploadIndicatorContainer: {
+    width: '15%',
+    position: 'absolute',
+    right: 12,
+    top: 0,
+    bottom: 0,
+  },
 });
 
 export default DocMessage;

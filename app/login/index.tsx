@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     borderWidth: 1,
-    backgroundColor: 'lightgray',
+    backgroundColor: '#eee',
     borderColor: '#ccc',
     borderRadius: 10,
     display: 'flex',

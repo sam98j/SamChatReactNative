@@ -1,15 +1,15 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { useChatsStore } from '@/store/zuChats';
-import { StyleSheet, Text } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { StyleSheet, Text, View } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import Icon from 'react-native-vector-icons/Feather';
 
 interface Props {
   _id: string;
+  isFile?: boolean;
 }
 
-const FileMsgUploadIndicator: FC<Props> = ({ _id }) => {
+const FileMsgUploadIndicator: FC<Props> = ({ _id, isFile }) => {
   // file msg upload indicator ref
   const fileMsgUploadProgressRef = useRef<HTMLDivElement>(null);
   // redux store
@@ -39,23 +39,29 @@ const FileMsgUploadIndicator: FC<Props> = ({ _id }) => {
   }, [fileMessageUploadIndicator]);
 
   return (
-    <BlurView
-      intensity={100}
-      tint='dark'
-      style={[styles.container, !isUploadProgressVisable && styles.hideFileMsgUploadIndicator]}
+    <View
+      style={[
+        styles.container,
+        !isUploadProgressVisable && styles.hideFileMsgUploadIndicator,
+        {
+          backgroundColor: isFile ? '#f2f2f2' : '#00000081',
+        },
+      ]}
     >
       <AnimatedCircularProgress
-        size={50}
+        size={40}
         width={2}
         fill={fileMessageUploadIndicator!}
-        tintColor='white'
-        children={() => <Icon name='upload-cloud' size={25} color='white' />}
-        backgroundColor='#3d5875'
+        tintColor='dodgerblue'
+        children={() => <Icon name='upload-cloud' size={20} color={`${isFile ? 'dodgerblue' : 'white'}`} />}
+        backgroundColor='#ddd'
       />
-      <Text style={{ color: 'white', fontSize: 12, fontFamily: 'BalooBhaijaan2' }}>
-        {Math.round(fileMessageUploadIndicator!)}%
-      </Text>
-    </BlurView>
+      {!isFile && (
+        <Text style={{ fontSize: 12, fontFamily: 'BalooBhaijaan2', color: 'white' }}>
+          {Math.round(fileMessageUploadIndicator!)}%
+        </Text>
+      )}
+    </View>
   );
 };
 
@@ -65,17 +71,18 @@ export default FileMsgUploadIndicator;
 const styles = StyleSheet.create({
   // container
   container: {
-    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
+    bottom: 0,
+    position: 'absolute',
     height: '100%',
-    paddingHorizontal: 10,
-    zIndex: 1000,
+    zIndex: 100,
+    borderRadius: 10,
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     gap: 10,
+    alignItems: 'center',
     justifyContent: 'center',
   },
   //   hide file msg upload indicator
