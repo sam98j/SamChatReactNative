@@ -7,6 +7,7 @@ import { runOnJS } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EnTypoIcon from 'react-native-vector-icons/Entypo';
 import VideoThumbnail from '../VideoThumbnail';
+import FileMsgUploadIndicator from '../FileMsgUploadIndicator';
 
 // props
 type Props = {
@@ -29,14 +30,10 @@ const VideoScreen = ({ msg }: Props) => {
     }
   });
   // destructure message
-  const { content } = msg;
+  const { content, _id } = msg;
   // file url
-  const [fileUrl] = useState(() => {
-    // check if content contain http
-    if (content.includes('data:')) return content;
-    // otherwize
-    return `${apiHost}${content}`;
-  });
+  const fileUrl = content.startsWith('file') ? content : `${apiHost}${content}`;
+
   const player = useVideoPlayer(fileUrl, () => {
     // player.loop = true;
     // player.play();
@@ -52,7 +49,7 @@ const VideoScreen = ({ msg }: Props) => {
 
   return (
     <View>
-      {/* status bar */}
+      {/* modal */}
       <Modal animationType='fade' transparent={true} visible={isVideoPlayerOpen} onRequestClose={handleClick}>
         <StatusBar backgroundColor={'black'} animated={true} barStyle='light-content' />
         <GestureHandlerRootView>
@@ -87,7 +84,8 @@ const VideoScreen = ({ msg }: Props) => {
           </View>
         </GestureHandlerRootView>
       </Modal>
-      <TouchableOpacity onPress={handleClick}>
+      <TouchableOpacity onPress={handleClick} style={styles.videoThumbnail}>
+        <FileMsgUploadIndicator _id={_id} />
         <VideoThumbnail videoUri={fileUrl} />
       </TouchableOpacity>
     </View>
@@ -130,5 +128,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  // vido thumbnail
+  videoThumbnail: {
+    position: 'relative',
   },
 });

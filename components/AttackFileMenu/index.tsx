@@ -6,7 +6,6 @@ import { useFilePicker } from '@/hooks/filesPicker';
 import { v4 as uuid } from 'uuid';
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
 import { useSearchParams } from 'expo-router/build/hooks';
-import { getFileSize, readFileAsDataURL } from '@/utils/files';
 import { useSystemStore } from '@/store/zuSystem';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
@@ -48,21 +47,17 @@ const AttchFileBottomSheet = () => {
     try {
       const image = await pickImage();
       if (image) {
-        // read file as data url expo file system
-        const fileData = await readFileAsDataURL(image.uri);
         // image message
         const imageMessage: ChatMessage = {
           ...msg,
-          fileName: image.name,
-          fileSize: getFileSize(fileData as string),
+          fileName: image.fileName!,
+          fileSize: String(image.fileSize),
           status: null,
-          content: fileData as string,
+          content: image.uri,
           type: MessagesTypes.PHOTO,
           voiceNoteDuration: '',
         };
         // Handle the selected image (e.g., upload it or display it)
-        console.log('Selected image:', image);
-        // Dispatch the message to the chat (you can implement this function)
         addMessageToChat(imageMessage);
         setChatLastMessage({ msg: imageMessage, currentUserId: currentUsr!._id });
       }
@@ -76,20 +71,16 @@ const AttchFileBottomSheet = () => {
     try {
       const video = await pickVideo();
       if (video) {
-        // read file as data url expo file system
-        const fileData = await readFileAsDataURL(video.uri);
         // video message
         const videoMessage: ChatMessage = {
           ...msg,
-          fileName: video.name,
-          fileSize: getFileSize(fileData as string),
+          fileName: video.fileName!,
+          fileSize: String(video.fileSize),
           status: null,
-          content: fileData as string,
+          content: video.uri,
           type: MessagesTypes.VIDEO,
           voiceNoteDuration: '',
         };
-        // Handle the selected video (e.g., upload it or display it)
-        console.log('Selected video:', video);
         // Dispatch the message to the chat (you can implement this function)
         addMessageToChat(videoMessage);
         setChatLastMessage({ msg: videoMessage, currentUserId: currentUsr!._id });
@@ -104,16 +95,13 @@ const AttchFileBottomSheet = () => {
     try {
       const doc = await pickFile();
       if (doc) {
-        // read file as data url expo file system
-        const fileData = await readFileAsDataURL(doc.uri, doc.mimeType);
-        console.log(doc.mimeType);
         // image message
         const docMessage: ChatMessage = {
           ...msg,
           fileName: doc.name,
-          fileSize: getFileSize(fileData as string),
+          fileSize: String(doc.size),
           status: null,
-          content: fileData as string,
+          content: doc.uri,
           type: MessagesTypes.FILE,
           voiceNoteDuration: '',
         };

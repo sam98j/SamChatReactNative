@@ -23,18 +23,19 @@ const useChatMessagesSender = (socket: Socket) => {
   // chunk index
   const [chunkIndex, setChunkIndex] = useState<number>(0);
   // send multi chunks msg
-  const sendChatMessage = (message: ChatMessage) => {
+  const sendChatMessage = async (message: ChatMessage) => {
     // set chunk index
     setChunkIndex(0);
     // set message to send
     setChatMessage({ ...message });
     // make chunks from message content
-    const messageContentChunks = chunkFile(message.content);
+    const messageContentChunks = await chunkFile(message.content);
     // set chunks
     setChunks(messageContentChunks);
     // hide response to message modal
     if (responseToMessage) setResponseToMessage(null);
   };
+
   // listen for file chunks
   useEffect(() => {
     // if there is no chunks
@@ -42,7 +43,7 @@ const useChatMessagesSender = (socket: Socket) => {
     // is it last chunk
     const isLastChunk = chunkIndex === chunks.length - 1;
     // terminate after last chunk
-    if (chunkIndex > chunks.length - 1) return;
+    if (chunkIndex > chunks.length - 1) return setFileMessageUploadIndicator(0);
     // multi chunks status
     const { delevered } = chatMsgStatus;
     // termenate if chunk is not delivered
@@ -61,8 +62,9 @@ const useChatMessagesSender = (socket: Socket) => {
     // check for invalid case
     if (chatMessage!.type === MessagesTypes.TEXT || chatMessage!.type === MessagesTypes.ACTION) return;
     // send chatMessage chunks lenght to the redux store
-    setFileMessageUploadIndicator(((chunkIndex + 1) / chunks?.length) * 100);
+    setFileMessageUploadIndicator((chunkIndex / chunks?.length) * 100);
   }, [chunks, chatMsgStatus]);
+
   // listen for chunk delevery res
   useEffect(() => {
     // terminate if no socket

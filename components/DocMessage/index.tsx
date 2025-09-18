@@ -13,8 +13,9 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
   const { fileName, fileSize, content } = msg;
   //   file type
   const fileType = fileName?.split('.').pop()?.toUpperCase() || 'FILE';
+  // TODO: file dosen't opon with expo url
   //   file url
-  const fileUrl = `${apiUrl}/${content}`;
+  const fileUrl = content.startsWith('file') ? content : `${apiUrl}/${content}`;
   //   handle press to open the file
   const handlePress = () => {
     // terminate if no content

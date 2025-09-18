@@ -34,12 +34,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
 
   // is image viewer open
   // file url
-  const [fileUrl] = useState(() => {
-    // check if content contain http
-    if (content.includes('data:')) return content;
-    // otherwize
-    return `${apiHost}${content}`;
-  });
+  const fileUrl = content.startsWith('file') ? content : `${apiHost}${content}`;
   return (
     <View>
       {/* status bar */}

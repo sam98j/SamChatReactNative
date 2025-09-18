@@ -1,6 +1,8 @@
 import * as FileSystem from 'expo-file-system';
 
-export function chunkFile(file: string) {
+export async function chunkFile(fileUrl: string) {
+  // file as daat url
+  const file = await readFileAsDataURL(fileUrl);
   // file chunks
   const chunks = [];
   // chunk size
@@ -10,10 +12,10 @@ export function chunkFile(file: string) {
   // file Reader
   // read as data url
   // loop throw the file
-  while (start < file.length) {
-    const end = Math.min(start + chunkSize, file.length);
+  while (start < file!.length) {
+    const end = Math.min(start + chunkSize, file!.length);
     // chunk the file
-    const chunk = file.slice(start, end);
+    const chunk = file!.slice(start, end);
     chunks.push(chunk);
     start += chunkSize;
   }

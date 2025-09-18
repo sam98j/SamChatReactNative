@@ -12,8 +12,12 @@ export const useFilePicker = () => {
       aspect: [4, 3],
       quality: 1,
     });
-    if (!result.canceled) return { uri: result.assets[0].uri, name: result.assets[0].fileName || 'image.jpg' };
-    return '';
+    // terminate if it's cancled
+    if (result.canceled) return '';
+    // selected file
+    const { uri, fileName, fileSize, mimeType } = result.assets[0];
+    // return
+    return { uri, fileName, mimeType, fileSize };
   };
   // pick a video
   const pickVideo = async () => {
@@ -23,8 +27,12 @@ export const useFilePicker = () => {
       aspect: [4, 3],
       quality: 1,
     });
-    if (!result.canceled) return { uri: result.assets[0].uri, name: result.assets[0].fileName || 'video.mp4' };
-    return '';
+    // terminate if it's cancled
+    if (result.canceled) return '';
+    // selected file
+    const { uri, fileName, fileSize, mimeType } = result.assets[0];
+    // return
+    return { uri, fileName, mimeType, fileSize };
   };
 
   // pick a file
@@ -37,9 +45,9 @@ export const useFilePicker = () => {
     // terminate if it's cancled
     if (result.canceled) return '';
     // selected file
-    const { uri, name, mimeType } = result.assets[0];
+    const { uri, name, mimeType, size } = result.assets[0];
     // return
-    return { uri, name, mimeType };
+    return { uri, name, mimeType, size };
   };
   // retturn
   return { pickImage, pickVideo, pickFile };

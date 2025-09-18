@@ -50,10 +50,11 @@ const FileMsgUploadIndicator: FC<Props> = ({ _id }) => {
         fill={fileMessageUploadIndicator!}
         tintColor='white'
         children={() => <Icon name='upload-cloud' size={25} color='white' />}
-        onAnimationComplete={() => console.log('onAnimationComplete')}
         backgroundColor='#3d5875'
       />
-      <Text style={{ color: 'white', fontSize: 12, fontFamily: 'BalooBhaijaan2' }}>{fileMessageUploadIndicator}%</Text>
+      <Text style={{ color: 'white', fontSize: 12, fontFamily: 'BalooBhaijaan2' }}>
+        {Math.round(fileMessageUploadIndicator!)}%
+      </Text>
     </BlurView>
   );
 };
