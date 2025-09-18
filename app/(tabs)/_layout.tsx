@@ -41,6 +41,7 @@ export default function TabLayout() {
     addMessageToChat,
     setChatUsrDoingAction,
     addNewChat,
+    setFileMessageUploadIndicator,
   } = useChatsStore();
   // sent message audio player
   const sentMsgAudioPlayer = useAudioPlayer(sentSound);
@@ -64,13 +65,14 @@ export default function TabLayout() {
     socketClient?.removeAllListeners('message_status_changed');
     // receive message status
     socketClient?.on('message_status_changed', (data: ChangeMessageStatusDTO) => {
+      // set message status
+      setMessageStatus(data);
       // check for message sent status
       if (data.msgStatus === MessageStatus.SENT) {
         sentMsgAudioPlayer.play();
         sentMsgAudioPlayer.seekTo(0);
+        setFileMessageUploadIndicator(0);
       }
-      // set message status
-      setMessageStatus(data);
     });
   }, [socketClient, currentUser, openedChat]);
 

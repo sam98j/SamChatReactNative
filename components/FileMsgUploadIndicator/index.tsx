@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useChatsStore } from '@/store/zuChats';
 import { StyleSheet, Text, View } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -10,8 +10,6 @@ interface Props {
 }
 
 const FileMsgUploadIndicator: FC<Props> = ({ _id, isFile }) => {
-  // file msg upload indicator ref
-  const fileMsgUploadProgressRef = useRef<HTMLDivElement>(null);
   // redux store
   const { fileMessageUploadIndicator, chatMessages } = useChatsStore();
   // last chat message
@@ -27,16 +25,6 @@ const FileMsgUploadIndicator: FC<Props> = ({ _id, isFile }) => {
     if (!lastChatMessage) return;
     setIsUploadProgressVisable(_id === lastChatMessage._id && lastChatMessage.status === null);
   }, [lastChatMessage]);
-
-  // fileMessageUploadProgress observer
-  useEffect(() => {
-    // terminate if it's not avilable
-    if (!fileMessageUploadIndicator) return;
-    // photoMessageUploadProgressElement
-    const photoMessageUploadProgressElement = fileMsgUploadProgressRef.current;
-    // set the width of the element
-    photoMessageUploadProgressElement?.style.setProperty('width', `${fileMessageUploadIndicator}%`);
-  }, [fileMessageUploadIndicator]);
 
   return (
     <View

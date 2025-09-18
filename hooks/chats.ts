@@ -43,7 +43,7 @@ const useChatMessagesSender = (socket: Socket) => {
     // is it last chunk
     const isLastChunk = chunkIndex === chunks.length - 1;
     // terminate after last chunk
-    if (chunkIndex > chunks.length - 1) return setFileMessageUploadIndicator(0);
+    if (chunkIndex > chunks.length - 1) return;
     // multi chunks status
     const { delevered } = chatMsgStatus;
     // termenate if chunk is not delivered
