@@ -74,3 +74,15 @@ export interface ChangeMessageStatusDTO {
   chatId: string;
   senderIDs?: string[];
 }
+
+// chat profile
+export interface ChatProfile {
+  avatar: string;
+  name: string;
+  email: string;
+}
+
+export type MessagesToBeForwarded = {
+  messages: string[];
+  chats: string[];
+};

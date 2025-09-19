@@ -1,21 +1,20 @@
 import * as FileSystem from 'expo-file-system';
 
-export async function chunkFile(fileUrl: string) {
+export async function chunkFile(msgContent: string) {
   // file as daat url
-  const file = await readFileAsDataURL(fileUrl);
+  const convertedMsgContent = msgContent.startsWith('file') ? await readFileAsDataURL(msgContent) : msgContent;
   // file chunks
   const chunks = [];
   // chunk size
   const chunkSize = 972800;
   // start
   let start = 0;
-  // file Reader
-  // read as data url
+
   // loop throw the file
-  while (start < file!.length) {
-    const end = Math.min(start + chunkSize, file!.length);
+  while (start < convertedMsgContent!.length) {
+    const end = Math.min(start + chunkSize, convertedMsgContent!.length);
     // chunk the file
-    const chunk = file!.slice(start, end);
+    const chunk = convertedMsgContent!.slice(start, end);
     chunks.push(chunk);
     start += chunkSize;
   }

@@ -41,6 +41,8 @@ export default function Chats() {
         {chats?.length === 0 && <NoChatsVector />}
         <FlatList
           data={chats}
+          extraData={chats} // <-- This tells FlatList to rerender when chats changes
+          keyExtractor={(item) => item._id} // Make sure each chat has a unique _id
           contentContainerStyle={{
             paddingHorizontal: 15,
           }}

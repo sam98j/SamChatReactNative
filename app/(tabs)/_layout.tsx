@@ -97,7 +97,7 @@ export default function TabLayout() {
         };
         // inform the server that the message is delevered
         socketClient?.emit('message_status_changed', data);
-        setChatUnReadedMessagesCount(message);
+        setChatUnReadedMessagesCount(message.receiverId, false);
         return;
       }
       // chatUser

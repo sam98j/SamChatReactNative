@@ -20,7 +20,7 @@ export const ChatCardContainer: FC<Props> = ({ chat }) => {
   // zustand zuAuhtStore
   const loggedInUser = useAuthStore().currentUser?._id;
   // get zustand zuChats
-  const { setOpenedChat } = useChatsStore();
+  const { setOpenedChat, setChatUnReadedMessagesCount } = useChatsStore();
   // router
   const router = useRouter();
   // chat name
@@ -42,6 +42,8 @@ export const ChatCardContainer: FC<Props> = ({ chat }) => {
   const handleCardPress = () => {
     // dispatch
     setOpenedChat(chat);
+    // clear unreaded messages count
+    setChatUnReadedMessagesCount(chat._id, true);
     // if selectChat is passed, call it
     router.push(`/single_chat/${chat._id}`);
   };

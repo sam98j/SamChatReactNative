@@ -26,6 +26,7 @@ const SingleChat = () => {
     createChatAPIres,
     openedChat,
     isChatUsrDoingAction,
+    setOpenedChat,
     addMessageToChat,
     setOpenedChatMessages,
     clearChatMessages,
@@ -135,6 +136,8 @@ const SingleChat = () => {
       setUserOnlineStatus(undefined, null);
       // reset chat messages batch no
       setChatMessagesBatchNo(1);
+      // set opened chat
+      setOpenedChat(undefined);
     };
   }, []);
 

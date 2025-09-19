@@ -7,7 +7,6 @@ import { useSearchParams } from 'expo-router/build/hooks';
 import { ChatActionsTypes, ChatCard, ChatMessage, MessagesTypes } from '@/interfaces/chats';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useChatSounds } from '@/hooks/sounds';
-import { readFileAsDataURL } from '@/utils/files';
 import { secondsToDurationConverter } from '@/utils/time';
 import { useAuthStore } from '@/store/zuAuth';
 import { ChatActions, useChatsStore } from '@/store/zuChats';
@@ -18,6 +17,8 @@ import i18n from '@/i18n';
 const CreateMessage = () => {
   // url search params
   const urlSearchParams = useSearchParams(); // Access the chat_id parameter
+  // chat id
+  const chatId = urlSearchParams.get('chat_id')!;
   //   current loggedIn user
   const currentUsr = useAuthStore().currentUser;
   // zustand zuChats
@@ -101,13 +102,11 @@ const CreateMessage = () => {
     if (!isRec || textMessage) return;
     // stop recording
     const { recordingUri } = await stopRecording();
-    // stop voice memo counter
-    const dataUrl = await readFileAsDataURL(recordingUri!);
 
     // voiceNoteDuration
     const voiceMsgNoteDuration = String(voiceNoteDurationMillis);
     // voice message content
-    const content = dataUrl!;
+    const content = recordingUri!;
     // voice message file name (null)
     const fileName = `AUDIO-${message.sender._id}-${message.receiverId}${String(Math.random())}`;
     // voice message file size (null)
@@ -126,8 +125,6 @@ const CreateMessage = () => {
     // add message to the chat
     setIsRec(false);
     setVoiceNoteDurationMillis(0);
-    // log voice mesage io
-    console.log('voiceNoteMessage', voiceNoteMessage._id);
     // set voiceNoteTime
     voiceNoteTime = secondsToDurationConverter(0);
     // add message to the chat
@@ -137,8 +134,6 @@ const CreateMessage = () => {
   };
   //   send message handler
   const handleSendMessage = async () => {
-    // chat id
-    const chatId = urlSearchParams.get('chat_id')!;
     // chat message
     const message = {
       _id: uuid(),
