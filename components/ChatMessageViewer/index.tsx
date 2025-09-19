@@ -10,9 +10,13 @@ import VideoScreen from '../VideoMsgViewer';
 import ReadCheckIcon from '@/assets/icons/check-read.png';
 import SentCheckIcon from '@/assets/icons/check.png';
 import DocMessage from '../DocMessage';
+import { getTime, TimeUnits } from '@/utils/time';
 
 const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
-  const { sender, content, _id, status, type } = msg;
+  const { sender, content, _id, status, type, date } = msg;
+
+  // message time
+  const messageTime = getTime(date, TimeUnits.time);
   // get current logged in user
   const loggedInUser = useAuthStore().currentUser;
   // deconstruct messages status
@@ -46,7 +50,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
             {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
           </View>
         )}
-        <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>22:23</Text>
+        <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{messageTime}</Text>
       </View>
     </View>
   );

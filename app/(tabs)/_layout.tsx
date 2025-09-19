@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ChangeMessageStatusDTO, ChatCard, ChatMessage, MessageStatus } from '@/interfaces/chats';
 import useChatMessagesSender from '@/hooks/chats';
-// import { usePlayChatSound } from '@/hooks/sounds';
 import { useAudioPlayer } from 'expo-audio';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
@@ -20,8 +19,6 @@ export default function TabLayout() {
   const { currentUser } = useAuthStore();
   // check if currentUser is truthy
   const isUserLoggedIn = currentUser !== null ? true : false;
-  // use playchatsound hook
-  // const { playReceivedMessageSound } = usePlayChatSound();
   // socket instance
   const [socketClient, setSocket] = useState<Socket | null>(null);
   // multichunk msg
@@ -177,7 +174,7 @@ export default function TabLayout() {
     <Tabs
       initialRouteName='chats/index'
       screenOptions={() => ({
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: 'dodgerblue',
         headerStyle: { shadowColor: 'white' },
         headerTitleAlign: 'center',
         headerTitleStyle: { fontFamily: 'BalooBhaijaan2', display: isUserLoggedIn ? 'flex' : 'none' },
