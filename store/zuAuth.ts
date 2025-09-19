@@ -34,13 +34,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   currentUser: null,
   apiResponse: null,
   isOAuthActive: false,
+
+  // set current user
   setCurrentUser: async () => {
     const { chats, loggedInUser } = await getUserChats();
     // set currentUser
     set({ currentUser: loggedInUser });
     // set chats in zuChats
-    useChatsStore.setState({ chats });
+    useChatsStore.getState().setCurrentUserChats(chats);
   },
+
   // login user (use the mehod in api/auth.ts)
   loginUser: async (loginDto: LoginDto) => {
     const { access_token, loggedInUser } = await loginUser(loginDto);
@@ -52,6 +55,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     SecureStore.setItem('access_token', `Bearer ${access_token}`);
     return loggedInUser;
   },
+
   // signup user (use the mehod in api/auth.ts)
   signupUser: async (userCred: SignUpDto) => {
     const { access_token, loggedInUser } = await signupUser(userCred);
@@ -63,6 +67,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     SecureStore.setItem('access_token', `Bearer ${access_token}`);
     return loggedInUser;
   },
+
   // google OAuth
   googleOAuth: async (loggedInUserApiRes: LoggedInApiResponse) => {
     // google auth endpoint from api/auth.ts
@@ -75,6 +80,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     SecureStore.setItem('access_token', `Bearer ${access_token}`);
     return loggedInUser;
   },
+
+  // logout
   logout: () => {
     // clear auth state
     set({ currentUser: null, apiResponse: null });
