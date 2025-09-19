@@ -22,7 +22,7 @@ const AttchFileBottomSheet = () => {
   // Snap points for the bottom sheet
   const snapPoints = useMemo(() => ['40%', '50%'], []);
   // response to message
-  const { responseToMessage, addMessageToChat, setChatLastMessage } = useChatsStore();
+  const { responseToMessage, addMessageToChat, setChatLastMessage, placeLastUpdatedChatToTheTop } = useChatsStore();
   // State to track if the bottom sheet is open
   const { isAttachFileBottomSheetOpen, openAttachFileBottomSheet } = useSystemStore();
 
@@ -116,10 +116,12 @@ const AttchFileBottomSheet = () => {
 
   // send picked file
   const sendPickedFile = async (msgType: MessagesTypes) => {
+    // chat id
+    const chatId = urlSearchParams.get('chat_id')!;
     // chat message
     const message = {
       _id: uuid(),
-      receiverId: urlSearchParams.get('chat_id'),
+      receiverId: chatId,
       sender: currentUsr,
       date: new Date().toString(),
       status: null,
@@ -135,7 +137,8 @@ const AttchFileBottomSheet = () => {
     if (msgType === MessagesTypes.FILE) handlePickDocument(message);
     // close attach file menu
     openAttachFileBottomSheet(false);
-    // send file
+    // place last updated chat to the top
+    placeLastUpdatedChatToTheTop({ chatId });
   };
 
   return (

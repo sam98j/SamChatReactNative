@@ -11,6 +11,7 @@ import i18n from '@/i18n';
 export default function Chats() {
   // get chats from zustand zuChats
   const { chats } = useChatsStore();
+
   // get lang from i18n
   const lang = i18n.locale; // replace with actual i18n language detection
   // log chat
