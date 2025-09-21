@@ -1,9 +1,10 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useEffect } from 'react';
 import WelcomeScreen from '../welcome';
 import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/zuAuth';
+import Onboarding from '../(onboarding)';
 
 export default function Index() {
   // expo router
@@ -23,6 +24,7 @@ export default function Index() {
   }, []);
   // observe currentUser state change
   useEffect(() => {
+    console.log(currentUser);
     // check if currentUser is null
     if (currentUser === null) return;
     // push to chats
@@ -31,7 +33,7 @@ export default function Index() {
   // is user is logged in
   const isUserLoggedIn = accessToken !== null;
 
-  return <View style={styles.container}>{!isUserLoggedIn && <WelcomeScreen />}</View>;
+  return <View style={styles.container}>{!isUserLoggedIn && <Text>Onboarding</Text>}</View>;
 }
 
 // styles
