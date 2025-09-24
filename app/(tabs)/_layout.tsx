@@ -23,6 +23,7 @@ export default function TabLayout() {
   const [socketClient, setSocket] = useState<Socket | null>(null);
   // multichunk msg
   const { sendChatMessage } = useChatMessagesSender(socketClient!);
+
   // dispatch method
   // chat messages
   const {
@@ -124,6 +125,7 @@ export default function TabLayout() {
 
   // listen for multichunk msg
   useEffect(() => {
+    console.log('chatMessages', chatMessages);
     // terminate if chat's messages not fetched yet
     if (!chatMessages) return;
     // msgs  to sent

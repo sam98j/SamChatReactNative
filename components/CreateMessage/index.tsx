@@ -89,6 +89,7 @@ const CreateMessage = () => {
       // add chat top the top
       addNewChat(chatCard);
     }
+
     // push message to the chat
     addMessageToChat(newTextMessage);
     // clear the input

@@ -18,6 +18,7 @@ const useChatMessagesSender = (socket: Socket) => {
   const [chatMsgStatus, setChatMsgStatus] = useState<ChatMsgStatus>({
     delevered: null,
   });
+
   // multiChunks
   const [chunks, setChunks] = useState<null | string[]>(null);
   // chunk index
