@@ -32,7 +32,7 @@ export default function WelcomeScreen() {
       </View>
       <View style={styles.buttonArea}>
         {/* login btn */}
-        <Button radius={'md'} onPress={() => router.navigate('/login')}>
+        <Button radius={'md'} onPress={() => router.navigate('/(auth)/login')}>
           <Text style={[styles.fontFamily, { color: 'white' }]}>{i18n.t('welcome.login')}</Text>
         </Button>
         {/* no account */}

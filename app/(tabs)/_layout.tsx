@@ -172,7 +172,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      initialRouteName='chats/index'
+      // initialRouteName='chats/index'
       screenOptions={() => ({
         tabBarActiveTintColor: 'dodgerblue',
         headerStyle: { shadowColor: 'white' },
@@ -185,7 +185,7 @@ export default function TabLayout() {
         },
       })}
     >
-      {/* index  */}
+      {/* index */}
       <Tabs.Screen
         name='index'
         options={{

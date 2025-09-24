@@ -2,7 +2,7 @@ import { Link, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
-import i18n from '../../i18n';
+import i18n from '../../../i18n';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useAuthStore } from '@/store/zuAuth';
@@ -25,7 +25,7 @@ export default function LoginScreen() {
   };
 
   useEffect(() => {
-    if (currentUser) router.push('/chats');
+    if (currentUser) router.replace('/(tabs)/chats');
   }, [currentUser]);
 
   // handle Google Sign In

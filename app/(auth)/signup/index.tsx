@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import i18n from '../../i18n';
+import i18n from '../../../i18n';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
