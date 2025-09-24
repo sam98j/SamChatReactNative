@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     gap: 10,
+    backgroundColor: 'white',
   },
   fontFamily: {
     fontFamily: 'BalooBhaijaan2',

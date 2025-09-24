@@ -1,0 +1,22 @@
+{
+  "home": {
+    "welcome": "Welcome to SamChat 👋",
+    "description": "SamChat is a simple and secure chat app that allows you to communicate with your friends and family in a convenient and easy-to-use way."
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "description": "SamChat is committed to protecting your privacy. We have implemented the following measures to ensure your data is secure:"
+  },
+  "fast_and_reliable": {
+    "title": "Fast and Reliable",
+    "description": "SamChat uses the latest technologies to ensure a fast and reliable connection. Our servers are located in the United States, ensuring that your data is protected from any potential threats."
+  },
+  "vidoe_voice_calls": {
+    "title": "Video and Voice Calls",
+    "description": "SamChat allows you to make video and voice calls with ease. You can easily join a call, share your screen, and even record and send voice messages. This feature is especially useful for those who prefer to communicate face-to-face."
+  },
+  "share_media_and_files": {
+    "title": "Share Media and Files",
+    "description": "SamChat makes it easy to share media and files with your friends and family. You can easily send photos, videos, and other files to your contacts, ensuring that they have everything they need to stay connected."
+  }
+}

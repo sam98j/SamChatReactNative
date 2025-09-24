@@ -27,6 +27,9 @@ import chatCardEn from './locales/en/chatCard.json';
 // import tranlations files for settings screen
 import settingsScreenAr from './locales/ar/settings.json';
 import settingsScreenEn from './locales/en/settings.json';
+// import tranlations files for onboarding
+import onboardingAr from './locales/ar/onboarding.json';
+import onboardingEn from './locales/en/onboarding.json';
 
 // Set translations
 const translations = {
@@ -40,6 +43,7 @@ const translations = {
     chatCard: chatCardEn,
     signup: signupScreenEn,
     settings: settingsScreenEn,
+    onboarding: onboardingEn,
   },
   ar: {
     welcome: welcomeScreenAr,
@@ -51,6 +55,7 @@ const translations = {
     chatCard: chatCardAr,
     signup: signupScreenAr,
     settings: settingsScreenAr,
+    onboarding: onboardingAr,
   },
 };
 
