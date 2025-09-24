@@ -172,7 +172,6 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      // initialRouteName='chats/index'
       screenOptions={() => ({
         tabBarActiveTintColor: 'dodgerblue',
         headerStyle: { shadowColor: 'white' },
