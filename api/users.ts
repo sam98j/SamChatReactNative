@@ -11,11 +11,10 @@ export const getUserProfile = async (profileId: string) => {
   const response = await fetch(`${apiUrl}/users/profile/${profileId}`, {
     method: 'GET',
     headers: {
-      authorization: `Bearer ${access_token}`,
+      authorization: access_token!,
     },
   });
-  // log response status
-  console.log('Response Status:', profileId);
+
   // check for internal serval error
   if (response.status >= 500) {
     return 'Internal Server Error';

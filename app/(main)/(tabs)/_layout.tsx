@@ -16,10 +16,12 @@ export default function TabLayout() {
         headerStyle: { shadowColor: 'white' },
         headerTitleAlign: 'center',
         headerTitleStyle: { fontFamily: 'BalooBhaijaan2', display: isUserLoggedIn ? 'flex' : 'none' },
-        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2' },
+        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 14 },
         headerShown: isUserLoggedIn ? true : false, // Dynamically control header visibility
         tabBarStyle: {
           display: isUserLoggedIn ? 'flex' : 'none', // Dynamically control tabBar visibility
+          paddingHorizontal: 10,
+          height: 60,
         },
       })}
     >
@@ -35,7 +37,7 @@ export default function TabLayout() {
         name='profile/index'
         options={{
           title: i18n.t('tabsLayout.profile'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='person-circle-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='person-circle-outline' color={color} />,
         }}
       />
       {/* chats screen */}
@@ -43,7 +45,7 @@ export default function TabLayout() {
         name='chats/index'
         options={{
           title: i18n.t('tabsLayout.chats'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='chatbubbles-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='chatbubbles-outline' color={color} />,
           headerRight: () => isUserLoggedIn && <ChatsHeaderBtns />,
         }}
       />
@@ -51,7 +53,7 @@ export default function TabLayout() {
         name='calls/index'
         options={{
           title: i18n.t('tabsLayout.calls'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='call-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='call-outline' color={color} />,
         }}
       />
       {/* setting screen */}
@@ -59,7 +61,7 @@ export default function TabLayout() {
         name='settings/index'
         options={{
           title: i18n.t('tabsLayout.settings'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='settings-outline' color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} name='settings-outline' color={color} />,
         }}
       />
     </Tabs>

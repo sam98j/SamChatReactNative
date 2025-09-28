@@ -22,11 +22,6 @@ export default function Profile() {
     getUserProfile(currentUser!._id as string);
   }, [currentUser]);
 
-  // observe changes in currentUserProfile
-  useEffect(() => {
-    console.log('Updated currentUserProfile:', currentUserProfile);
-  }, [currentUserProfile]);
-
   const btnPressHandler = async () => logout();
 
   // get avtar url
@@ -37,7 +32,6 @@ export default function Profile() {
   // Placeholder avatar and user info
   const avatarUri = avatar.startsWith('http') ? avatar : `${apiUrl}${avatar}`;
   const name = currentUser?.name || 'اسم المستخدم';
-  const email = 'البريد الإلكتروني غير متوفر';
 
   // return
   return (
@@ -48,7 +42,8 @@ export default function Profile() {
           <Image source={{ uri: avatarUri }} style={styles.avatar_image} />
         </View>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.email}>{email}</Text>
+        <Text style={styles.email}>{currentUserProfile?.email}</Text>
+        <Text style={styles.usrname}>@{currentUserProfile?.usrname}</Text>
         <Button
           type='outline'
           radius={10}
@@ -92,13 +87,16 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 6,
+    fontFamily: 'BalooBhaijaan2',
+  },
+  usrname: {
+    fontSize: 16,
+    color: '#888',
     fontFamily: 'BalooBhaijaan2',
   },
   email: {
     fontSize: 16,
     color: '#888',
-    marginBottom: 20,
     fontFamily: 'BalooBhaijaan2',
   },
   editBtnContainer: {
