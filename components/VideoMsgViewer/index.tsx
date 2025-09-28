@@ -73,7 +73,6 @@ const VideoScreen = ({ msg }: Props) => {
               <TouchableOpacity>
                 <EnTypoIcon name='dots-three-vertical' size={20} color='white' />
               </TouchableOpacity>
-              +
             </View>
           </View>
           {/* modal image container */}

@@ -1,7 +1,5 @@
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Tabs } from 'expo-router';
-import ChatsHeaderBtns from '@/components/ChatsHeaderBtns';
-import i18n from '../../i18n';
+import { Slot } from 'expo-router';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ChangeMessageStatusDTO, ChatCard, ChatMessage, MessageStatus } from '@/interfaces/chats';
@@ -12,13 +10,11 @@ import { useChatsStore } from '@/store/zuChats';
 import sentSound from '@/assets/sounds/imessage_send.mp3';
 import recieve_msg_sound from '@/assets/sounds/imessage_recieve.mp3';
 
-export default function TabLayout() {
+const MainLayout = () => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   // get curentUser state zustand zuAuth
   const { currentUser } = useAuthStore();
-  // check if currentUser is truthy
-  const isUserLoggedIn = currentUser !== null ? true : false;
   // socket instance
   const [socketClient, setSocket] = useState<Socket | null>(null);
   // multichunk msg
@@ -125,7 +121,6 @@ export default function TabLayout() {
 
   // listen for multichunk msg
   useEffect(() => {
-    console.log('chatMessages', chatMessages);
     // terminate if chat's messages not fetched yet
     if (!chatMessages) return;
     // msgs  to sent
@@ -172,59 +167,7 @@ export default function TabLayout() {
     socketClient?.emit('chatusr_typing_status', isCurrentUsrDoingAction);
   }, [isCurrentUsrDoingAction]);
 
-  return (
-    <Tabs
-      screenOptions={() => ({
-        tabBarActiveTintColor: 'dodgerblue',
-        headerStyle: { shadowColor: 'white' },
-        headerTitleAlign: 'center',
-        headerTitleStyle: { fontFamily: 'BalooBhaijaan2', display: isUserLoggedIn ? 'flex' : 'none' },
-        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2' },
-        headerShown: isUserLoggedIn ? true : false, // Dynamically control header visibility
-        tabBarStyle: {
-          display: isUserLoggedIn ? 'flex' : 'none', // Dynamically control tabBar visibility
-        },
-      })}
-    >
-      {/* index */}
-      <Tabs.Screen
-        name='index'
-        options={{
-          href: null,
-        }}
-      />
-      {/* home screen */}
-      <Tabs.Screen
-        name='profile/index'
-        options={{
-          title: i18n.t('tabsLayout.profile'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='person-circle-outline' color={color} />,
-        }}
-      />
-      {/* chats screen */}
-      <Tabs.Screen
-        name='chats/index'
-        options={{
-          title: i18n.t('tabsLayout.chats'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='chatbubbles-outline' color={color} />,
-          headerRight: () => isUserLoggedIn && <ChatsHeaderBtns />,
-        }}
-      />
-      <Tabs.Screen
-        name='calls/index'
-        options={{
-          title: i18n.t('tabsLayout.calls'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='call-outline' color={color} />,
-        }}
-      />
-      {/* setting screen */}
-      <Tabs.Screen
-        name='settings/index'
-        options={{
-          title: i18n.t('tabsLayout.settings'),
-          tabBarIcon: ({ color }) => <Icon size={28} name='settings-outline' color={color} />,
-        }}
-      />
-    </Tabs>
-  );
-}
+  return <Slot />;
+};
+
+export default MainLayout;

@@ -27,13 +27,19 @@ export default function Profile() {
     console.log('Updated currentUserProfile:', currentUserProfile);
   }, [currentUserProfile]);
 
-  // console.log('currentUserProfile', currentUserProfile);
-  // remove access token
   const btnPressHandler = async () => logout();
+
+  // get avtar url
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+  // get current user avatar
+  const { avatar } = currentUser!;
   // Placeholder avatar and user info
-  const avatarUri = currentUser?.avatar || undefined;
+  const avatarUri = avatar.startsWith('http') ? avatar : `${apiUrl}${avatar}`;
   const name = currentUser?.name || 'اسم المستخدم';
   const email = 'البريد الإلكتروني غير متوفر';
+
+  // return
   return (
     <View style={styles.container}>
       <View style={styles.profileSection}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 // Import the package.json file
-import packageJson from '../../../package.json';
+import packageJson from '../../../../package.json';
 import { Switch } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import i18n from '@/i18n';

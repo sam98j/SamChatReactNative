@@ -4,7 +4,7 @@ import ChatMessagesLoader from '@/components/ChatMessagesLoader';
 import CreateMessage from '@/components/CreateMessage';
 import NoMessages from '@/components/NoMessages';
 import SingleChatHeader from '@/components/SingleChatHeader';
-import { ChangeMessageStatusDTO, ChatMessage, MessageStatus, MessagesTypes } from '@/interfaces/chats';
+import { ChangeMessageStatusDTO, ChatMessage, ChatTypes, MessageStatus, MessagesTypes } from '@/interfaces/chats';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
 import { groupChatMessagesByDate } from '@/utils/chats';
@@ -33,6 +33,7 @@ const SingleChat = () => {
     setChatMessagesBatchNo,
     setUserOnlineStatus,
     setMessageToBeMarketAsReaded,
+    deleteChat,
   } = useChatsStore();
 
   // scroll view ref
@@ -51,6 +52,7 @@ const SingleChat = () => {
   useEffect(() => {
     // set is fetching chat messages
     if (chatMessages !== undefined) setIsFetchingChatMessages(false);
+
     // set message to be market as readed
     if (chatMessages && chatMessages.length) {
       // messages to be market as readed
@@ -61,6 +63,7 @@ const SingleChat = () => {
       const messagesSendersIDs = chatMessages
         .filter((message) => message.status !== MessageStatus.READED && message.sender._id !== loggedInUser?._id)
         .map((message) => message.sender._id);
+
       // terminate if message is sended by current user
       if (!messagesToBeMarketAsReaded.length) return;
       // messagesToBeMarket as Readed
@@ -75,7 +78,7 @@ const SingleChat = () => {
     }
 
     // check for chat creattion
-    if (createChatAPIres && chatMessages?.length === 0) {
+    if (createChatAPIres && chatMessages?.length === 0 && openedChat?.type === ChatTypes.GROUP) {
       // create chat action
       const actionMessage: ChatMessage = {
         _id: v4(),
@@ -138,6 +141,9 @@ const SingleChat = () => {
       setChatMessagesBatchNo(1);
       // set opened chat
       setOpenedChat(undefined);
+
+      // check for chat type individual
+      if (openedChat?.type === ChatTypes.INDIVISUAL) deleteChat(chat_id!);
     };
   }, []);
 

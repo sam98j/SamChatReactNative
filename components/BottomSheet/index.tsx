@@ -31,6 +31,7 @@ const CustomBottomSheet = () => {
       {/* Bottom Sheet */}
       <BottomSheet
         ref={bottomSheetRef}
+        handleIndicatorStyle={{ backgroundColor: '#ddd' }}
         index={-1} // Start closed
         snapPoints={snapPoints}
         enablePanDownToClose={true} // Allow closing by swiping down
@@ -39,7 +40,6 @@ const CustomBottomSheet = () => {
       >
         <BottomSheetView style={styles.contentContainer}>
           <NewChatSearch />
-          {/* Additional Content */}
         </BottomSheetView>
       </BottomSheet>
     </View>

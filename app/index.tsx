@@ -9,13 +9,14 @@ const App = () => {
   const { setCurrentUser } = useAuthStore();
   //   get access token from expo secure store
   const accessToken = SecureStore.getItem('access_token');
+
   //   get current user when component mount
   useEffect(() => {
     setCurrentUser();
   }, []);
   return (
     <View>
-      <Redirect href={`${accessToken ? '/(tabs)/chats' : '/(onboarding)'}`} />
+      <Redirect href={`${accessToken ? '/(main)/(tabs)/chats' : '/(onboarding)'}`} />
     </View>
   );
 };

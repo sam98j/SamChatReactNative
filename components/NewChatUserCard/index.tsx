@@ -6,6 +6,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { v4 } from 'uuid';
 import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
+import { useSystemStore } from '@/store/zuSystem';
 
 type NewChatUserCardProps = {
   name: string;
@@ -21,8 +22,15 @@ const NewChatUserCard: React.FC<NewChatUserCardProps> = ({ name, avatarUrl, usrn
   const currentUser = useAuthStore().currentUser;
   // zustand zuChats
   const { setOpenedChat, addNewChat } = useChatsStore();
+
+  // zustand system
+  const { toggleBottomSheet } = useSystemStore();
   // router
   const router = useRouter();
+
+  // usr avatar uri
+  const avatarUri = avatarUrl?.startsWith('http') ? avatarUrl : `${apiUrl}${avatarUrl}`;
+
   // handle user press
   const onPress = () => {
     // create chat
@@ -36,19 +44,25 @@ const NewChatUserCard: React.FC<NewChatUserCardProps> = ({ name, avatarUrl, usrn
       ],
       name: '',
     };
+
+    // toggle bottom sheet
+    toggleBottomSheet();
+
     // set openedChat
     setOpenedChat(chat);
     // create new chat request
     addNewChat(chat as ChatCard);
-    console.log('User pressed');
-    router.push(`/single_chat/${_id}`);
+    // navigate to the chat screen
+    router.push(`/(main)/single_chat/${chat._id}`);
   };
+
+  //
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Image source={{ uri: `${apiUrl}${avatarUrl}` }} style={styles.avatar} />
+      <Image source={{ uri: avatarUri }} style={styles.avatar} />
       <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={{ color: 'gray' }}>{usrname}</Text>
+        <Text style={[styles.name, styles.fontFamily]}>{name}</Text>
+        <Text style={styles.fontFamily}>{usrname}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -78,6 +92,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  // font family
+  fontFamily: {
     fontFamily: 'BalooBhaijaan2',
   },
 });

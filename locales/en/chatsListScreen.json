@@ -1,4 +1,7 @@
 {
   "no-chats": "No chats yet",
-  "search-bar-placeholder": "Search Conversations"
+  "search-bar-placeholder": "Search Conversations",
+  "create-chat-menu": {
+    "search": "Search a user by name or username"
+  }
 }

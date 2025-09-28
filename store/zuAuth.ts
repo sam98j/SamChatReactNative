@@ -38,8 +38,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   // set current user
   setCurrentUser: async () => {
     const { chats, loggedInUser } = await getUserChats();
+
     // set currentUser
     set({ currentUser: loggedInUser });
+
     // set chats in zuChats
     useChatsStore.getState().setCurrentUserChats(chats);
   },

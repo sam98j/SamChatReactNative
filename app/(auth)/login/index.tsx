@@ -25,7 +25,7 @@ export default function LoginScreen() {
   };
 
   useEffect(() => {
-    if (currentUser) router.replace('/(tabs)/chats');
+    if (currentUser) router.replace('/(main)/(tabs)/chats');
   }, [currentUser]);
 
   // handle Google Sign In

@@ -5,6 +5,7 @@ import useUsersApi from './hooks';
 import { UIActivityIndicator } from 'react-native-indicators';
 import NewChatUserCard from '../NewChatUserCard';
 import { LoggedInUserData } from '@/store/auth.slice';
+import i18n from '@/i18n';
 
 // component state
 type State = {
@@ -13,29 +14,39 @@ type State = {
 };
 
 const NewChatSearch: React.FC = () => {
+  // pref lang
+  const prefLang = i18n.locale;
   // search query state
   const [query, setQuery] = useState('');
 
   //   the fetchUsers hook
   const { fetchUsers } = useUsersApi();
+
   // Placeholder for search logic
   const [state, setState] = useState<State>({
     fetchedUsers: [],
     loading: false,
   });
+
   // handle user search
   const handleFormChange = async (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+    // get query
     const query = e.nativeEvent.text;
-    //
+    // set query
     setQuery(query);
 
+    // check if query is not empty
     if (query) {
       setState((prevState) => ({
         ...prevState,
         loading: true,
       }));
     }
+
+    // fetch users
     const fetchedUsers = await fetchUsers(query);
+
+    // set fetched users
     setState((prevState) => ({
       ...prevState,
       fetchedUsers,
@@ -45,12 +56,12 @@ const NewChatSearch: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, prefLang === 'ar' && styles.dirRtl]}>
         <Icon name='search' size={20} color='#8e8e93' style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder={'Search a user by name or username'}
-          placeholderTextColor='#8e8e93'
+          placeholder={i18n.t('chatsListScreen.create-chat-menu.search')}
+          placeholderTextColor='#aaa'
           cursorColor='dodgerblue'
           onChange={(e) => handleFormChange(e)}
           value={query}
@@ -78,15 +89,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: '#ddd',
-    borderRadius: 20,
+    borderRadius: 15,
     paddingHorizontal: 10,
     paddingVertical: 5,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0.5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   icon: {
     marginRight: 8,
@@ -95,5 +103,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flexGrow: 1,
     color: '#000',
+    fontFamily: 'BalooBhaijaan2',
+  },
+  // ar dir
+  dirRtl: {
+    direction: 'rtl',
   },
 });

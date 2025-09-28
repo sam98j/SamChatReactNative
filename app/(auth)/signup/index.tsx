@@ -2,8 +2,6 @@ import { Link, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
 import i18n from '../../../i18n';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -16,7 +14,8 @@ import SamChatLogo from '@/assets/icon.png';
 import startSignInFlow from '@/utils/auth';
 
 export default function LoginScreen() {
-  const { currentUser } = useSelector((state: RootState) => state.authSlice);
+  // zustand store
+  const { currentUser } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -29,6 +28,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const { signupUser, googleOAuth } = useAuthStore();
 
+  // pick image
   const pickImage = async () => {
     // Ask for permission
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -49,6 +49,8 @@ export default function LoginScreen() {
       setProfileImage(blob);
     }
   };
+
+  // handle form submition
   const handleFormSubmition = () => {
     // sign up user dto object
     const user: SignUpDto = {
@@ -62,12 +64,14 @@ export default function LoginScreen() {
     setIsLoading(true);
   };
 
+  // redirect to chats page
   useEffect(() => {
     if (currentUser) {
       router.push('/chats');
     }
   }, [currentUser]);
 
+  // handle google sign in
   const handleGoogleSignIn = async () => {
     const token = await startSignInFlow();
     await googleOAuth(token!);

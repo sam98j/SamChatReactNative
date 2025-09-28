@@ -1,4 +1,7 @@
 {
   "no-chats": "لا توجد محادثات بعد",
-  "search-bar-placeholder": "ابحث في المحادثات"
+  "search-bar-placeholder": "ابحث في المحادثات",
+  "create-chat-menu": {
+    "search": "ابحث عن مستخدم باسم أو اسم المستخدم"
+  }
 }

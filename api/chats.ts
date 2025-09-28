@@ -5,6 +5,7 @@ import { SingleChat } from '@/interfaces/chats';
 // api url
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
+// get user chats
 export const getUserChats = async () => {
   const access_token = await SecureStore.getItemAsync('access_token');
   // request parmas
@@ -74,6 +75,7 @@ export const getChatMessages = async (data: { chatId: string; msgBatch: number }
   // there is no error
   return resp;
 };
+
 // create chat
 export const createChat = async (chatData: { chat: SingleChat; avatar?: File }) => {
   // access token
@@ -89,6 +91,7 @@ export const createChat = async (chatData: { chat: SingleChat; avatar?: File }) 
     headers: { authorization: access_token! },
     body: formData,
   });
+
   // // check for internal serval error
   if (response.status >= 500) {
     return 'Internal Server Error';
@@ -99,5 +102,30 @@ export const createChat = async (chatData: { chat: SingleChat; avatar?: File }) 
   }
   const resp = (await response.json()) as boolean;
   // // there is no error
+  return resp;
+};
+
+// delete chat
+export const deleteChat = async (_id: string) => {
+  // access token
+  const access_token = await SecureStore.getItemAsync('access_token');
+
+  // get request
+  const response = await fetch(`${apiUrl}/chats/${_id}`, {
+    method: 'DELETE',
+    headers: { authorization: access_token! },
+  });
+
+  // check for internal serval error
+  if (response.status >= 500) {
+    return 'Internal Server Error';
+  }
+  // if the clinet err
+  if (response.status >= 400) {
+    return 'You Are Not Authente. Yet, you cant delete the chat';
+  }
+  const resp = await response.json();
+
+  // there is no error
   return resp;
 };

@@ -8,7 +8,7 @@ import {
   MessagesToBeForwarded,
   SingleChat,
 } from '@/interfaces/chats';
-import { createChat, getChatMessages, getUsrOnlineStatus } from '@/api/chats';
+import { createChat, deleteChat, getChatMessages, getUsrOnlineStatus } from '@/api/chats';
 
 export type ResponseToMessageData = Pick<
   ChatMessage,
@@ -59,6 +59,7 @@ export interface ChatState {
   setOpenedChatMessages: (data: { chatId: string; msgBatch: number }) => Promise<void>;
   setUserOnlineStatus: (userId?: string, status?: string | null | undefined) => Promise<void>;
   setFileMessageUploadIndicator: (n: number) => void;
+  deleteChat: (_id: string) => void;
 }
 
 export const useChatsStore = create<ChatState>((set, get) => ({
@@ -215,4 +216,18 @@ export const useChatsStore = create<ChatState>((set, get) => ({
 
   // method to set the file message upload indicator
   setFileMessageUploadIndicator: (n: number) => set({ fileMessageUploadIndicator: n }),
+
+  // delete chat
+  deleteChat: async (_id: string) => {
+    // delete chat
+    const res = await deleteChat(_id);
+
+    if (typeof res === 'string') return;
+    // get chats
+    const chats = get().chats;
+    if (!chats) return;
+    // remove chat from chats
+    const updatedChats = chats.filter((chat) => chat._id !== _id);
+    set({ chats: updatedChats });
+  },
 }));
