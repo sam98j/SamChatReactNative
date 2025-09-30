@@ -3,6 +3,7 @@ import { Tabs } from 'expo-router';
 import ChatsHeaderBtns from '@/components/ChatsHeaderBtns';
 import i18n from '../../../i18n';
 import { useAuthStore } from '@/store/zuAuth';
+import { StyleSheet } from 'react-native';
 
 export default function TabLayout() {
   // get curentUser state zustand zuAuth
@@ -16,12 +17,11 @@ export default function TabLayout() {
         headerStyle: { shadowColor: 'white' },
         headerTitleAlign: 'center',
         headerTitleStyle: { fontFamily: 'BalooBhaijaan2', display: isUserLoggedIn ? 'flex' : 'none' },
-        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 14 },
+        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 13, marginTop: 5 },
         headerShown: isUserLoggedIn ? true : false, // Dynamically control header visibility
         tabBarStyle: {
-          display: isUserLoggedIn ? 'flex' : 'none', // Dynamically control tabBar visibility
-          paddingHorizontal: 10,
-          height: 60,
+          display: isUserLoggedIn ? 'flex' : 'none',
+          ...styles.tapBarStyle,
         },
       })}
     >
@@ -67,3 +67,18 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+// styles
+const styles = StyleSheet.create({
+  tapBarStyle: {
+    paddingHorizontal: 10,
+    height: 65,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderRadius: 20,
+    elevation: 0,
+    position: 'absolute',
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+});
