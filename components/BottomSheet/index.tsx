@@ -63,6 +63,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderWidth: 1,
+    // Box shadow properties
+    // iOS specific shadow properties
     borderColor: '#ddd',
   },
   contentContainer: {

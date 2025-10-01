@@ -1,11 +1,12 @@
 import { ChatMessage } from '@/interfaces/chats';
 import React, { useState } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, Modal, StatusBar } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Modal, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EnTypoIcon from 'react-native-vector-icons/Entypo';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import FileMsgUploadIndicator from '../FileMsgUploadIndicator';
+import { Image } from 'expo-image';
 
 // props
 type Props = {
@@ -72,7 +73,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
       </Modal>
       <TouchableOpacity onPress={handleClick} style={styles.imageContainer}>
         <FileMsgUploadIndicator _id={msg._id} />
-        <Image source={{ uri: fileUrl }} style={styles.image} />
+        <Image source={fileUrl} style={styles.image} autoplay={true} />
       </TouchableOpacity>
     </View>
   );

@@ -221,7 +221,7 @@ const CreateMessage = () => {
         {/* if it's not recording */}
         {!isRec && (
           <View style={styles.inputContainer}>
-            <Icon name='camera-outline' size={26} color={'gray'} />
+            <Icon name='camera-outline' size={26} color='dodgerblue' />
             <TextInput
               style={styles.input}
               placeholder={i18n.t('openedChat.create-message-input.type-message-input-placeholder')}
@@ -231,9 +231,9 @@ const CreateMessage = () => {
               onBlur={handleInputBlur}
               onChangeText={(e) => inputChangeHandler(e)}
             />
-            <MIcon name='sticker-circle-outline' size={26} color='gray' />
+            <MIcon name='sticker-circle-outline' size={26} color='dodgerblue' />
             <TouchableOpacity onPress={() => openAttachFileBottomSheet(!isAttachFileBottomSheetOpen)}>
-              <Icon name='attach' size={28} color='gray' style={{ transform: [{ rotate: '45deg' }] }} />
+              <Icon name='attach' size={28} color='dodgerblue' style={{ transform: [{ rotate: '45deg' }] }} />
             </TouchableOpacity>
           </View>
         )}

@@ -52,10 +52,10 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   const isChatUsrOnline = chatUsrStatus === 'online' && chatUsrStatus && i18n.t('chatHeader.online');
   // is chat usr offline
   const isChatUsrOffline = chatUsrStatus !== 'online' && chatUsrStatus && chatUsrLastSeen;
+
   // handle back button press
-  const handleBackPress = () => {
-    router.back();
-  };
+  const handleBackPress = () => router.back();
+
   // observe openedChat
   React.useEffect(() => {
     // check if no opened chat
@@ -65,7 +65,7 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     // // get usr online status
     // if (openedChat?.type === ChatTypes.GROUP) dispatch(setChatUsrStatus(undefined));
   }, [openedChat]);
-  // observe chatUserStatus
+
   return (
     <View style={[styles.headerContainer, locale === 'ar' && styles.arDirection]}>
       {/* Back Button */}
