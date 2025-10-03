@@ -3,5 +3,12 @@
   "create-message-input": {
     "type-message-input-placeholder": "Type a message...",
     "recording-voice-message-alert": "Recording voice message ... "
+  },
+  "response-to-msg-popup": {
+    "replying-to": "Replying to",
+    "photo-msg-type": "Photo",
+    "video-msg-type": "Video",
+    "audio-msg-type": "Audio",
+    "file-msg-type": "File"
   }
 }

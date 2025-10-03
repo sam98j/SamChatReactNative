@@ -2,7 +2,7 @@
 import React, { FC } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ChatMessage, MessageStatus, MessagesTypes } from '@/interfaces/chats';
+import { ChatMessage, MessageStatus, MessagesTypes, ResponseToMessageData } from '@/interfaces/chats';
 import VoiceMsgPlayer from '../VoiceMsgPlayer';
 import ImageMsgViewer from '../ImageMsgViewer';
 import { useAuthStore } from '@/store/zuAuth';
@@ -11,48 +11,103 @@ import ReadCheckIcon from '@/assets/icons/check-read.png';
 import SentCheckIcon from '@/assets/icons/check.png';
 import DocMessage from '../DocMessage';
 import { getTime, TimeUnits } from '@/utils/time';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import Animated, {
+  runOnJS,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { useChatsStore } from '@/store/zuChats';
+import RepliedToMessage from '../RepliedToMessage';
 
 const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
-  const { sender, content, _id, status, type, date } = msg;
+  const { sender, content, _id, status, type, date, voiceNoteDuration, fileName, msgReplyedTo } = msg;
 
   // message time
   const messageTime = getTime(date, TimeUnits.time);
+
   // get current logged in user
   const loggedInUser = useAuthStore().currentUser;
+
+  // zustand chats
+  const { setResponseToMessage } = useChatsStore();
+
   // deconstruct messages status
   const { DELEVERED, READED, SENT } = MessageStatus;
 
+  // translate x value for swipe gesture
+  const translateX = useSharedValue(0);
+
+  // gesture handler
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart: (_, ctx) => {
+      ctx.startX = translateX.value;
+    },
+    onActive: (event, ctx) => {
+      translateX.value = ctx.startX + event.translationX;
+    },
+    onEnd: () => {
+      console.log('ended');
+      // Snap back to 0 or apply spring
+      translateX.value = withSpring(0);
+
+      // response to message
+      const responseToMessageData: ResponseToMessageData = {
+        sender,
+        voiceNoteDuration,
+        _id,
+        type,
+        content,
+        fileName,
+      };
+      // dispatch
+      runOnJS(setResponseToMessage)(responseToMessageData);
+    },
+  });
+
+  // animated style
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
   // i want to check if the message is from me or not
   const isFromMe = loggedInUser?._id === sender._id;
+
   return (
-    <View style={[styles.container, isFromMe ? styles.myMessage : styles.theirMessage]} key={_id}>
-      {/* Text */}
-      {type === MessagesTypes.TEXT && <Text style={styles.messageText}>{content}</Text>}
-      {/* voice note message viewer */}
-      {type === MessagesTypes.VOICENOTE && <VoiceMsgPlayer msg={msg} />}
-      {/* image message viewer */}
-      {type === MessagesTypes.PHOTO && <ImageMsgViewer msg={msg} />}
-      {/* video message viewer */}
-      {type === MessagesTypes.VIDEO && <VideoScreen msg={msg} />}
-      {/* document message viewer */}
-      {type === MessagesTypes.FILE && <DocMessage msg={msg} />}
-      {/* message data */}
-      <View style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
-        {isFromMe && (
-          <View>
-            {/* svg icon from assets as image */}
-            {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
-            {/* check or msg status readed */}
-            {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
-            {/* check or msg status sent */}
-            {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
-            {/* check for msg status null */}
-            {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
-          </View>
-        )}
-        <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{messageTime}</Text>
-      </View>
-    </View>
+    <PanGestureHandler onGestureEvent={gestureHandler}>
+      <Animated.View style={[styles.container, isFromMe ? styles.myMessage : styles.theirMessage, animatedStyle]} key={_id}>
+        {/* replied to message */}
+        {msgReplyedTo && <RepliedToMessage msgData={msgReplyedTo as ResponseToMessageData} />}
+        {/* Text */}
+        {type === MessagesTypes.TEXT && <Text style={styles.messageText}>{content}</Text>}
+        {/* voice note message viewer */}
+        {type === MessagesTypes.VOICENOTE && <VoiceMsgPlayer msg={msg} />}
+        {/* image message viewer */}
+        {type === MessagesTypes.PHOTO && <ImageMsgViewer msg={msg} />}
+        {/* video message viewer */}
+        {type === MessagesTypes.VIDEO && <VideoScreen msg={msg} />}
+        {/* document message viewer */}
+        {type === MessagesTypes.FILE && <DocMessage msg={msg} />}
+        {/* message data */}
+        <View style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
+          {isFromMe && (
+            <View>
+              {/* svg icon from assets as image */}
+              {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
+              {/* check or msg status readed */}
+              {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
+              {/* check or msg status sent */}
+              {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
+              {/* check for msg status null */}
+              {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
+            </View>
+          )}
+          <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{messageTime}</Text>
+        </View>
+      </Animated.View>
+    </PanGestureHandler>
   );
 };
 
@@ -65,6 +120,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     maxWidth: '85%',
     paddingHorizontal: 5,
+    paddingTop: 5,
   },
   myMessage: {
     backgroundColor: '#eee',

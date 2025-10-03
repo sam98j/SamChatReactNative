@@ -1,5 +1,6 @@
 // basic imports
 import React, { useRef, useState } from 'react';
+import 'react-native-image-keyboard';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { v4 as uuid } from 'uuid';
@@ -13,14 +14,21 @@ import { ChatActions, useChatsStore } from '@/store/zuChats';
 import { useSystemStore } from '@/store/zuSystem';
 import SoundIcon from '@/assets/icons/sound.png';
 import i18n from '@/i18n';
+import ResponseToMsgPopUp from '../ResponseToMsgPopUp';
 
 const CreateMessage = () => {
   // url search params
   const urlSearchParams = useSearchParams(); // Access the chat_id parameter
+
+  // type message input ref
+  const typeMessageInputRef = useRef<TextInput>(null);
+
   // chat id
   const chatId = urlSearchParams.get('chat_id')!;
+
   //   current loggedIn user
   const currentUsr = useAuthStore().currentUser;
+
   // zustand zuChats
   const {
     setCurrentUsrDoingAction,
@@ -32,36 +40,50 @@ const CreateMessage = () => {
     addMessageToChat,
     setChatLastMessage,
   } = useChatsStore();
+
+  // foucs text input on response to message pop
+  if (responseToMessage) typeMessageInputRef.current?.focus();
+
   // zustand system
   const { openAttachFileBottomSheet, isAttachFileBottomSheetOpen } = useSystemStore();
+
   // text message input
   const [textMessage, setTextMessage] = useState('');
+
   // voice note duration
   const [voiceNoteDurationMillis, setVoiceNoteDurationMillis] = useState(0);
+
   // voice note duration in seconds
   let voiceNoteTime = secondsToDurationConverter(voiceNoteDurationMillis);
+
   // use sounds hooks
   const { record, stopRecording } = useChatSounds();
+
   //   is recording
   const [isRec, setIsRec] = useState(false);
+
   // chat action
   const [chatAction, setChatAction] = useState<ChatActions | null>(null);
+
   // handleInputFocus
   const handleInputFocus = () =>
     setCurrentUsrDoingAction({
       ...chatAction!,
       type: ChatActionsTypes.TYPEING,
     });
+
   // handleInputBlur
   const handleInputBlur = () => {
     console.log('blurred');
     setCurrentUsrDoingAction({ ...chatAction!, type: null });
   };
+
   //  check if it's recording
   const showSendMsgBtn = isRec || textMessage;
+
   //   input change handler
   const inputChangeHandler = (text: string) => setTextMessage(text);
-  //   send text message handler
+
   // send text message
   const sendTextMessage = (message: ChatMessage) => {
     // create meassge
@@ -97,6 +119,7 @@ const CreateMessage = () => {
     // change chat last message
     setChatLastMessage({ msg: newTextMessage, currentUserId: currentUsr!._id });
   };
+
   // send voice message
   const sendVoiceMessage = async (message: ChatMessage) => {
     // send voice msg if it's recording and input is empty
@@ -133,6 +156,7 @@ const CreateMessage = () => {
     // change chat last message
     setChatLastMessage({ msg: voiceNoteMessage, currentUserId: currentUsr!._id });
   };
+
   //   send message handler
   const handleSendMessage = async () => {
     // chat message
@@ -152,6 +176,7 @@ const CreateMessage = () => {
     // if voice message
     sendVoiceMessage(message);
   };
+
   // handle record and stop recording
   const handleRecordStopRecording = async () => {
     // if it's not recording
@@ -166,6 +191,16 @@ const CreateMessage = () => {
     setIsRec(false);
     stopRecording();
   };
+
+  //TODO: handle image change
+  const handleImageChange = (event) => {
+    const { uri, linkUri, mime, data } = event.nativeEvent;
+    console.log('uri', uri);
+    console.log('linkUri', linkUri);
+    console.log('mime', mime);
+    console.log('data', data);
+  };
+
   // interval variable
   const intervalRef = useRef<number | null>(null);
 
@@ -207,6 +242,9 @@ const CreateMessage = () => {
 
   return (
     <KeyboardAvoidingView style={styles.container}>
+      {/* response to message pop up */}
+      <ResponseToMsgPopUp />
+
       {/* input filed */}
       <View style={styles.mainContainer}>
         {/* if it's recording */}
@@ -224,12 +262,14 @@ const CreateMessage = () => {
             <Icon name='camera-outline' size={26} color='dodgerblue' />
             <TextInput
               style={styles.input}
+              ref={typeMessageInputRef}
               placeholder={i18n.t('openedChat.create-message-input.type-message-input-placeholder')}
               cursorColor={'dodgerblue'}
               value={textMessage}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
               onChangeText={(e) => inputChangeHandler(e)}
+              onImageChange={() => handleImageChange}
             />
             <MIcon name='sticker-circle-outline' size={26} color='dodgerblue' />
             <TouchableOpacity onPress={() => openAttachFileBottomSheet(!isAttachFileBottomSheetOpen)}>
@@ -238,6 +278,7 @@ const CreateMessage = () => {
           </View>
         )}
       </View>
+
       {/* send button */}
       <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
         {/* send icon if text message is not empty */}
@@ -249,6 +290,7 @@ const CreateMessage = () => {
           </TouchableOpacity>
         )}
       </TouchableOpacity>
+
       {/* stop recording btn */}
       {isRec && (
         <TouchableOpacity style={styles.stopRecBtn} onPress={handleRecordStopRecording}>
@@ -264,7 +306,7 @@ export default CreateMessage;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    padding: 10,
+    paddingVertical: 10,
     backgroundColor: '#fff',
     borderTopColor: 'lightgray',
     borderTopWidth: 1,
@@ -273,12 +315,10 @@ const styles = StyleSheet.create({
   // main container
   mainContainer: {
     flexGrow: 1,
-    // height: 45,
     borderRadius: 22.5,
-    // backgroundColor: '#f1f1f1',
+    backgroundColor: '#f1f1f1',
   },
   inputContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     direction: 'rtl',
@@ -290,14 +330,10 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 45,
-    lineHeight: 20,
     fontFamily: 'BalooBhaijaan2',
   },
   sendButton: {
     backgroundColor: '#007bff',
-    // paddingVertical: 10,
-    // paddingHorizontal: 20,
     height: 45,
     width: 45,
     display: 'flex',

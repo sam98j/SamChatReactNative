@@ -3,5 +3,12 @@
   "create-message-input": {
     "type-message-input-placeholder": "اكتب رسالة . . . ",
     "recording-voice-message-alert": "جار تسجيل رسالة صوتية . . . "
+  },
+  "response-to-msg-popup": {
+    "replying-to": "الرد على",
+    "photo-msg-type": "صورة",
+    "video-msg-type": "فيديو",
+    "audio-msg-type": "صوت",
+    "file-msg-type": "ملف"
   }
 }
