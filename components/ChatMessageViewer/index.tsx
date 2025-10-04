@@ -21,6 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useChatsStore } from '@/store/zuChats';
 import RepliedToMessage from '../RepliedToMessage';
+import * as Haptics from 'expo-haptics';
 
 const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   const { sender, content, _id, status, type, date, voiceNoteDuration, fileName, msgReplyedTo } = msg;
@@ -64,6 +65,8 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
       };
       // dispatch
       runOnJS(setResponseToMessage)(responseToMessageData);
+      // haptic feedback
+      runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
     },
   });
 
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
   theirMessage: {
     borderRadius: 10,
     borderBottomRightRadius: 0,
-    backgroundColor: '#0d6efd26',
+    backgroundColor: '#e4efff',
     alignSelf: 'flex-end',
   },
   messageText: {

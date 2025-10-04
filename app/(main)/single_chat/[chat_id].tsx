@@ -10,11 +10,12 @@ import { useChatsStore } from '@/store/zuChats';
 import { groupChatMessagesByDate } from '@/utils/chats';
 import { useSearchParams } from 'expo-router/build/hooks';
 import React, { useEffect, useRef, useState } from 'react';
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { ImageBackground, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { v4 } from 'uuid';
+import chatBackground from '../../../assets/images/chat_background.png';
 
 const SingleChat = () => {
   // dispatch method
@@ -179,26 +180,28 @@ const SingleChat = () => {
     <View style={styles.container}>
       <SingleChatHeader onBackPress={() => {}} title='' />
       {/* messages container */}
-      <ScrollView
-        style={styles.messagesContainer}
-        contentContainerStyle={{
-          display: 'flex',
-          justifyContent: chatMessages?.length ? 'flex-start' : 'center',
-          flexGrow: 1,
-          alignItems: 'center',
-        }}
-        onScroll={onScrollEndHandler}
-        ref={messagesContainerRef}
-      >
-        {/* display messages */}
-        {chatMessages !== undefined && !chatMessages?.length && !isFetchingChatMessages && <NoMessages />}
-        {/* messages loading */}
-        {isFetchingChatMessages && <UIActivityIndicator size={20} color='gray' />}
-        {/* loop messages and display them in flat list */}
-        {messages !== undefined && <ChatMessagesLoader messages={messages} />}
-        {/* chat actions */}
-        {isChatUsrDoingAction.type !== null && <ChatActions />}
-      </ScrollView>
+      <ImageBackground source={chatBackground} resizeMode='repeat' imageStyle={{ opacity: 0.1 }} style={{ flex: 1 }}>
+        <ScrollView
+          style={styles.messagesContainer}
+          contentContainerStyle={{
+            display: 'flex',
+            justifyContent: chatMessages?.length ? 'flex-start' : 'center',
+            flexGrow: 1,
+            alignItems: 'center',
+          }}
+          onScroll={onScrollEndHandler}
+          ref={messagesContainerRef}
+        >
+          {/* display messages */}
+          {chatMessages !== undefined && !chatMessages?.length && !isFetchingChatMessages && <NoMessages />}
+          {/* messages loading */}
+          {isFetchingChatMessages && <UIActivityIndicator size={20} color='gray' />}
+          {/* loop messages and display them in flat list */}
+          {messages !== undefined && <ChatMessagesLoader messages={messages} />}
+          {/* chat actions */}
+          {isChatUsrDoingAction.type !== null && <ChatActions />}
+        </ScrollView>
+      </ImageBackground>
       {/* bottom sheet */}
       <AttchFileBottomSheet />
       {/* messages container */}
@@ -215,11 +218,11 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
   },
   messagesContainer: {
     paddingHorizontal: 15,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'transparent',
     marginBottom: 70, // to avoid overlap with the message input
   },
   // create message container

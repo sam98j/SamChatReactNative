@@ -277,26 +277,25 @@ const CreateMessage = () => {
             </TouchableOpacity>
           </View>
         )}
-      </View>
+        {/* send button */}
+        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+          {/* send icon if text message is not empty */}
+          {showSendMsgBtn && <Icon name='send' style={styles.sendButtonText} />}
+          {/* sound png image text field is empty*/}
+          {!textMessage && !isRec && (
+            <TouchableOpacity onPress={handleRecordStopRecording}>
+              <Image source={SoundIcon} style={styles.recordVoiceBtn} />
+            </TouchableOpacity>
+          )}
+        </TouchableOpacity>
 
-      {/* send button */}
-      <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
-        {/* send icon if text message is not empty */}
-        {showSendMsgBtn && <Icon name='send' style={styles.sendButtonText} />}
-        {/* sound png image text field is empty*/}
-        {!textMessage && !isRec && (
-          <TouchableOpacity onPress={handleRecordStopRecording}>
-            <Image source={SoundIcon} style={styles.recordVoiceBtn} />
+        {/* stop recording btn */}
+        {isRec && (
+          <TouchableOpacity style={styles.stopRecBtn} onPress={handleRecordStopRecording}>
+            <Icon name='stop-circle-outline' size={28} color='white' />
           </TouchableOpacity>
         )}
-      </TouchableOpacity>
-
-      {/* stop recording btn */}
-      {isRec && (
-        <TouchableOpacity style={styles.stopRecBtn} onPress={handleRecordStopRecording}>
-          <Icon name='stop-circle-outline' size={28} color='white' />
-        </TouchableOpacity>
-      )}
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -305,18 +304,19 @@ export default CreateMessage;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     paddingVertical: 10,
     backgroundColor: '#fff',
-    borderTopColor: 'lightgray',
-    borderTopWidth: 1,
-    gap: 10,
+    borderTopColor: '#eee',
+    borderTopWidth: 0.5,
   },
   // main container
   mainContainer: {
     flexGrow: 1,
     borderRadius: 22.5,
-    backgroundColor: '#f1f1f1',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    gap: 10,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -326,7 +326,8 @@ const styles = StyleSheet.create({
     borderRadius: 22.5,
     paddingHorizontal: 10,
     fontFamily: 'BalooBhaijaan2',
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#eee',
+    flexGrow: 1,
   },
   input: {
     flex: 1,

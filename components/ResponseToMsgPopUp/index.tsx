@@ -6,7 +6,7 @@ import i18n from '@/i18n';
 import { MessagesTypes } from '@/interfaces/chats';
 import { Image } from 'expo-image';
 import VideoThumbnail from '../VideoThumbnail';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const ResponseToMsgPopUp = () => {
   // api url
@@ -20,7 +20,7 @@ const ResponseToMsgPopUp = () => {
 
   // observe response to message
   useEffect(() => {
-    height.value = withTiming(responseToMessage ? -50 : 0, { duration: 200 });
+    height.value = withTiming(responseToMessage ? -50 : 0, { duration: 200, easing: Easing.elastic(1) });
   }, [responseToMessage]);
 
   // animated style

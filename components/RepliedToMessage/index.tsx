@@ -11,8 +11,8 @@ const RepliedToMessage: FC<{ msgData: MsgData }> = ({ msgData }) => {
   const { content, fileName, sender, type } = msgData;
   return (
     <View style={styles.container}>
-      <Text style={styles.sender}>{sender.name}</Text>
-      <Text style={styles.content}>
+      <Text style={[styles.sender, styles.fontFamily]}>{sender.name}</Text>
+      <Text style={[styles.content, styles.fontFamily]}>
         {type === TEXT && content}
         {type === PHOTO && 'Photo'}
         {type === VIDEO && 'Video'}
@@ -40,5 +40,10 @@ const styles = StyleSheet.create({
   content: {
     color: '#6B7280', // Tailwind 'gray-500'
     fontSize: 14,
+  },
+
+  // font family
+  fontFamily: {
+    fontFamily: 'BalooBhaijaan2',
   },
 });
