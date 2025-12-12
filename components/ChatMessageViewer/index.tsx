@@ -1,6 +1,6 @@
 // basic imports
 import React, { FC } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ChatMessage, MessageStatus, MessagesTypes, ResponseToMessageData } from '@/interfaces/chats';
 import VoiceMsgPlayer from '../VoiceMsgPlayer';
@@ -22,9 +22,16 @@ import Animated, {
 import { useChatsStore } from '@/store/zuChats';
 import RepliedToMessage from '../RepliedToMessage';
 import * as Haptics from 'expo-haptics';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
-  const { sender, content, _id, status, type, date, voiceNoteDuration, fileName, msgReplyedTo } = msg;
+  const { sender, content, _id, status, type, date, voiceNoteDuration, fileName, msgReplyedTo, isForwarded } = msg;
+
+  // screen width
+  const SCREEN_WIDTH = Dimensions.get('window').width;
+
+  // max drag
+  const MAX_DRAG = SCREEN_WIDTH / 4;
 
   // message time
   const messageTime = getTime(date, TimeUnits.time);
@@ -33,7 +40,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   const loggedInUser = useAuthStore().currentUser;
 
   // zustand chats
-  const { setResponseToMessage } = useChatsStore();
+  const { setResponseToMessage, setMsgsActionsMenu } = useChatsStore();
 
   // deconstruct messages status
   const { DELEVERED, READED, SENT } = MessageStatus;
@@ -47,7 +54,11 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
       ctx.startX = translateX.value;
     },
     onActive: (event, ctx) => {
-      translateX.value = ctx.startX + event.translationX;
+      // Clamp the value between -MAX_DRAG and MAX_DRAG
+      let nextX = ctx.startX + event.translationX;
+      if (nextX > MAX_DRAG) nextX = MAX_DRAG;
+      if (nextX < -MAX_DRAG) nextX = -MAX_DRAG;
+      translateX.value = nextX;
     },
     onEnd: () => {
       console.log('ended');
@@ -76,39 +87,53 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   }));
 
   // i want to check if the message is from me or not
-  const isFromMe = loggedInUser?._id === sender._id;
+  const isFromMe = loggedInUser?._id === sender._id && !isForwarded;
+
+  // handle long press on message
+  const handleMsgLongPress = () => setMsgsActionsMenu(msg._id);
 
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
       <Animated.View style={[styles.container, isFromMe ? styles.myMessage : styles.theirMessage, animatedStyle]} key={_id}>
-        {/* replied to message */}
-        {msgReplyedTo && <RepliedToMessage msgData={msgReplyedTo as ResponseToMessageData} />}
-        {/* Text */}
-        {type === MessagesTypes.TEXT && <Text style={styles.messageText}>{content}</Text>}
-        {/* voice note message viewer */}
-        {type === MessagesTypes.VOICENOTE && <VoiceMsgPlayer msg={msg} />}
-        {/* image message viewer */}
-        {type === MessagesTypes.PHOTO && <ImageMsgViewer msg={msg} />}
-        {/* video message viewer */}
-        {type === MessagesTypes.VIDEO && <VideoScreen msg={msg} />}
-        {/* document message viewer */}
-        {type === MessagesTypes.FILE && <DocMessage msg={msg} />}
-        {/* message data */}
-        <View style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
-          {isFromMe && (
-            <View>
-              {/* svg icon from assets as image */}
-              {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
-              {/* check or msg status readed */}
-              {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
-              {/* check or msg status sent */}
-              {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
-              {/* check for msg status null */}
-              {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
-            </View>
-          )}
-          <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{messageTime}</Text>
-        </View>
+        {/* forwarded icon */}
+        {isForwarded && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <Icon name='return-up-forward' size={20} color='gray' />
+            <Text style={{ color: 'gray', fontFamily: 'BalooBhaijaan2' }}>Forwarded</Text>
+          </View>
+        )}
+
+        {/* container */}
+        <TouchableOpacity onLongPress={handleMsgLongPress}>
+          {/* replied to message */}
+          {msgReplyedTo && <RepliedToMessage msgData={msgReplyedTo as ResponseToMessageData} />}
+          {/* Text */}
+          {type === MessagesTypes.TEXT && <Text style={styles.messageText}>{content}</Text>}
+          {/* voice note message viewer */}
+          {type === MessagesTypes.VOICENOTE && <VoiceMsgPlayer msg={msg} />}
+          {/* image message viewer */}
+          {type === MessagesTypes.PHOTO && <ImageMsgViewer msg={msg} />}
+          {/* video message viewer */}
+          {type === MessagesTypes.VIDEO && <VideoScreen msg={msg} />}
+          {/* document message viewer */}
+          {type === MessagesTypes.FILE && <DocMessage msg={msg} />}
+          {/* message data */}
+          <View style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
+            {isFromMe && (
+              <View>
+                {/* svg icon from assets as image */}
+                {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
+                {/* check or msg status readed */}
+                {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
+                {/* check or msg status sent */}
+                {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
+                {/* check for msg status null */}
+                {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
+              </View>
+            )}
+            <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{messageTime}</Text>
+          </View>
+        </TouchableOpacity>
       </Animated.View>
     </PanGestureHandler>
   );

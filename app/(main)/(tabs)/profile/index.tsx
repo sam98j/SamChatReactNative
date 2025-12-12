@@ -18,7 +18,6 @@ export default function Profile() {
     // check if the user is not logged in
     if (!currentUser) return router.replace('/welcome');
     // get current user profile
-    // TODO: git user profile failed
     getUserProfile(currentUser!._id as string);
   }, [currentUser]);
 

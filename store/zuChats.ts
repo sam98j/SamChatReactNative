@@ -39,6 +39,7 @@ export interface ChatState {
   responseToMessage: ResponseToMessageData | null;
   messagesToBeForwared: MessagesToBeForwarded | null;
   createChatAPIres: null | boolean;
+  msgsActionsMenu: string[] | null;
 
   // actions
   setOpenedChat: (chat: SingleChat | undefined) => void;
@@ -60,6 +61,8 @@ export interface ChatState {
   setUserOnlineStatus: (userId?: string, status?: string | null | undefined) => Promise<void>;
   setFileMessageUploadIndicator: (n: number) => void;
   deleteChat: (_id: string) => void;
+  setMsgsActionsMenu: (msgId: string | null) => void;
+  setMessagesToBeForwared: (msgsToBeForwarded: MessagesToBeForwarded | null) => void;
 }
 
 export const useChatsStore = create<ChatState>((set, get) => ({
@@ -89,6 +92,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
   responseToMessage: null,
   messagesToBeForwared: null,
   createChatAPIres: null,
+  msgsActionsMenu: null,
 
   // method to set the opened chat
   setOpenedChat: (chat) => set({ openedChat: chat }),
@@ -212,7 +216,9 @@ export const useChatsStore = create<ChatState>((set, get) => ({
   },
 
   // forwardMsgMenu
-  setMessagesToBeForwared: (msgsToBeForwarded: MessagesToBeForwarded) => set({ messagesToBeForwared: msgsToBeForwarded }),
+  setMessagesToBeForwared: (msgsToBeForwarded) => {
+    set({ messagesToBeForwared: msgsToBeForwarded });
+  },
 
   // method to set the file message upload indicator
   setFileMessageUploadIndicator: (n: number) => set({ fileMessageUploadIndicator: n }),
@@ -230,4 +236,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     const updatedChats = chats.filter((chat) => chat._id !== _id);
     set({ chats: updatedChats });
   },
+
+  // open close msg actions menu
+  setMsgsActionsMenu: (msgId) => set({ msgsActionsMenu: msgId ? [msgId] : null }),
 }));

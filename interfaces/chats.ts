@@ -30,6 +30,7 @@ export interface ChatMessage {
   fileSize: string | null;
   receiverId: string;
   forwardedTo?: string[];
+  isForwarded?: boolean;
   status: MessageStatus | null;
   date: string;
   voiceNoteDuration: string;

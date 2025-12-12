@@ -37,6 +37,8 @@ export default function RootLayout() {
     router.push(onboarding.screensPaths[onboarding.currentScreen + 1]);
     onboarding.setCurrentScreen(onboarding.currentScreen + 1);
   };
+
+  // return 
   return (
     <View style={styles.container}>
       <View>
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   // vector image container
   vectorImageContainer: {
     width: '100%',
-    height: 300,
+    height: 300,/* */
     resizeMode: 'contain',
   },
   // description text container

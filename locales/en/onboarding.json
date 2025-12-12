@@ -18,5 +18,9 @@
   "share_media_and_files": {
     "title": "Share Media and Files",
     "description": "SamChat makes it easy to share media and files with your friends and family. You can easily send photos, videos, and other files to your contacts, ensuring that they have everything they need to stay connected."
+  },
+  "secure_messaging": {
+    "title": "Secure Messaging",
+    "description": "Your conversations are end-to-end encrypted, ensuring that only you and the person you're communicating with can read what's sent."
   }
 }

@@ -8,7 +8,14 @@ type SystemState = {
   openAttachFileBottomSheet: (state: boolean) => void;
   toggleImageViewer: () => void;
   onboarding: {
-    screensPaths: ['/', '/privacy', '/fast_and_reliable', '/vidoe_voice_calls', '/share_media_and_files'];
+    screensPaths: [
+      '/',
+      '/privacy',
+      '/secure_messaging',
+      '/fast_and_reliable',
+      '/vidoe_voice_calls',
+      '/share_media_and_files'
+    ];
     currentScreen: number;
     setCurrentScreen: (n: number) => void;
   };
@@ -19,7 +26,14 @@ export const useSystemStore = create<SystemState>((set, get) => ({
   isAttachFileBottomSheetOpen: false,
   isImageViewerOpen: false,
   onboarding: {
-    screensPaths: ['/', '/privacy', '/fast_and_reliable', '/vidoe_voice_calls', '/share_media_and_files'],
+    screensPaths: [
+      '/',
+      '/privacy',
+      '/secure_messaging',
+      '/fast_and_reliable',
+      '/vidoe_voice_calls',
+      '/share_media_and_files',
+    ],
     currentScreen: 0,
     setCurrentScreen: (n) => {
       // get onboarding

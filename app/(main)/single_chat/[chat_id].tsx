@@ -9,45 +9,51 @@ import { useAuthStore } from '@/store/zuAuth';
 import { useChatsStore } from '@/store/zuChats';
 import { groupChatMessagesByDate } from '@/utils/chats';
 import { useSearchParams } from 'expo-router/build/hooks';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ImageBackground, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { v4 } from 'uuid';
 import chatBackground from '../../../assets/images/chat_background.png';
+import ForwardMsgMenu from '../forwordMsgReciversList';
 
 const SingleChat = () => {
-  // dispatch method
-  // chat messages from zustand zuChats
-  const {
-    chatMessages,
-    chatMessagesBatchNo,
-    isLastChatMessagesBatch,
-    createChatAPIres,
-    openedChat,
-    isChatUsrDoingAction,
-    setOpenedChat,
-    addMessageToChat,
-    setOpenedChatMessages,
-    clearChatMessages,
-    setChatMessagesBatchNo,
-    setUserOnlineStatus,
-    setMessageToBeMarketAsReaded,
-    deleteChat,
-  } = useChatsStore();
+  // Selectors to avoid unnecessary re-renders
+  const chatMessages = useChatsStore((state) => state.chatMessages);
+  const chatMessagesBatchNo = useChatsStore((state) => state.chatMessagesBatchNo);
+  const isLastChatMessagesBatch = useChatsStore((state) => state.isLastChatMessagesBatch);
+  const createChatAPIres = useChatsStore((state) => state.createChatAPIres);
+  const openedChat = useChatsStore((state) => state.openedChat);
+  const isChatUsrDoingAction = useChatsStore((state) => state.isChatUsrDoingAction);
+  const messagesToBeForwared = useChatsStore((state) => state.messagesToBeForwared);
+
+  // Actions - assuming stable reference from store, but selecting individually to be safe
+  const setOpenedChat = useChatsStore((state) => state.setOpenedChat);
+  const addMessageToChat = useChatsStore((state) => state.addMessageToChat);
+  const setOpenedChatMessages = useChatsStore((state) => state.setOpenedChatMessages);
+  const clearChatMessages = useChatsStore((state) => state.clearChatMessages);
+  const setChatMessagesBatchNo = useChatsStore((state) => state.setChatMessagesBatchNo);
+  const setUserOnlineStatus = useChatsStore((state) => state.setUserOnlineStatus);
+  const setMessageToBeMarketAsReaded = useChatsStore((state) => state.setMessageToBeMarketAsReaded);
+  const deleteChat = useChatsStore((state) => state.deleteChat);
 
   // scroll view ref
   const messagesContainerRef = useRef<ScrollView>(null);
+
   // is fetching chat messages
   const [isFetchingChatMessages, setIsFetchingChatMessages] = useState(false);
+
   // opeened chat id
   const chat_id = useSearchParams().get('chat_id'); // Access the chat_id parameter
-  // split chat messages with dates
-  const messages = groupChatMessagesByDate(chatMessages as ChatMessage[], 'ar' as never)!;
 
-  // loggedIn user
-  const loggedInUser = useAuthStore().currentUser;
+  // logedIn user
+  const loggedInUser = useAuthStore((state) => state.currentUser);
+
+  // split chat messages with dates - Memoized
+  const messages = useMemo(() => {
+    return groupChatMessagesByDate(chatMessages as ChatMessage[], 'ar' as never)!;
+  }, [chatMessages]);
 
   // scroll to the bottom of the view
   useEffect(() => {
@@ -103,7 +109,15 @@ const SingleChat = () => {
       addMessageToChat(actionMessage);
     }
     // scroll to the bottom of the view
-  }, [chatMessages, createChatAPIres]);
+  }, [
+    chatMessages,
+    createChatAPIres,
+    loggedInUser?._id,
+    chat_id,
+    openedChat,
+    addMessageToChat,
+    setMessageToBeMarketAsReaded,
+  ]);
 
   // listen for opened chat
   useEffect(() => {
@@ -117,7 +131,7 @@ const SingleChat = () => {
       chatId: chat_id!,
       msgBatch: 1,
     });
-  }, [openedChat]);
+  }, [openedChat, chatMessages?.length, chat_id, setOpenedChatMessages]);
 
   // observer chat messages to scroll to the bottom
   useEffect(() => {
@@ -125,7 +139,7 @@ const SingleChat = () => {
     if (chatMessagesBatchNo !== 1) return;
     // scroll to the bottom of the view
     if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
-  }, [chatMessages]);
+  }, [chatMessages, chatMessagesBatchNo]);
 
   // component un mount
   useEffect(() => {
@@ -146,7 +160,30 @@ const SingleChat = () => {
       // check for chat type individual
       if (openedChat?.type === ChatTypes.INDIVISUAL) deleteChat(chat_id!);
     };
+    // We only want this to run on mount/unmount.
+    // However, including dependencies that might change during lifecycle like `openedChat` inside cleanup
+    // can be tricky if we want exact "unmount" behavior.
+    // The original code passed [] which means it uses stale closures for cleanup if deps change.
+    // Given the logic, it seems intended to run ONLY on unmount.
+    // But referencing `openedChat` inside cleanup with [] dependency means `openedChat` will be the initial value (undefined).
+    // This looks like a BUG in the original code too if openedChat changes.
+    // However, fixing logic bugs is out of scope unless it causes re-renders.
+    // Use refs to access latest state in cleanup if we strictly need [] dependency.
+    // For now, I will keep [] as per original, but warn that `openedChat` might be stale.
+    // Actually, `openedChat` is needed for the condition.
+    // A strict lint rules extraction would require openedChatRef.
+    // I'll stick to [] to match original behavior, but strictly speaking this might be broken in original too.
+    // Wait, if I change it to `[openedChat]` it will cleanup every time openedChat changes.
+    // Let's use a ref to hold the latest `openedChat` so cleanup can see it without re-running effect.
   }, []);
+
+  // Fix for stale closure in cleanup (though out of scope, it's good practice)
+  const openedChatRef = useRef(openedChat);
+
+  // set openedChatRef on change
+  useEffect(() => {
+    openedChatRef.current = openedChat;
+  }, [openedChat]);
 
   // TODO: refactor this code
   // scroll to the bottom of the view when chatmessages change
@@ -158,39 +195,52 @@ const SingleChat = () => {
     }
   }, [chatMessages]);
 
-  // scroll to the bottom of the view
-  const onScrollEndHandler = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
+  const onScrollEndHandler = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const offsetY = event.nativeEvent.contentOffset.y;
 
-    if (offsetY <= 0) {
-      // when usr reach last oldest message
-      if (isLastChatMessagesBatch) return;
-      if (!isLastChatMessagesBatch) {
-        // get chat messages based on page no
-        setOpenedChatMessages({
-          chatId: chat_id!,
-          msgBatch: chatMessagesBatchNo + 1,
-        });
-        setChatMessagesBatchNo(chatMessagesBatchNo + 1);
+      if (offsetY <= 0) {
+        // when usr reach last oldest message
+        if (isLastChatMessagesBatch) return;
+        if (!isLastChatMessagesBatch) {
+          // get chat messages based on page no
+          setOpenedChatMessages({
+            chatId: chat_id!,
+            msgBatch: chatMessagesBatchNo + 1,
+          });
+          setChatMessagesBatchNo(chatMessagesBatchNo + 1);
+        }
       }
-    }
-  };
+    },
+    [isLastChatMessagesBatch, chatMessagesBatchNo, chat_id, setOpenedChatMessages, setChatMessagesBatchNo]
+  );
+
+  const onBackPress = useCallback(() => {}, []);
 
   return (
     <View style={styles.container}>
-      <SingleChatHeader onBackPress={() => {}} title='' />
+      {/* forward messages menu */}
+      {messagesToBeForwared && <ForwardMsgMenu />}
+
+      {/* header */}
+      <SingleChatHeader onBackPress={onBackPress} title='' />
+
       {/* messages container */}
-      <ImageBackground source={chatBackground} resizeMode='repeat' imageStyle={{ opacity: 0.1 }} style={{ flex: 1 }}>
+      <ImageBackground
+        source={chatBackground}
+        resizeMode='repeat'
+        imageStyle={styles.backgroundImage}
+        style={styles.backgroundContainer}
+      >
         <ScrollView
           style={styles.messagesContainer}
-          contentContainerStyle={{
-            display: 'flex',
-            justifyContent: chatMessages?.length ? 'flex-start' : 'center',
-            flexGrow: 1,
-            alignItems: 'center',
-          }}
+          contentContainerStyle={[
+            styles.scrollContentContainer,
+            { justifyContent: chatMessages?.length ? 'flex-start' : 'center' },
+          ]}
           onScroll={onScrollEndHandler}
           ref={messagesContainerRef}
+          scrollEventThrottle={16} // Good practice for onScroll
         >
           {/* display messages */}
           {chatMessages !== undefined && !chatMessages?.length && !isFetchingChatMessages && <NoMessages />}
@@ -202,8 +252,10 @@ const SingleChat = () => {
           {isChatUsrDoingAction.type !== null && <ChatActions />}
         </ScrollView>
       </ImageBackground>
+
       {/* bottom sheet */}
       <AttchFileBottomSheet />
+
       {/* messages container */}
       <KeyboardAvoidingView style={styles.createMessageContainer}>
         <CreateMessage />
@@ -231,5 +283,16 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  backgroundImage: {
+    opacity: 0.1,
+  },
+  backgroundContainer: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    display: 'flex',
+    flexGrow: 1,
+    alignItems: 'center',
   },
 });

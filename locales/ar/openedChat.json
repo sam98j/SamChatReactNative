@@ -10,5 +10,9 @@
     "video-msg-type": "فيديو",
     "audio-msg-type": "صوت",
     "file-msg-type": "ملف"
+  },
+  "messages-forwarding-menu": {
+    "forward-to": "إعادة توجيه إلى",
+    "messages-forwarded-successfully": "تمت إعادة توجيه الرسائل بنجاح"
   }
 }

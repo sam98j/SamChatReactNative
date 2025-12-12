@@ -13,20 +13,24 @@ import recieve_msg_sound from '@/assets/sounds/imessage_recieve.mp3';
 const MainLayout = () => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
   // get curentUser state zustand zuAuth
   const { currentUser } = useAuthStore();
+
   // socket instance
   const [socketClient, setSocket] = useState<Socket | null>(null);
+
   // multichunk msg
   const { sendChatMessage } = useChatMessagesSender(socketClient!);
 
-  // dispatch method
   // chat messages
   const {
     chatMessages,
     messageToBeMarketAsReaded,
     isCurrentUsrDoingAction,
     openedChat,
+    messagesToBeForwared,
+    setMessagesToBeForwared,
     setChatUsrStatus,
     setMessageStatus,
     placeLastUpdatedChatToTheTop,
@@ -37,8 +41,10 @@ const MainLayout = () => {
     addNewChat,
     setFileMessageUploadIndicator,
   } = useChatsStore();
+
   // sent message audio player
   const sentMsgAudioPlayer = useAudioPlayer(sentSound);
+
   // recieve message audio player
   const recieveMsgAudioPlayer = useAudioPlayer(recieve_msg_sound);
 
@@ -143,8 +149,10 @@ const MainLayout = () => {
   useEffect(() => {
     // check for usr and socket
     if (!socketClient) return;
+
     // listen for chat usr doing action
     socketClient?.on('chatusr_typing_status', (actionData) => setChatUsrDoingAction(actionData));
+
     // listen for new chat created
     socketClient?.on('new_chat_created', (newChat: ChatCard) => {
       // add the new chat to the user's chats list
@@ -166,6 +174,25 @@ const MainLayout = () => {
     // chatusr_start_typing
     socketClient?.emit('chatusr_typing_status', isCurrentUsrDoingAction);
   }, [isCurrentUsrDoingAction]);
+
+  // listen for forwarded messages
+  useEffect(() => {
+    // messages forwarded done
+    socketClient?.on('forward_messages_done', () => {
+      // terminate if no messages to forwarded
+      console.log(messagesToBeForwared);
+      // place chats to the top
+      messagesToBeForwared!.chats.map((chatId) => placeLastUpdatedChatToTheTop({ chatId }));
+
+      // set messages to forwarded to null
+      setMessagesToBeForwared(null);
+    });
+    // terminate if no chats to forwarded to them
+    if (!messagesToBeForwared || !messagesToBeForwared.chats.length) return;
+
+    // send socket TODO: BUG: the message is sent twice to the backend
+    socketClient?.emit('forward_messages', messagesToBeForwared);
+  }, [messagesToBeForwared]);
 
   return <Slot />;
 };
