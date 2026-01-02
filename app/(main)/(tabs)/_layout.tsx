@@ -14,7 +14,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={() => ({
         tabBarActiveTintColor: 'dodgerblue',
-        headerStyle: { shadowColor: 'white' },
+        headerStyle: { shadowColor: 'transparent', elevation: 0 },
         headerTitleAlign: 'center',
         headerTitleStyle: { fontFamily: 'BalooBhaijaan2', display: isUserLoggedIn ? 'flex' : 'none' },
         tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 13, marginTop: 5 },
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     height: 65,
     backgroundColor: 'white',
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderRadius: 20,
     elevation: 0,
     position: 'absolute',
