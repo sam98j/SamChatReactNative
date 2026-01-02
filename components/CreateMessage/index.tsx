@@ -15,6 +15,7 @@ import { useSystemStore } from '@/store/zuSystem';
 import SoundIcon from '@/assets/icons/sound.png';
 import i18n from '@/i18n';
 import ResponseToMsgPopUp from '../ResponseToMsgPopUp';
+import * as ImagePicker from 'expo-image-picker';
 
 const CreateMessage = () => {
   // url search params
@@ -201,6 +202,59 @@ const CreateMessage = () => {
     console.log('data', data);
   };
 
+  // open camera and take photo
+  const openCamera = async () => {
+    // check camera permission
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    // if camera permission is not granted
+    if (status !== 'granted') {
+      alert('Camera permission is required to take photos.');
+      return;
+    }
+    // take photo
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+    // if photo is taken
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      // create message object
+      const message: ChatMessage = {
+        _id: uuid(),
+        content: uri,
+        type: MessagesTypes.PHOTO,
+        replyTo: responseToMessage?._id || null,
+        msgReplyedTo: responseToMessage,
+        sender: currentUsr!,
+        fileName: result.assets[0].fileName!,
+        fileSize: String(result.assets[0].fileSize),
+        receiverId: chatId,
+        status: null,
+        date: new Date().toISOString(),
+        voiceNoteDuration: '',
+      };
+      // check if it's first message in the chat
+      if (chatMessages?.length === 0) {
+        // create chat card
+        const chatCard: ChatCard = {
+          lastMessage: message,
+          unReadedMsgs: 1,
+          ...openedChat!,
+        };
+        // add chat to the top
+        addNewChat(chatCard);
+      }
+      // push message to the chat
+      addMessageToChat(message);
+      // change chat last message
+      setChatLastMessage({ msg: message, currentUserId: currentUsr!._id });
+      // place current chat to the top
+      placeLastUpdatedChatToTheTop({ chatId });
+    }
+  };
+
   // interval variable
   const intervalRef = useRef<number | null>(null);
 
@@ -256,10 +310,15 @@ const CreateMessage = () => {
             <Text style={{ color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{voiceNoteTime}</Text>
           </View>
         )}
+
         {/* if it's not recording */}
         {!isRec && (
           <View style={styles.inputContainer}>
-            <Icon name='camera-outline' size={26} color='dodgerblue' />
+            {/* open a camera when click on the icon */}
+            <TouchableOpacity onPress={openCamera}>
+              <Icon name='camera-outline' size={26} color='dodgerblue' />
+            </TouchableOpacity>
+            {/* input field */}
             <TextInput
               style={styles.input}
               ref={typeMessageInputRef}
@@ -271,7 +330,9 @@ const CreateMessage = () => {
               onChangeText={(e) => inputChangeHandler(e)}
               onImageChange={() => handleImageChange}
             />
+            {/* attach file and stickers icons */}
             <MIcon name='sticker-circle-outline' size={26} color='dodgerblue' />
+            {/* attach file bottom sheet */}
             <TouchableOpacity onPress={() => openAttachFileBottomSheet(!isAttachFileBottomSheetOpen)}>
               <Icon name='attach' size={28} color='dodgerblue' style={{ transform: [{ rotate: '45deg' }] }} />
             </TouchableOpacity>
