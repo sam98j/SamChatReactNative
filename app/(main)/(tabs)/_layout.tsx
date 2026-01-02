@@ -4,6 +4,7 @@ import ChatsHeaderBtns from '@/components/ChatsHeaderBtns';
 import i18n from '../../../i18n';
 import { useAuthStore } from '@/store/zuAuth';
 import { StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
 
 export default function TabLayout() {
   // get curentUser state zustand zuAuth
@@ -23,6 +24,13 @@ export default function TabLayout() {
           display: isUserLoggedIn ? 'flex' : 'none',
           ...styles.tapBarStyle,
         },
+        tabBarBackground: () => (
+          <BlurView
+            intensity={100}
+            tint='light' // or "dark" / "extraLight"
+            style={styles.blurViewStyle}
+          />
+        ),
       })}
     >
       {/* index */}
@@ -73,12 +81,20 @@ const styles = StyleSheet.create({
   tapBarStyle: {
     paddingHorizontal: 10,
     height: 65,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     borderWidth: 0.5,
     borderRadius: 20,
     elevation: 0,
     position: 'absolute',
     marginHorizontal: 10,
     marginBottom: 10,
+  },
+
+  // blur view style
+  blurViewStyle: {
+    borderRadius: 20,
+    flex: 1,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
 });
