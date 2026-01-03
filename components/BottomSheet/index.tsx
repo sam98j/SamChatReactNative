@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useCallback, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useSystemStore } from '@/store/zuSystem';
+import { useSystemStore } from '@/store/systemStore';
 import NewChatSearch from '../NewChatSearch';
 
 const CustomBottomSheet = () => {

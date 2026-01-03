@@ -3,12 +3,12 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import CustomBottomSheet from '@/components/BottomSheet';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { useChatsStore } from '@/store/zuChats';
+import { useChatsStore } from '@/store/chatsStore';
 import NoChatsVector from '@/components/NoChatsVector';
 import i18n from '@/i18n';
 import { useEffect, useState } from 'react';
 import { ChatCard } from '@/interfaces/chats';
-import { useAuthStore } from '@/store/zuAuth';
+import { useAuthStore } from '@/store/authStore';
 
 export default function Chats() {
   // get chats from zustand zuChats

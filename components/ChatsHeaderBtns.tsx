@@ -2,10 +2,10 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { useSystemStore } from '@/store/zuSystem';
+import { useSystemStore } from '@/store/systemStore';
 
 export default function ChatsHeaderBtns() {
-  // zuSystem stroe
+  // system store
   const { toggleBottomSheet } = useSystemStore();
   // Handle press in event
   const handlePress = () => toggleBottomSheet();

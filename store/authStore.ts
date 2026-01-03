@@ -1,6 +1,6 @@
 import { getUserChats } from '@/api/chats';
 import { create } from 'zustand';
-import { useChatsStore } from './zuChats';
+import { useChatsStore } from './chatsStore';
 import { loginUser, signupUser } from '@/api/auth';
 import * as SecureStore from 'expo-secure-store';
 import { LoggedInApiResponse, LoginDto, SignUpDto } from '@/interfaces/auth';

@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/store/zuAuth';
+import { useAuthStore } from '@/store/authStore';
 import { Redirect } from 'expo-router';
 import React, { useEffect } from 'react';
 import { View } from 'react-native';

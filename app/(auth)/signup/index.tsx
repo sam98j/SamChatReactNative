@@ -7,7 +7,7 @@ import { UIActivityIndicator } from 'react-native-indicators';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useAuthStore } from '@/store/zuAuth';
+import { useAuthStore } from '@/store/authStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SignUpDto } from '@/interfaces/auth';
 import SamChatLogo from '@/assets/icon.png';

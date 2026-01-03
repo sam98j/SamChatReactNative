@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useChatsStore } from '@/store/zuChats';
+import { useChatsStore } from '@/store/chatsStore';
 import { StyleSheet, Text, View } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import Icon from 'react-native-vector-icons/Feather';

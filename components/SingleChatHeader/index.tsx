@@ -6,8 +6,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { getTime, TimeUnits } from '@/utils/time';
 import i18n from '../../i18n';
-import { useChatsStore } from '@/store/zuChats';
-import { useAuthStore } from '@/store/zuAuth';
+import { useChatsStore } from '@/store/chatsStore';
+import { useAuthStore } from '@/store/authStore';
 import MsgActionsMenu from '../MsgActionsMenu';
 
 type SingleChatHeaderProps = {

@@ -1,4 +1,4 @@
-import { LoggedInUserData } from '@/store/auth.slice';
+import { LoggedInUserData } from '@/store/authStore';
 // Chat
 export interface SingleChat {
   _id: string;

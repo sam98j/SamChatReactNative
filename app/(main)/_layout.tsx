@@ -5,8 +5,8 @@ import { io, Socket } from 'socket.io-client';
 import { ChangeMessageStatusDTO, ChatCard, ChatMessage, MessageStatus } from '@/interfaces/chats';
 import useChatMessagesSender from '@/hooks/chats';
 import { useAudioPlayer } from 'expo-audio';
-import { useAuthStore } from '@/store/zuAuth';
-import { useChatsStore } from '@/store/zuChats';
+import { useAuthStore } from '@/store/authStore';
+import { useChatsStore } from '@/store/chatsStore';
 import sentSound from '@/assets/sounds/imessage_send.mp3';
 import recieve_msg_sound from '@/assets/sounds/imessage_recieve.mp3';
 

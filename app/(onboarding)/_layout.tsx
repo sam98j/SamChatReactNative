@@ -5,7 +5,7 @@ import i18n from '../../i18n.js';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SamChatLogo from '../../assets/icon.png';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSystemStore } from '@/store/zuSystem';
+import { useSystemStore } from '@/store/systemStore';
 import { useEffect } from 'react';
 
 export default function RootLayout() {
@@ -38,7 +38,7 @@ export default function RootLayout() {
     onboarding.setCurrentScreen(onboarding.currentScreen + 1);
   };
 
-  // return 
+  // return
   return (
     <View style={styles.container}>
       <View>
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   // vector image container
   vectorImageContainer: {
     width: '100%',
-    height: 300,/* */
+    height: 300 /* */,
     resizeMode: 'contain',
   },
   // description text container

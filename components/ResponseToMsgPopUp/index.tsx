@@ -1,4 +1,4 @@
-import { useChatsStore } from '@/store/zuChats';
+import { useChatsStore } from '@/store/chatsStore';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';

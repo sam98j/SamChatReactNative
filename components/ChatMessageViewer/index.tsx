@@ -5,7 +5,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ChatMessage, MessageStatus, MessagesTypes, ResponseToMessageData } from '@/interfaces/chats';
 import VoiceMsgPlayer from '../VoiceMsgPlayer';
 import ImageMsgViewer from '../ImageMsgViewer';
-import { useAuthStore } from '@/store/zuAuth';
+import { useAuthStore } from '@/store/authStore';
 import VideoScreen from '../VideoMsgViewer';
 import ReadCheckIcon from '@/assets/icons/check-read.png';
 import SentCheckIcon from '@/assets/icons/check.png';
@@ -19,7 +19,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { useChatsStore } from '@/store/zuChats';
+import { useChatsStore } from '@/store/chatsStore';
 import RepliedToMessage from '../RepliedToMessage';
 import * as Haptics from 'expo-haptics';
 import Icon from 'react-native-vector-icons/Ionicons';

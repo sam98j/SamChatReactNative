@@ -1,4 +1,4 @@
-import { CurrentUser } from '@/store/zuAuth';
+import { CurrentUser } from '@/store/authStore';
 
 export interface SignUpDto {
   email: string;

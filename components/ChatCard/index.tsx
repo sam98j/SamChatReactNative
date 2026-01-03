@@ -5,8 +5,8 @@ import { ChatCard, ChatTypes } from '@/interfaces/chats';
 import i18n from '@/i18n';
 import { useRouter } from 'expo-router';
 import { getTime, TimeUnits } from '@/utils/time';
-import { useAuthStore } from '@/store/zuAuth';
-import { useChatsStore } from '@/store/zuChats';
+import { useAuthStore } from '@/store/authStore';
+import { useChatsStore } from '@/store/chatsStore';
 import ChatCardLastMsgPreview from '../ChatCardLastMsgPreview';
 
 type Props = {

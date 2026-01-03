@@ -4,10 +4,6 @@ import { Text, View, StyleSheet } from 'react-native';
 
 export default function Calls() {
   // check if the user is logged in
-  // const { apiResponse, currentUser } = useSelector((state: RootState) => state.authSlice);
-  // useEffect(() => {
-  //   console.log(currentUser);
-  // }, []);
   return (
     <View style={styles.container}>
       <Text>Calls</Text>

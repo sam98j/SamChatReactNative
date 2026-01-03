@@ -3,8 +3,8 @@ import { Button } from '@rneui/themed';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { useAuthStore } from '@/store/zuAuth';
-import { useUsersStore } from '@/store/zuUsers';
+import { useAuthStore } from '@/store/authStore';
+import { useUsersStore } from '@/store/usersStore';
 
 export default function Profile() {
   // expo router

@@ -6,9 +6,9 @@ import { useFilePicker } from '@/hooks/filesPicker';
 import { v4 as uuid } from 'uuid';
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
 import { useSearchParams } from 'expo-router/build/hooks';
-import { useSystemStore } from '@/store/zuSystem';
-import { useAuthStore } from '@/store/zuAuth';
-import { useChatsStore } from '@/store/zuChats';
+import { useSystemStore } from '@/store/systemStore';
+import { useAuthStore } from '@/store/authStore';
+import { useChatsStore } from '@/store/chatsStore';
 
 const AttchFileBottomSheet = () => {
   // url search params

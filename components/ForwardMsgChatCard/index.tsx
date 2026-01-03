@@ -3,7 +3,7 @@ import { FC, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ChatCard, ChatTypes } from '@/interfaces/chats';
 import i18n from '@/i18n';
-import { useAuthStore } from '@/store/zuAuth';
+import { useAuthStore } from '@/store/authStore';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {

@@ -1,7 +1,7 @@
 // boilerplate for react native component
 
 import { ChatActionsTypes } from '@/interfaces/chats';
-import { useChatsStore } from '@/store/zuChats';
+import { useChatsStore } from '@/store/chatsStore';
 import { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';

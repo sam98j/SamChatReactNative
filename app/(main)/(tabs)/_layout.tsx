@@ -2,7 +2,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 import ChatsHeaderBtns from '@/components/ChatsHeaderBtns';
 import i18n from '../../../i18n';
-import { useAuthStore } from '@/store/zuAuth';
+import { useAuthStore } from '@/store/authStore';
 import { StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 

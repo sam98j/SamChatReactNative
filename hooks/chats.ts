@@ -1,5 +1,5 @@
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
-import { useChatsStore } from '@/store/zuChats';
+import { useChatsStore } from '@/store/chatsStore';
 import { chunkFile } from '@/utils/files';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';

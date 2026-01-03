@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import i18n from '../../../i18n';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useAuthStore } from '@/store/zuAuth';
+import { useAuthStore } from '@/store/authStore';
 import SamChatIcon from '@/assets/icon.png';
 import startSignInFlow from '@/utils/auth';
 

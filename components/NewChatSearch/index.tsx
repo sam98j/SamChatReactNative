@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import useUsersApi from './hooks';
 import { UIActivityIndicator } from 'react-native-indicators';
 import NewChatUserCard from '../NewChatUserCard';
-import { LoggedInUserData } from '@/store/auth.slice';
+import { LoggedInUserData } from '@/store/authStore';
 import i18n from '@/i18n';
 
 // component state

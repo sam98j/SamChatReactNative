@@ -9,9 +9,9 @@ import { ChatActionsTypes, ChatCard, ChatMessage, MessagesTypes } from '@/interf
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useChatSounds } from '@/hooks/sounds';
 import { secondsToDurationConverter } from '@/utils/time';
-import { useAuthStore } from '@/store/zuAuth';
-import { ChatActions, useChatsStore } from '@/store/zuChats';
-import { useSystemStore } from '@/store/zuSystem';
+import { useAuthStore } from '@/store/authStore';
+import { ChatActions, useChatsStore } from '@/store/chatsStore';
+import { useSystemStore } from '@/store/systemStore';
 import SoundIcon from '@/assets/icons/sound.png';
 import i18n from '@/i18n';
 import ResponseToMsgPopUp from '../ResponseToMsgPopUp';

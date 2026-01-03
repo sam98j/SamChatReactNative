@@ -2,7 +2,7 @@ import ForwardMsgChatCard from '@/components/ForwardMsgChatCard';
 import NoChatsVector from '@/components/NoChatsVector';
 import i18n from '@/i18n';
 import { MessagesToBeForwarded } from '@/interfaces/chats';
-import { useChatsStore } from '@/store/zuChats';
+import { useChatsStore } from '@/store/chatsStore';
 import { Button } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
