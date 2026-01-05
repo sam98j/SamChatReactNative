@@ -1,32 +1,37 @@
 // basic imports
 import React, { useEffect, useState, FC } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ChatMessage } from '@/interfaces/chats';
 import { useAudioPlayer } from 'expo-audio';
 import { secondsToDurationConverter } from '@/utils/time';
 
 // component props
-type Props = {
-  msg: ChatMessage;
-};
+type Props = { msg: ChatMessage };
 
 const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+  // screen width
+  const SCREEN_WIDTH = Dimensions.get('window').width;
+
+  // get voiceNoteDuration and content from msg
   const { voiceNoteDuration, content } = msg;
+
   // progress bar ref
   const progressRef = React.useRef<View>(null);
   // expo audio imports
   const player = useAudioPlayer(apiUrl + content);
 
   console.log('VoiceMsgPlayer rendered');
-  // get audio player status
-  // expo audio player status
-  // progress bar width
-  // get current user from store
+
+  console.log('Voice note duration:', voiceNoteDuration);
+  console.log('Voice note content URL:', apiUrl + content);
+
   // is audio playing state
   const [isPlaying, setIsPlaying] = useState(false);
+
   // handle audio play/pause
   const handlePress = () => {
     // if it's playing, pause it
@@ -39,9 +44,10 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
     player.play();
     setIsPlaying(true);
   };
-  // play audio
+
   // intervalId
   let intervalId: number;
+
   // observe isPlaying
   useEffect(() => {
     if (!isPlaying) return;
@@ -65,17 +71,22 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
       // calculate progress width;
     }, 1000);
   }, [isPlaying]);
-  // log content
+
   return (
     <View style={styles.container}>
+      {/* play / pause button */}
       <TouchableOpacity style={styles.playButton}>
         {isPlaying && <Icon name='pause' size={30} color='gray' />}
         {/* if it's not playing */}
         {!isPlaying && <Icon name='play' size={30} color='gray' onPress={handlePress} />}
       </TouchableOpacity>
-      <View style={styles.progressContainer}>
+
+      {/* progress bar */}
+      <View style={[styles.progressContainer, { width: `${SCREEN_WIDTH * 0.17}%` }]}>
         <View style={[styles.progress]} ref={progressRef}></View>
       </View>
+
+      {/* voice note duration */}
       <View>
         <Text style={{ fontSize: 12, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>
           {secondsToDurationConverter(Number(voiceNoteDuration))}
@@ -104,10 +115,8 @@ const styles = StyleSheet.create({
     borderRadius: 22.5,
   },
   progressContainer: {
-    flex: 1,
     height: 5,
     backgroundColor: '#ddd',
-    width: 400,
     borderRadius: 2.5,
     overflow: 'hidden',
   },

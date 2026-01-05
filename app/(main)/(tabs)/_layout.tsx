@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     height: 65,
     backgroundColor: 'transparent',
     borderWidth: 0.5,
-    borderRadius: 20,
+    borderRadius: 50,
     elevation: 0,
     position: 'absolute',
     marginHorizontal: 10,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
 
   // blur view style
   blurViewStyle: {
-    borderRadius: 20,
+    borderRadius: 50,
     flex: 1,
     overflow: 'hidden',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',

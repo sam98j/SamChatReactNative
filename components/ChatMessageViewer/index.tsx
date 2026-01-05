@@ -60,11 +60,11 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
       if (nextX < -MAX_DRAG) nextX = -MAX_DRAG;
       translateX.value = nextX;
     },
-    onEnd: () => {
+    onEnd: (event) => {
+      if (event.translationX < SCREEN_WIDTH / 2) return (translateX.value = withSpring(0));
       console.log('ended');
-      // Snap back to 0 or apply spring
       translateX.value = withSpring(0);
-
+      // Snap back to 0 or apply spring
       // response to message
       const responseToMessageData: ResponseToMessageData = {
         sender,

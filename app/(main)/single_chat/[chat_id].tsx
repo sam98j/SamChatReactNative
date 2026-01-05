@@ -66,13 +66,15 @@ const SingleChat = () => {
       const messagesToBeMarketAsReaded = chatMessages
         .filter((message) => message.status !== MessageStatus.READED && message.sender._id !== loggedInUser?._id)
         .map((message) => message._id);
+
       // messages senders
       const messagesSendersIDs = chatMessages
         .filter((message) => message.status !== MessageStatus.READED && message.sender._id !== loggedInUser?._id)
         .map((message) => message.sender._id);
 
-      // terminate if message is sended by current user
+      // terminate if there is no messages to be market as readed
       if (!messagesToBeMarketAsReaded.length) return;
+
       // messagesToBeMarket as Readed
       const changeMessageStatusData: ChangeMessageStatusDTO = {
         chatId: chat_id!,
@@ -80,6 +82,7 @@ const SingleChat = () => {
         senderIDs: messagesSendersIDs,
         msgStatus: MessageStatus.READED,
       };
+
       // set messages to market as readed
       setMessageToBeMarketAsReaded(changeMessageStatusData);
     }
@@ -108,7 +111,6 @@ const SingleChat = () => {
       };
       addMessageToChat(actionMessage);
     }
-    // scroll to the bottom of the view
   }, [
     chatMessages,
     createChatAPIres,
@@ -121,22 +123,16 @@ const SingleChat = () => {
 
   // listen for opened chat
   useEffect(() => {
-    if (!openedChat) return;
-    // get usr online status
+    if (!openedChat || chatMessages?.length) return;
     // if (openedChat?.type === ChatTypes.GROUP) dispatch(setChatUsrStatus(undefined));
-    // terminate if there is chat messages
-    if (chatMessages?.length) return;
     // get chats messages
-    setOpenedChatMessages({
-      chatId: chat_id!,
-      msgBatch: 1,
-    });
-  }, [openedChat, chatMessages?.length, chat_id, setOpenedChatMessages]);
+    setOpenedChatMessages({ chatId: chat_id!, msgBatch: 1 });
+  }, [openedChat, chatMessages?.length, setOpenedChatMessages]);
 
   // observer chat messages to scroll to the bottom
   useEffect(() => {
     // Only run when chatMessages is loaded for the first time
-    if (chatMessagesBatchNo !== 1) return;
+    if (chatMessages && chatMessagesBatchNo !== 1) return;
     // scroll to the bottom of the view
     if (messagesContainerRef.current) messagesContainerRef.current.scrollToEnd({ animated: true });
   }, [chatMessages, chatMessagesBatchNo]);
@@ -160,21 +156,6 @@ const SingleChat = () => {
       // check for chat type individual
       if (openedChat?.type === ChatTypes.INDIVISUAL) deleteChat(chat_id!);
     };
-    // We only want this to run on mount/unmount.
-    // However, including dependencies that might change during lifecycle like `openedChat` inside cleanup
-    // can be tricky if we want exact "unmount" behavior.
-    // The original code passed [] which means it uses stale closures for cleanup if deps change.
-    // Given the logic, it seems intended to run ONLY on unmount.
-    // But referencing `openedChat` inside cleanup with [] dependency means `openedChat` will be the initial value (undefined).
-    // This looks like a BUG in the original code too if openedChat changes.
-    // However, fixing logic bugs is out of scope unless it causes re-renders.
-    // Use refs to access latest state in cleanup if we strictly need [] dependency.
-    // For now, I will keep [] as per original, but warn that `openedChat` might be stale.
-    // Actually, `openedChat` is needed for the condition.
-    // A strict lint rules extraction would require openedChatRef.
-    // I'll stick to [] to match original behavior, but strictly speaking this might be broken in original too.
-    // Wait, if I change it to `[openedChat]` it will cleanup every time openedChat changes.
-    // Let's use a ref to hold the latest `openedChat` so cleanup can see it without re-running effect.
   }, []);
 
   // Fix for stale closure in cleanup (though out of scope, it's good practice)
