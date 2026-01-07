@@ -41,9 +41,9 @@ export const useSingleChat = () => {
     return grouped.dates
       .map((date, index) => ({
         title: date,
-        data: grouped.messages[index].slice().reverse(), // Reverse messages to show newest at bottom (start of inverted list)
+        data: grouped.messages[index].slice(), // Reverse messages to show newest at bottom (start of inverted list)
       }))
-      .reverse(); // Reverse sections to show newest date section at bottom
+      // .reverse(); // Reverse sections to show newest date section at bottom
   }, [chatMessages]);
 
   // Initial fetch and setup

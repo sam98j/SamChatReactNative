@@ -35,24 +35,24 @@ const SingleChat = () => {
         <View style={styles.messagesContainer}>
           {chatMessages !== undefined && !chatMessages?.length && !isFetchingChatMessages && <NoMessages />}
 
-          {isFetchingChatMessages && (
+          {/* loading messages */}
+          {isFetchingChatMessages && !chatMessages?.length && (
             <View style={{ padding: 10 }}>
               <UIActivityIndicator size={20} color='gray' />
             </View>
           )}
 
+          {/* messages list */}
           <SectionList
-            inverted
             sections={sections}
+            onRefresh={loadMoreMessages}
+            refreshing={isFetchingChatMessages}
             contentContainerStyle={styles.scrollContentContainer}
             keyExtractor={(item) => item._id}
             renderSectionHeader={({ section: { title } }) => <Text style={styles.messagesDate}>{title}</Text>}
             renderItem={({ item }) => <ChatMessageViewer msg={item} />}
-            onEndReached={loadMoreMessages}
-            onEndReachedThreshold={0.5}
-            // Remove clipping to avoid white spaces during fast scroll
             removeClippedSubviews={false}
-            stickySectionHeadersEnabled={false} // sticky headers look weird in inverted chat usually
+            stickySectionHeadersEnabled={true} 
           />
 
           {/* chat actions */}
@@ -80,10 +80,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   messagesContainer: {
-    flex: 1, // Ensure it takes available space
-    // paddingHorizontal: 15,
+    flex: 1, 
     backgroundColor: 'transparent',
-    marginBottom: 70, // to avoid overlap with the message input
+    marginBottom: 70, 
   },
   // create message container
   createMessageContainer: {
@@ -105,9 +104,9 @@ const styles = StyleSheet.create({
   },
   messagesDate: {
     textAlign: 'center',
-    color: '#3b82f6',
+    color: '#3b83f6ff',
     marginVertical: 10,
-    backgroundColor: '#ebf8ff',
+    backgroundColor: '#ebf8ffff',
     borderRadius: 10,
     padding: 3,
     alignSelf: 'center',
