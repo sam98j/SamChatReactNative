@@ -18,14 +18,16 @@ type SingleChatHeaderProps = {
 const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
   // get opened chat from redux
   const { openedChat, setUserOnlineStatus, chatUsrStatus, msgsActionsMenu } = useChatsStore();
-  // dispatch method
+
   // logged in user id from zustand zuAuth
   const loggedInUser = useAuthStore().currentUser?._id;
-  // get chatAction from redux\
+
   // chat name
   const [chatUser] = useState(() => openedChat!.members.filter((member) => member._id !== loggedInUser)[0]);
+
   // chat avatar
   const [chatAvatar] = useState(() => {
     // get chat member
@@ -35,10 +37,13 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     // return
     return `${apiUrl}${openedChat!.type === ChatTypes.GROUP ? openedChat!.avatar : chatMember.avatar}`;
   });
+
   // chatName
   const [chatName] = useState(() => (openedChat!.name ? openedChat!.name : chatUser.name));
+
   // use router to navigate back
   const router = useRouter();
+
   // get locale
   const locale = i18n.locale;
 
@@ -49,6 +54,7 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     TimeUnits.fullTime,
     locale as never
   )}`;
+
   // is chat usr online
   const isChatUsrOnline = chatUsrStatus === 'online' && chatUsrStatus && i18n.t('chatHeader.online');
   // is chat usr offline
@@ -109,12 +115,10 @@ export default SingleChatHeader;
 
 const styles = StyleSheet.create({
   headerContainer: {
-    height: 55,
+    // height: 55,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
     position: 'relative',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    top: 0,
     width: '100%',
   },
 
