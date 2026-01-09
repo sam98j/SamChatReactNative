@@ -82,7 +82,7 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
       </TouchableOpacity>
 
       {/* progress bar */}
-      <View style={[styles.progressContainer, { width: `${SCREEN_WIDTH * 0.17}%` }]}>
+      <View style={[styles.progressContainer, { width: '65%' }]}>
         <View style={[styles.progress]} ref={progressRef}></View>
       </View>
 
@@ -104,7 +104,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     fontFamily: 'BalooBhaijaan2',
-    width: '100%',
+    width: '80%',
+    marginRight: '20%',
   },
   playButton: {
     height: 45,

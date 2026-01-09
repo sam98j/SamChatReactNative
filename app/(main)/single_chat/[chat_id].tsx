@@ -6,7 +6,7 @@ import NoMessages from '@/components/NoMessages';
 import SingleChatHeader from '@/components/SingleChatHeader';
 import ForwardMsgMenu from '../forwordMsgReciversList';
 import { useSingleChat } from '@/hooks/useSingleChat';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { ImageBackground, KeyboardAvoidingView, SectionList, StyleSheet, Text, View } from 'react-native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import chatBackground from '../../../assets/images/chat_background.png';
@@ -16,6 +16,8 @@ const SingleChat = () => {
     useSingleChat();
 
   const onBackPress = useCallback(() => {}, []);
+
+  // TODO: implement auto scroll to bottom when new message is added
 
   return (
     <View style={styles.container}>
