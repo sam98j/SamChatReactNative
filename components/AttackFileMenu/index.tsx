@@ -202,10 +202,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 10,
+    gap: 5,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    padding: 13,
+    padding: 5,
   },
 
   fileTypeContainer: {
