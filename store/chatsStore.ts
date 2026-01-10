@@ -63,6 +63,7 @@ export interface ChatState {
   deleteChat: (_id: string) => void;
   setMsgsActionsMenu: (msgId: string | null) => void;
   setMessagesToBeForwared: (msgsToBeForwarded: MessagesToBeForwarded | null) => void;
+  setChatMessages: (msgs: ChatMessage[]) => void;
 }
 
 export const useChatsStore = create<ChatState>((set, get) => ({
@@ -239,4 +240,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
 
   // open close msg actions menu
   setMsgsActionsMenu: (msgId) => set({ msgsActionsMenu: msgId ? [msgId] : null }),
+
+  // method to set chat messages directly
+  setChatMessages: (msgs) => set({ chatMessages: msgs }),
 }));

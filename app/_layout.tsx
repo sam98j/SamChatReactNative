@@ -6,6 +6,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 // import font baloo
 import BalooBhaijaan2 from '@/assets/fonts/BalooBhaijaan2-Regular.ttf';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   // check if the user is logged in
@@ -21,10 +24,12 @@ export default function RootLayout() {
 
   if (!fontsLoaded) return null;
   return (
-    <GestureHandlerRootView key={Math.random()}>
-      <SafeAreaProvider>
-        <Slot />
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView key={Math.random()}>
+        <SafeAreaProvider>
+          <Slot />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }

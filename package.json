@@ -22,6 +22,7 @@
     "@react-native-google-signin/google-signin": "^15.0.0",
     "@rneui/base": "^4.0.0-rc.8",
     "@rneui/themed": "^4.0.0-rc.8",
+    "@tanstack/react-query": "^5.90.16",
     "expo": "~53.0.25",
     "expo-audio": "~0.4.9",
     "expo-blob": "^0.1.0",
