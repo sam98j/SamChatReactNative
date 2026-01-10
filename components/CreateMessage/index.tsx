@@ -420,6 +420,6 @@ const styles = StyleSheet.create({
   recordVoiceBtn: {
     tintColor: '#fff',
     width: 25,
-    height: 30,
+    height: 25,
   },
 });
