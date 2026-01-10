@@ -54,7 +54,7 @@ const SingleChat = () => {
             renderSectionHeader={({ section: { title } }) => <Text style={styles.messagesDate}>{title}</Text>}
             renderItem={({ item }) => <ChatMessageViewer msg={item} />}
             removeClippedSubviews={false}
-            stickySectionHeadersEnabled={true} 
+            stickySectionHeadersEnabled={true}
           />
 
           {/* chat actions */}
