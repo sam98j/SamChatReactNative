@@ -1,6 +1,5 @@
 // basic imports
 import React, { useRef, useState } from 'react';
-import 'react-native-image-keyboard';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { v4 as uuid } from 'uuid';
@@ -193,15 +192,6 @@ const CreateMessage = () => {
     stopRecording();
   };
 
-  //TODO: handle image change
-  const handleImageChange = (event) => {
-    const { uri, linkUri, mime, data } = event.nativeEvent;
-    console.log('uri', uri);
-    console.log('linkUri', linkUri);
-    console.log('mime', mime);
-    console.log('data', data);
-  };
-
   // open camera and take photo
   const openCamera = async () => {
     // check camera permission
@@ -328,7 +318,6 @@ const CreateMessage = () => {
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
               onChangeText={(e) => inputChangeHandler(e)}
-              onImageChange={() => handleImageChange}
             />
             {/* attach file and stickers icons */}
             <MIcon name='sticker-circle-outline' size={26} color='dodgerblue' />

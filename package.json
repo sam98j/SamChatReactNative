@@ -58,7 +58,6 @@
     "react-native-circular-progress": "^1.4.1",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-get-random-values": "^1.11.0",
-    "react-native-image-keyboard": "^2.2.1",
     "react-native-indicators": "^0.17.0",
     "react-native-platform-searchbar": "^1.2.3",
     "react-native-reanimated": "~3.17.4",
@@ -90,5 +89,23 @@
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3"
   },
-  "private": true
+  "private": true,
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "@rneui/base",
+          "@rneui/themed",
+          "react-native-indicators",
+          "expo-blob",
+          "get-blob-duration",
+          "install",
+          "react-native-platform-searchbar",
+          "react-native-vector-icons",
+          "socket.io-client",
+          "uuid"
+        ]
+      }
+    }
+  }
 }
