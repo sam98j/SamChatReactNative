@@ -120,23 +120,23 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
 
           {/* message data */}
           {/* <View style={{width: '20%',  flexGrow: 1}}> */}
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', position: 'absolute', bottom: 5, right: 5 }}>
-              {/* message status */}
-              {isFromMe && (
-                <View>
-                  {/* svg icon from assets as image */}
-                  {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
-                  {/* check or msg status readed */}
-                  {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
-                  {/* check or msg status sent */}
-                  {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
-                  {/* check for msg status null */}
-                  {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
-                </View>
-              )}
-              {/* message time */}
-              <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{messageTime}</Text>
-            </View>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', position: 'absolute', bottom: 5, right: 5 }}>
+            {/* message status */}
+            {isFromMe && (
+              <View>
+                {/* svg icon from assets as image */}
+                {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
+                {/* check or msg status readed */}
+                {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
+                {/* check or msg status sent */}
+                {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
+                {/* check for msg status null */}
+                {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
+              </View>
+            )}
+            {/* message time */}
+            <Text style={{ fontSize: 10, color: 'gray', fontFamily: 'BalooBhaijaan2' }}>{messageTime}</Text>
+          </View>
           {/* </View> */}
         </TouchableOpacity>
       </Animated.View>

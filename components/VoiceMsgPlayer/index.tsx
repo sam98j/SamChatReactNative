@@ -1,6 +1,6 @@
 // basic imports
 import React, { useEffect, useState, FC } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ChatMessage } from '@/interfaces/chats';
 import { useAudioPlayer } from 'expo-audio';
@@ -12,9 +12,6 @@ type Props = { msg: ChatMessage };
 const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
-  // screen width
-  const SCREEN_WIDTH = Dimensions.get('window').width;
 
   // get voiceNoteDuration and content from msg
   const { voiceNoteDuration, content } = msg;
