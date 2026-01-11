@@ -65,6 +65,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingBottom: 100,
     height: '100%',
     backgroundColor: 'white',
     display: 'flex',

@@ -1,4 +1,4 @@
-import { Slot } from 'expo-router';
+import { Stack } from 'expo-router';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -194,7 +194,21 @@ const MainLayout = () => {
     socketClient?.emit('forward_messages', messagesToBeForwared);
   }, [messagesToBeForwared]);
 
-  return <Slot />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="single_chat/[chat_id]"
+        options={{
+          headerShown: false,
+          presentation: 'pageSheet',
+          animation: 'ios_from_right',
+          animationDuration: 50,
+          gestureEnabled: true,
+        }}
+      />
+    </Stack>
+  );
 };
 
 export default MainLayout;
