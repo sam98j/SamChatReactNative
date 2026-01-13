@@ -207,6 +207,13 @@ const MainLayout = () => {
           gestureEnabled: true,
         }}
       />
+      <Stack.Screen
+        name="conversation_details/[chat_id]"
+        options={{
+          headerShown: false,
+          presentation: 'modal',
+        }}
+      />
     </Stack>
   );
 };

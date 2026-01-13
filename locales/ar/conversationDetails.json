@@ -1,0 +1,17 @@
+{
+  "chatNotFound": "المحادثة غير موجودة",
+  "group": "مجموعة",
+  "personal": "شخصي",
+  "available": "متاح",
+  "members": "{{count}} أعضاء",
+  "audio": "صوت",
+  "video": "فيديو",
+  "search": "بحث",
+  "you": "أنت",
+  "mediaLinksDocs": "الوسائط، الروابط، والمستندات",
+  "starredMessages": "الرسائل المميزة بنجمة",
+  "notifications": "الإشعارات",
+  "clearChat": "مسح المحادثة",
+  "blockGroup": "حظر المجموعة",
+  "blockUser": "حظر المستخدم"
+}

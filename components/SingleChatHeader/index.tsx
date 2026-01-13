@@ -73,6 +73,13 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     // if (openedChat?.type === ChatTypes.GROUP) dispatch(setChatUsrStatus(undefined));
   }, [openedChat]);
 
+  // handle header press
+  const handleHeaderPress = () => {
+    if (openedChat?._id) {
+      router.push(`/conversation_details/${openedChat._id}`);
+    }
+  };
+
   return (
     <View style={[styles.headerContainer, locale === 'ar' && styles.arDirection]}>
       {/* msg actions menu */}
@@ -85,17 +92,19 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
           <Icon name='chevron-back' size={30} color='dodgerblue' style={styles.flipDir} />
         </TouchableOpacity>
 
-        {/* Avatar */}
-        <Avatar source={{ uri: chatAvatar }} size={'small'} containerStyle={{ backgroundColor: '#bbb' }} rounded />
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }} onPress={handleHeaderPress}>
+          {/* Avatar */}
+          <Avatar source={{ uri: chatAvatar }} size={'small'} containerStyle={{ backgroundColor: '#bbb' }} rounded />
 
-        {/* Title */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{chatName}</Text>
-          {/* is chat usr offline */}
-          {isChatUsrOffline && <Text style={styles.lastseen}>{isChatUsrOffline}</Text>}
-          {/* user online status */}
-          {isChatUsrOnline && <Text style={styles.onlineStatus}>{isChatUsrOnline}</Text>}
-        </View>
+          {/* Title */}
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{chatName}</Text>
+            {/* is chat usr offline */}
+            {isChatUsrOffline && <Text style={styles.lastseen}>{isChatUsrOffline}</Text>}
+            {/* user online status */}
+            {isChatUsrOnline && <Text style={styles.onlineStatus}>{isChatUsrOnline}</Text>}
+          </View>
+        </TouchableOpacity>
 
         {/* chats calls */}
         <View style={styles.chatsCallsContainer}>

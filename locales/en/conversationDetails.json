@@ -1,0 +1,17 @@
+{
+  "chatNotFound": "Chat not found",
+  "group": "Group",
+  "personal": "Personal",
+  "available": "Available",
+  "members": "{{count}} members",
+  "audio": "Audio",
+  "video": "Video",
+  "search": "Search",
+  "you": "You",
+  "mediaLinksDocs": "Media, Links, and Docs",
+  "starredMessages": "Starred Messages",
+  "notifications": "Notifications",
+  "clearChat": "Clear Chat",
+  "blockGroup": "Block Group",
+  "blockUser": "Block User"
+}
