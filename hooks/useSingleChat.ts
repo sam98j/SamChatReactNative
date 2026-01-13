@@ -130,7 +130,7 @@ export const useSingleChat = () => {
     return () => {
       console.log('SingleChat unmounted');
       clearChatMessages();
-      setUserOnlineStatus(undefined, null);
+      setUserOnlineStatus(loggedInUser?._id, undefined);
       setOpenedChat(undefined);
       if (openedChat?.type === ChatTypes.INDIVISUAL) deleteChat(chat_id as string);
     };

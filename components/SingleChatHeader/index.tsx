@@ -41,19 +41,14 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // chatName
   const [chatName] = useState(() => (openedChat!.name ? openedChat!.name : chatUser.name));
 
+  // chat usr last seen
+  const [chatUsrLastSeen, setChatUsrLastSeen] = useState('');
+
   // use router to navigate back
   const router = useRouter();
 
   // get locale
   const locale = i18n.locale;
-
-  // TODO: handle loading state
-  // chat usr last seen
-  const chatUsrLastSeen = `${i18n.t('chatHeader.last_seen')} ${getTime(
-    chatUsrStatus!,
-    TimeUnits.fullTime,
-    locale as never
-  )}`;
 
   // is chat usr online
   const isChatUsrOnline = chatUsrStatus === 'online' && chatUsrStatus && i18n.t('chatHeader.online');
@@ -63,15 +58,31 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // handle back button press
   const handleBackPress = () => router.back();
 
-  // observe openedChat
+  // observe openedChat 
   React.useEffect(() => {
     // check if no opened chat
     if (!openedChat) return;
+
     // get usr online status
     if (openedChat?.type === ChatTypes.INDIVISUAL) setUserOnlineStatus(chatUser!._id);
-    // // get usr online status
-    // if (openedChat?.type === ChatTypes.GROUP) dispatch(setChatUsrStatus(undefined));
+
+    // get usr online status
+    if (openedChat?.type === ChatTypes.GROUP) setUserOnlineStatus(undefined);
+
   }, [openedChat]);
+
+  // observe chatUsrStatus
+  React.useEffect(() => {
+    // check if no chat usr status
+    if (!chatUsrStatus) return;
+
+    // set chat usr last seen
+    setChatUsrLastSeen(`${i18n.t('chatHeader.last_seen')} ${getTime(
+    chatUsrStatus!,
+    TimeUnits.fullTime,
+    locale as never
+  )}`);
+  }, [chatUsrStatus]);
 
   return (
     <View style={[styles.headerContainer, locale === 'ar' && styles.arDirection]}>
@@ -82,7 +93,7 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
       <View style={styles.mainContainer}>
         {/* Back Button */}
         <TouchableOpacity onPress={handleBackPress}>
-          <Icon name='chevron-back' size={30} color='dodgerblue' style={styles.flipDir} />
+          <Icon  name='chevron-forward' size={30} color='dodgerblue' />
         </TouchableOpacity>
 
         {/* Avatar */}
@@ -123,7 +134,7 @@ const styles = StyleSheet.create({
   },
 
   mainContainer: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -133,10 +144,7 @@ const styles = StyleSheet.create({
   arDirection: {
     direction: 'rtl',
   },
-  // flip dir
-  flipDir: {
-    transform: [{ scaleX: -1 }],
-  },
+  
   //   title container
   titleContainer: {
     flex: 1,
