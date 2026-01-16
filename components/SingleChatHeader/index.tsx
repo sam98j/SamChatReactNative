@@ -58,7 +58,7 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // handle back button press
   const handleBackPress = () => router.back();
 
-  // observe openedChat 
+  // observe openedChat
   React.useEffect(() => {
     // check if no opened chat
     if (!openedChat) return;
@@ -68,7 +68,6 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
 
     // get usr online status
     if (openedChat?.type === ChatTypes.GROUP) setUserOnlineStatus(undefined);
-
   }, [openedChat]);
 
   // observe chatUsrStatus
@@ -77,11 +76,7 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     if (!chatUsrStatus) return;
 
     // set chat usr last seen
-    setChatUsrLastSeen(`${i18n.t('chatHeader.last_seen')} ${getTime(
-    chatUsrStatus!,
-    TimeUnits.fullTime,
-    locale as never
-  )}`);
+    setChatUsrLastSeen(`${i18n.t('chatHeader.last_seen')} ${getTime(chatUsrStatus!, TimeUnits.fullTime, locale as never)}`);
   }, [chatUsrStatus]);
 
   return (
@@ -93,20 +88,22 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
       <View style={styles.mainContainer}>
         {/* Back Button */}
         <TouchableOpacity onPress={handleBackPress}>
-          <Icon  name='chevron-forward' size={30} color='dodgerblue' />
+          <Icon name='chevron-forward' size={30} color='dodgerblue' />
         </TouchableOpacity>
 
-        {/* Avatar */}
-        <Avatar source={{ uri: chatAvatar }} size={'small'} containerStyle={{ backgroundColor: '#bbb' }} rounded />
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }} onPress={handleHeaderPress}>
+          {/* Avatar */}
+          <Avatar source={{ uri: chatAvatar }} size={'small'} containerStyle={{ backgroundColor: '#bbb' }} rounded />
 
-        {/* Title */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{chatName}</Text>
-          {/* is chat usr offline */}
-          {isChatUsrOffline && <Text style={styles.lastseen}>{isChatUsrOffline}</Text>}
-          {/* user online status */}
-          {isChatUsrOnline && <Text style={styles.onlineStatus}>{isChatUsrOnline}</Text>}
-        </View>
+          {/* Title */}
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{chatName}</Text>
+            {/* is chat usr offline */}
+            {isChatUsrOffline && <Text style={styles.lastseen}>{isChatUsrOffline}</Text>}
+            {/* user online status */}
+            {isChatUsrOnline && <Text style={styles.onlineStatus}>{isChatUsrOnline}</Text>}
+          </View>
+        </TouchableOpacity>
 
         {/* chats calls */}
         <View style={styles.chatsCallsContainer}>
@@ -144,7 +141,7 @@ const styles = StyleSheet.create({
   arDirection: {
     direction: 'rtl',
   },
-  
+
   //   title container
   titleContainer: {
     flex: 1,

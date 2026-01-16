@@ -30,6 +30,9 @@ import settingsScreenEn from './locales/en/settings.json';
 // import tranlations files for onboarding
 import onboardingAr from './locales/ar/onboarding.json';
 import onboardingEn from './locales/en/onboarding.json';
+// import tranlations files for conversationDetails
+import conversationDetailsAr from './locales/ar/conversationDetails.json';
+import conversationDetailsEn from './locales/en/conversationDetails.json';
 
 // Set translations
 const translations = {
@@ -44,6 +47,7 @@ const translations = {
     signup: signupScreenEn,
     settings: settingsScreenEn,
     onboarding: onboardingEn,
+    conversationDetails: conversationDetailsEn,
   },
   ar: {
     welcome: welcomeScreenAr,
@@ -56,6 +60,7 @@ const translations = {
     signup: signupScreenAr,
     settings: settingsScreenAr,
     onboarding: onboardingAr,
+    conversationDetails: conversationDetailsAr,
   },
 };
 
