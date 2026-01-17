@@ -88,10 +88,12 @@ const CreateMessage = () => {
   const sendTextMessage = (message: ChatMessage) => {
     // create meassge
     if (!textMessage) return;
+
     // text message file name (null)
     const fileName = null;
     // text message file size (null)
     const fileSize = null;
+
     // textMessage
     const newTextMessage: ChatMessage = {
       ...message,
@@ -100,6 +102,7 @@ const CreateMessage = () => {
       fileName,
       fileSize,
     };
+
     // check if it's first message in the chat
     if (chatMessages?.length === 0) {
       // create chat card
@@ -124,6 +127,7 @@ const CreateMessage = () => {
   const sendVoiceMessage = async (message: ChatMessage) => {
     // send voice msg if it's recording and input is empty
     if (!isRec || textMessage) return;
+
     // stop recording
     const { recordingUri } = await stopRecording();
 
@@ -137,6 +141,7 @@ const CreateMessage = () => {
     const fileSize = '';
     // msg type
     const type = MessagesTypes.VOICENOTE;
+
     // voice note message
     const voiceNoteMessage: ChatMessage = {
       ...message,
@@ -146,10 +151,12 @@ const CreateMessage = () => {
       fileName,
       fileSize,
     };
-    // add message to the chat
+
+    // reset recording (stop recording)
     setIsRec(false);
+    // reset voice note duration
     setVoiceNoteDurationMillis(0);
-    // set voiceNoteTime
+    // reset voiceNoteTime
     voiceNoteTime = secondsToDurationConverter(0);
     // add message to the chat
     addMessageToChat(voiceNoteMessage);
@@ -271,6 +278,7 @@ const CreateMessage = () => {
   React.useEffect(() => {
     // if no opened chat
     if (!openedChat) return;
+
     // chat members IDs
     const openedChatMembersIDs = openedChat?.members.map((member) => member._id);
     // chat action
@@ -280,6 +288,7 @@ const CreateMessage = () => {
       chatMembers: openedChatMembersIDs!,
       senderId: currentUsr!._id,
     };
+
     // setChatAction
     setChatAction(chatAction);
   }, [openedChat]);
@@ -327,10 +336,12 @@ const CreateMessage = () => {
             </TouchableOpacity>
           </View>
         )}
+
         {/* send button */}
         <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
           {/* send icon if text message is not empty */}
           {showSendMsgBtn && <Icon name='send' style={styles.sendButtonText} />}
+
           {/* sound png image text field is empty*/}
           {!textMessage && !isRec && (
             <TouchableOpacity onPress={handleRecordStopRecording}>

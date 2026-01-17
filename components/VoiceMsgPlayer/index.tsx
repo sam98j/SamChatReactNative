@@ -18,8 +18,11 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
 
   // progress bar ref
   const progressRef = React.useRef<View>(null);
+
+  // voice note url
+  const voiceNoteUrl = content.startsWith('file') ? content : apiUrl + content;
   // expo audio imports
-  const player = useAudioPlayer(apiUrl + content);
+  const player = useAudioPlayer(voiceNoteUrl);
 
 
 
