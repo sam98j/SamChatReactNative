@@ -58,7 +58,7 @@ export interface ChatState {
   addNewChat: (chat: ChatCard) => void;
   setCurrentUserChats: (chats: ChatCard[]) => void;
   setOpenedChatMessages: (data: { chatId: string; msgBatch: number }) => Promise<void>;
-  setUserOnlineStatus: (userId?: string, status?: string | null | undefined) => Promise<void>;
+  getUserOnlineStatus: (userId?: string) => Promise<void>;
   setFileMessageUploadIndicator: (n: number) => void;
   deleteChat: (_id: string) => void;
   setMsgsActionsMenu: (msgId: string | null) => void;
@@ -83,7 +83,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     senderId: '',
     type: null,
   },
-  chatUsrStatus: '',
+  chatUsrStatus: null,
   messageToBeMarketAsReaded: null,
   currentChatPorfile: null,
   chatMessagesBatchNo: 1,
@@ -207,9 +207,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
   },
 
   // method to set the user online status
-  setUserOnlineStatus: async (userId?: string, status?: string | null | undefined) => {
-    // check if status is passed
-    if (status) return set({ chatUsrStatus: status });
+  getUserOnlineStatus: async (userId?: string) => {
     // get user online status
     const usrOnlineStatus = await getUsrOnlineStatus(userId!);
     // log

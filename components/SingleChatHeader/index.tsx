@@ -20,7 +20,7 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
   // get opened chat from redux
-  const { openedChat, setUserOnlineStatus, chatUsrStatus, msgsActionsMenu } = useChatsStore();
+  const { openedChat, getUserOnlineStatus, chatUsrStatus, msgsActionsMenu } = useChatsStore();
 
   // logged in user id from zustand zuAuth
   const loggedInUser = useAuthStore().currentUser?._id;
@@ -41,15 +41,8 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // chatName
   const [chatName] = useState(() => (openedChat!.name ? openedChat!.name : chatUser.name));
 
-  // chat usr last seen
-  const [chatUsrLastSeen, setChatUsrLastSeen] = useState('');
-
   // is chat usr online
   const [isChatUsrOnline, setIsChatUsrOnline] = useState('');
-
-  // is chat usr offline
-  const [isChatUsrOffline, setIsChatUsrOffline] = useState('');
-
 
   // use router to navigate back
   const router = useRouter();
@@ -66,10 +59,10 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     if (!openedChat) return;
 
     // get usr online status
-    if (openedChat?.type === ChatTypes.INDIVISUAL) setUserOnlineStatus(chatUser!._id);
+    if (openedChat?.type === ChatTypes.INDIVISUAL) getUserOnlineStatus(chatUser!._id);
 
     // get usr online status
-    if (openedChat?.type === ChatTypes.GROUP) setUserOnlineStatus(undefined);
+    if (openedChat?.type === ChatTypes.GROUP) getUserOnlineStatus(undefined);
   }, [openedChat]);
 
   // observe chatUsrStatus
@@ -77,16 +70,12 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     // check if no chat usr status
     if (!chatUsrStatus) return;
 
-
-
     // set chat usr last seen
-    const lastSeen = `${i18n.t('chatHeader.last_seen')} ${getTime(chatUsrStatus!, TimeUnits.fullTime, locale as never)}`;
+    const lastSeen = `${i18n.t('chatHeader.last_seen')} ${getTime(chatUsrStatus, TimeUnits.fullTime, locale as never)}`;
 
     // set chat usr online status
-    setIsChatUsrOnline(chatUsrStatus === 'online' ? i18n.t('chatHeader.online') : '');
+    setIsChatUsrOnline(chatUsrStatus === 'online' ? i18n.t('chatHeader.online') : lastSeen);
 
-    // set chat usr offline status
-    setIsChatUsrOffline(chatUsrStatus !== 'online' ? lastSeen : '');
   }, [chatUsrStatus]);
 
   // handle header press
@@ -112,10 +101,8 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
           <View style={styles.titleContainer}>
             {/* chat name */}
             <Text style={styles.title}>{chatName}</Text>
-            {/* is chat usr offline */}
-            {isChatUsrOffline && <Text style={styles.lastseen}>{isChatUsrOffline}</Text>}
             {/* user online status */}
-            {isChatUsrOnline && <Text style={styles.onlineStatus}>{isChatUsrOnline}</Text>}
+            <Text style={[isChatUsrOnline === 'online' ? styles.onlineStatus : styles.lastseen]}>{isChatUsrOnline}</Text>
           </View>
         </TouchableOpacity>
 

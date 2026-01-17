@@ -46,6 +46,7 @@ export const getUsrOnlineStatus = async (usrId: string) => {
     return 'You Are Not Authente. Yet';
   }
   const resp = (await response.text()) as string;
+
   // there is no error
   return resp;
 };

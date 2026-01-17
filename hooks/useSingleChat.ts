@@ -24,7 +24,7 @@ export const useSingleChat = () => {
   const addMessageToChat = useChatsStore((state) => state.addMessageToChat);
   const setChatMessages = useChatsStore((state) => state.setChatMessages);
   const clearChatMessages = useChatsStore((state) => state.clearChatMessages);
-  const setUserOnlineStatus = useChatsStore((state) => state.setUserOnlineStatus);
+  const setChatUsrStatus = useChatsStore((state) => state.setChatUsrStatus);
   const setMessageToBeMarketAsReaded = useChatsStore((state) => state.setMessageToBeMarketAsReaded);
   const deleteChat = useChatsStore((state) => state.deleteChat);
 
@@ -128,11 +128,10 @@ export const useSingleChat = () => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-
       clearChatMessages();
-      setUserOnlineStatus(loggedInUser?._id, undefined);
+      setChatUsrStatus(null);
       setOpenedChat(undefined);
-      if (openedChat?.type === ChatTypes.INDIVISUAL) deleteChat(chat_id as string);
+      if (openedChat?.type === ChatTypes.INDIVISUAL) deleteChat(chat_id!);
     };
   }, []);
 
