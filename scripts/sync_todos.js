@@ -15,7 +15,7 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const EXCLUDES = ['node_modules', '.git', 'android', 'ios', 'dist', 'build', '.expo'];
 
 function findTodos() {
-  console.log('Scanning for TODOs...');
+
   try {
     // using grep to find TODOs recursively, ignoring binary files and excluding directories
     // -r: recursive
@@ -104,14 +104,14 @@ async function createTodoistTask(todo) {
 
 async function main() {
   const todos = findTodos();
-  console.log(`Found ${todos.length} TODOs.`);
+
 
   let successCount = 0;
   let failCount = 0;
 
   for (const todo of todos) {
     try {
-      console.log(`Adding: ${todo.text.substring(0, 50)}...`);
+
       await createTodoistTask(todo);
       successCount++;
       // Rate limiting: sleep a bit
@@ -122,7 +122,7 @@ async function main() {
     }
   }
 
-  console.log(`\nFinished. Added: ${successCount}, Failed: ${failCount}`);
+
 }
 
 main();

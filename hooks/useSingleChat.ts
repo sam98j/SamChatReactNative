@@ -128,7 +128,7 @@ export const useSingleChat = () => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      console.log('SingleChat unmounted');
+
       clearChatMessages();
       setUserOnlineStatus(loggedInUser?._id, undefined);
       setOpenedChat(undefined);

@@ -180,7 +180,7 @@ const MainLayout = () => {
     // messages forwarded done
     socketClient?.on('forward_messages_done', () => {
       // terminate if no messages to forwarded
-      console.log(messagesToBeForwared);
+
       // place chats to the top
       messagesToBeForwared!.chats.map((chatId) => placeLastUpdatedChatToTheTop({ chatId }));
 

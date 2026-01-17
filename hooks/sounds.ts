@@ -42,7 +42,7 @@ export const usePlayChatSound = () => {
   // play the sound
   const playReceivedMessageSound = () => {
     try {
-      console.log('Playing received message sound');
+
       audioPlayer.play();
     } catch (error) {
       console.error('Error playing sound:', error);

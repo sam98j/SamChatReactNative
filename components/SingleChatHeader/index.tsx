@@ -44,16 +44,18 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // chat usr last seen
   const [chatUsrLastSeen, setChatUsrLastSeen] = useState('');
 
+  // is chat usr online
+  const [isChatUsrOnline, setIsChatUsrOnline] = useState('');
+
+  // is chat usr offline
+  const [isChatUsrOffline, setIsChatUsrOffline] = useState('');
+
+
   // use router to navigate back
   const router = useRouter();
 
   // get locale
   const locale = i18n.locale;
-
-  // is chat usr online
-  const isChatUsrOnline = chatUsrStatus === 'online' && chatUsrStatus && i18n.t('chatHeader.online');
-  // is chat usr offline
-  const isChatUsrOffline = chatUsrStatus !== 'online' && chatUsrStatus && chatUsrLastSeen;
 
   // handle back button press
   const handleBackPress = () => router.back();
@@ -75,9 +77,20 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
     // check if no chat usr status
     if (!chatUsrStatus) return;
 
+
+
     // set chat usr last seen
-    setChatUsrLastSeen(`${i18n.t('chatHeader.last_seen')} ${getTime(chatUsrStatus!, TimeUnits.fullTime, locale as never)}`);
+    const lastSeen = `${i18n.t('chatHeader.last_seen')} ${getTime(chatUsrStatus!, TimeUnits.fullTime, locale as never)}`;
+
+    // set chat usr online status
+    setIsChatUsrOnline(chatUsrStatus === 'online' ? i18n.t('chatHeader.online') : '');
+
+    // set chat usr offline status
+    setIsChatUsrOffline(chatUsrStatus !== 'online' ? lastSeen : '');
   }, [chatUsrStatus]);
+
+  // handle header press
+  const handleHeaderPress = () => openedChat && router.push(`/conversation_details/${openedChat._id}`);
 
   return (
     <View style={[styles.headerContainer, locale === 'ar' && styles.arDirection]}>
@@ -97,6 +110,7 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
 
           {/* Title */}
           <View style={styles.titleContainer}>
+            {/* chat name */}
             <Text style={styles.title}>{chatName}</Text>
             {/* is chat usr offline */}
             {isChatUsrOffline && <Text style={styles.lastseen}>{isChatUsrOffline}</Text>}

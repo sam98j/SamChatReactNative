@@ -49,7 +49,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   const translateX = useSharedValue(0);
 
   // gesture handler
-  const gestureHandler = useAnimatedGestureHandler({
+  const gestureHandler = useAnimatedGestureHandler<any, { startX: number }>({
     onStart: (_, ctx) => {
       ctx.startX = translateX.value;
     },
@@ -62,7 +62,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
     },
     onEnd: (event) => {
       if (event.translationX < SCREEN_WIDTH / 2) return (translateX.value = withSpring(0));
-      console.log('ended');
+
       translateX.value = withSpring(0);
       // Snap back to 0 or apply spring
       // response to message

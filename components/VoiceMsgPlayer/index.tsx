@@ -21,10 +21,7 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
   // expo audio imports
   const player = useAudioPlayer(apiUrl + content);
 
-  console.log('VoiceMsgPlayer rendered');
 
-  console.log('Voice note duration:', voiceNoteDuration);
-  console.log('Voice note content URL:', apiUrl + content);
 
   // is audio playing state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -54,7 +51,7 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
     intervalId = setInterval(() => {
       counter++;
       // log counter
-      console.log('Counter:', counter);
+
       // log isPlaying
       const progressWidth = `${(counter / Number(voiceNoteDuration)) * 100}%`;
 

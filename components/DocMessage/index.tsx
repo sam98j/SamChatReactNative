@@ -23,7 +23,7 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
     if (!content) return;
     // open the file link
     Linking.openURL(fileUrl);
-    console.log('Opening file:', fileUrl);
+
   };
   return (
     <View style={styles.container}>

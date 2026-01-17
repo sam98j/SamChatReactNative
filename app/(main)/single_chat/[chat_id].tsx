@@ -52,7 +52,7 @@ const SingleChat = () => {
             contentContainerStyle={styles.scrollContentContainer}
             keyExtractor={(item) => item._id}
             renderSectionHeader={({ section: { title } }) => <Text style={styles.messagesDate}>{title}</Text>}
-            renderItem={({ item }) => <ChatMessageViewer msg={item} />}
+            renderItem={({ item }) => <ChatMessageViewer msg={item} key={item._id}/>}
             removeClippedSubviews={false}
             stickySectionHeadersEnabled={true}
           />

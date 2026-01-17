@@ -74,7 +74,7 @@ const CreateMessage = () => {
 
   // handleInputBlur
   const handleInputBlur = () => {
-    console.log('blurred');
+
     setCurrentUsrDoingAction({ ...chatAction!, type: null });
   };
 

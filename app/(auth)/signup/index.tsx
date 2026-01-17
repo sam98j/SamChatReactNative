@@ -32,7 +32,7 @@ export default function LoginScreen() {
   const pickImage = async () => {
     // Ask for permission
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') return console.log('Sorry, we need camera roll permissions!');
+    if (status !== 'granted') return;
     // Pick image
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -44,7 +44,6 @@ export default function LoginScreen() {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const respose = await fetch(result.assets[0].uri);
       const blob = await respose.blob();
-      console.log(blob, 'blob');
       setProfileImageUrL(result.assets[0].uri);
       setProfileImage(blob);
     }

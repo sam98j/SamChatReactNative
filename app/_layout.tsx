@@ -15,7 +15,6 @@ export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    console.log('fonts loaded');
     Font.loadAsync({
       BalooBhaijaan2,
     }).then(() => setFontsLoaded(true));
