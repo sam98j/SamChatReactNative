@@ -53,6 +53,8 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
     onStart: (_, ctx) => {
       ctx.startX = translateX.value;
     },
+
+    // on drag active
     onActive: (event, ctx) => {
       // Clamp the value between -MAX_DRAG and MAX_DRAG
       let nextX = ctx.startX + event.translationX;
@@ -60,8 +62,10 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
       if (nextX < -MAX_DRAG) nextX = -MAX_DRAG;
       translateX.value = nextX;
     },
+
+    // on drag end
     onEnd: (event) => {
-      if (event.translationX < SCREEN_WIDTH / 2) return (translateX.value = withSpring(0));
+      if (event.translationX < SCREEN_WIDTH / 3) return (translateX.value = withSpring(0));
 
       translateX.value = withSpring(0);
       // Snap back to 0 or apply spring
@@ -74,6 +78,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
         content,
         fileName,
       };
+
       // dispatch
       runOnJS(setResponseToMessage)(responseToMessageData);
       // haptic feedback
