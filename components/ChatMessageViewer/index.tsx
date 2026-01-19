@@ -17,7 +17,6 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
 } from 'react-native-reanimated';
 import { useChatsStore } from '@/store/chatsStore';
 import RepliedToMessage from '../RepliedToMessage';
@@ -50,8 +49,9 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
 
   // gesture handler
   const gestureHandler = useAnimatedGestureHandler<any, { startX: number }>({
+    // on drag start
     onStart: (_, ctx) => {
-      ctx.startX = translateX.value;
+        ctx.startX = translateX.value;
     },
 
     // on drag active
@@ -65,10 +65,9 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
 
     // on drag end
     onEnd: (event) => {
-      if (event.translationX < SCREEN_WIDTH / 3) return (translateX.value = withSpring(0));
+      if (event.translationX < SCREEN_WIDTH / 3) return (translateX.value = 0);
 
-      translateX.value = withSpring(0);
-      // Snap back to 0 or apply spring
+      translateX.value = 0;
       // response to message
       const responseToMessageData: ResponseToMessageData = {
         sender,

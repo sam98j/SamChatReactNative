@@ -1,12 +1,12 @@
 import { useChatsStore } from '@/store/chatsStore';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import i18n from '@/i18n';
 import { MessagesTypes } from '@/interfaces/chats';
 import { Image } from 'expo-image';
 import VideoThumbnail from '../VideoThumbnail';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming, WithTimingConfig } from 'react-native-reanimated';
 
 const ResponseToMsgPopUp = () => {
   // api url
@@ -15,12 +15,28 @@ const ResponseToMsgPopUp = () => {
   // response to message from zustand zuChats
   const { responseToMessage, setResponseToMessage } = useChatsStore();
 
+  // local state to keep message during animation
+  const [localResponseMsg, setLocalResponseMsg] = useState(responseToMessage);
+
   // height animation
   const height = useSharedValue(0);
 
   // observe response to message
   useEffect(() => {
-    height.value = withTiming(responseToMessage ? -50 : 0, { duration: 200, easing: Easing.elastic(1) });
+    // timing config
+    const timingConfig: WithTimingConfig = { duration: 150, easing: Easing.inOut(Easing.quad) };
+
+    // show response to message
+    if (responseToMessage) {
+      setLocalResponseMsg(responseToMessage);
+      height.value = withTiming(-50, timingConfig);
+
+      // termenate
+      return;
+    }
+
+    // reset height
+    height.value = withTiming(0, timingConfig, finished => finished && runOnJS(setLocalResponseMsg)(null));
   }, [responseToMessage]);
 
   // animated style
@@ -34,26 +50,22 @@ const ResponseToMsgPopUp = () => {
   const { PHOTO, VIDEO, VOICENOTE, FILE, TEXT } = MessagesTypes;
 
   //   image  url
-  const imageUrl = responseToMessage?.content.startsWith('http')
-    ? responseToMessage?.content
-    : `${apiHost}/${responseToMessage?.content}`;
+  const imageUrl = localResponseMsg?.content.startsWith('http')
+    ? localResponseMsg?.content
+    : `${apiHost}/${localResponseMsg?.content}`;
 
   //   pref local from i18n
   const prefLocal = i18n.locale;
 
-  //   if no response to message return null
-  if (!responseToMessage) return <View></View>;
+  //   if no local message return null (nothing to animate)
+  if (!localResponseMsg) return null;
 
   return (
     <Animated.View
       style={[
         styles.responseToMsgPopUp,
         animatedStyle,
-        {
-          direction: prefLocal === 'ar' ? 'rtl' : 'ltr',
-          padding: responseToMessage ? 10 : 0,
-          borderTopWidth: responseToMessage ? 0.5 : 0,
-        },
+        prefLocal === 'ar' && styles.rtlDir
       ]}
     >
       {/* close icon */}
@@ -66,35 +78,35 @@ const ResponseToMsgPopUp = () => {
         {/* msg sender name */}
         <View style={styles.msgSenderNameContainer}>
           <Text style={styles.fontFamily}>{i18n.t('openedChat.response-to-msg-popup.replying-to')}</Text>
-          <Text style={[styles.fontFamily, styles.msgSenderName]}>{responseToMessage.sender.name}</Text>
+          <Text style={[styles.fontFamily, styles.msgSenderName]}>{localResponseMsg.sender.name}</Text>
         </View>
 
         {/* msg type */}
         <Text style={[styles.fontFamily, styles.msgType]}>
-          {responseToMessage.type === PHOTO && i18n.t('openedChat.response-to-msg-popup.photo-msg-type')}
-          {responseToMessage.type === VIDEO && i18n.t('openedChat.response-to-msg-popup.video-msg-type')}
-          {responseToMessage.type === TEXT && responseToMessage.content}
-          {responseToMessage.type === VOICENOTE && i18n.t('openedChat.response-to-msg-popup.audio-msg-type')}
-          {responseToMessage.type === FILE && i18n.t('openedChat.response-to-msg-popup.file-msg-type')}
+          {localResponseMsg.type === PHOTO && i18n.t('openedChat.response-to-msg-popup.photo-msg-type')}
+          {localResponseMsg.type === VIDEO && i18n.t('openedChat.response-to-msg-popup.video-msg-type')}
+          {localResponseMsg.type === TEXT && localResponseMsg.content}
+          {localResponseMsg.type === VOICENOTE && i18n.t('openedChat.response-to-msg-popup.audio-msg-type')}
+          {localResponseMsg.type === FILE && i18n.t('openedChat.response-to-msg-popup.file-msg-type')}
         </Text>
       </View>
 
       {/* photo msg preview */}
-      {responseToMessage && responseToMessage.type === PHOTO && (
+      {localResponseMsg && localResponseMsg.type === PHOTO && (
         <View style={styles.photoMsgPreviewContainer}>
           <Image source={{ uri: imageUrl }} style={styles.photoMsgPreview} />
         </View>
       )}
 
       {/* video msg preview */}
-      {responseToMessage && responseToMessage.type === VIDEO && (
+      {localResponseMsg && localResponseMsg.type === VIDEO && (
         <View style={styles.photoMsgPreviewContainer}>
           <VideoThumbnail videoUri={imageUrl} style={styles.photoMsgPreview} />
         </View>
       )}
 
       {/* file msg preview */}
-      {responseToMessage && responseToMessage.type === FILE && (
+      {localResponseMsg && localResponseMsg.type === FILE && (
         <View style={styles.photoMsgPreviewContainer}>
           <Icon name='document-text-outline' size={30} color='dodgerblue' />
         </View>
@@ -118,13 +130,17 @@ const styles = StyleSheet.create({
     gap: 10,
     height: 50,
     borderTopColor: '#ddd',
+    padding: 10,
+    borderTopWidth: 0.5,
   },
+
   //   msg sender name styles
   msgSenderNameContainer: { flexDirection: 'row', gap: 5 },
   msgSenderName: { color: 'dodgerblue' },
   msgType: { color: 'gray', fontSize: 16 },
   msgDetailsContainer: { paddingVertical: 4, flex: 1 },
   fontFamily: { fontFamily: 'BalooBhaijaan2' },
+
   //   photo msg preview container
   photoMsgPreviewContainer: {
     top: 0,
@@ -143,4 +159,10 @@ const styles = StyleSheet.create({
 
   //   photo msg preview styles
   photoMsgPreview: { width: '100%', height: '100%', borderRadius: 10 },
+
+  // rtl dir
+  rtlDir: {
+    direction: 'rtl'
+  }
 });
+
