@@ -33,6 +33,9 @@ import onboardingEn from './locales/en/onboarding.json';
 // import tranlations files for conversationDetails
 import conversationDetailsAr from './locales/ar/conversationDetails.json';
 import conversationDetailsEn from './locales/en/conversationDetails.json';
+// import tranlations files for attachFileMenu
+import attachFileMenuAr from './locales/ar/attachFileMenu.json';
+import attachFileMenuEn from './locales/en/attachFileMenu.json';
 
 // Set translations
 const translations = {
@@ -48,6 +51,7 @@ const translations = {
     settings: settingsScreenEn,
     onboarding: onboardingEn,
     conversationDetails: conversationDetailsEn,
+    attachFileMenu: attachFileMenuEn,
   },
   ar: {
     welcome: welcomeScreenAr,
@@ -61,6 +65,7 @@ const translations = {
     settings: settingsScreenAr,
     onboarding: onboardingAr,
     conversationDetails: conversationDetailsAr,
+    attachFileMenu: attachFileMenuAr,
   },
 };
 

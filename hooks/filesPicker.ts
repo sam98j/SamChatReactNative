@@ -4,6 +4,8 @@ import * as FilePicker from 'expo-document-picker';
 
 // use file picker
 export const useFilePicker = () => {
+
+  // pick an image
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -19,6 +21,7 @@ export const useFilePicker = () => {
     // return
     return { uri, fileName, mimeType, fileSize };
   };
+
   // pick a video
   const pickVideo = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -49,6 +52,7 @@ export const useFilePicker = () => {
     // return
     return { uri, name, mimeType, size };
   };
-  // retturn
+
+  // return
   return { pickImage, pickVideo, pickFile };
 };

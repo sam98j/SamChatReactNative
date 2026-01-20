@@ -9,20 +9,27 @@ import { useSearchParams } from 'expo-router/build/hooks';
 import { useSystemStore } from '@/store/systemStore';
 import { useAuthStore } from '@/store/authStore';
 import { useChatsStore } from '@/store/chatsStore';
+import i18n from '../../i18n';
 
 const AttchFileBottomSheet = () => {
   // url search params
   const urlSearchParams = useSearchParams(); // Access the chat_id parameter
+
   // Bottom sheet ref
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // file picker
   const { pickImage, pickVideo, pickFile } = useFilePicker();
 
   // current loggedIn user
   const currentUsr = useAuthStore().currentUser;
+
   // Snap points for the bottom sheet
   const snapPoints = useMemo(() => ['40%', '50%'], []);
+
   // response to message
   const { responseToMessage, addMessageToChat, setChatLastMessage, placeLastUpdatedChatToTheTop } = useChatsStore();
+
   // State to track if the bottom sheet is open
   const { isAttachFileBottomSheetOpen, openAttachFileBottomSheet } = useSystemStore();
 
@@ -33,34 +40,37 @@ const AttchFileBottomSheet = () => {
   }, []);
 
   // Open the bottom sheet
-  const openSheet = () => bottomSheetRef.current?.snapToIndex(0);
+  const openSheet = () => bottomSheetRef.current?.snapToIndex(1);
 
   // observe if the bottom sheet is open
   useEffect(() => {
-    if (isAttachFileBottomSheetOpen) return openSheet();
-    // close the bottom sheet
-    bottomSheetRef.current?.close();
+    if (!isAttachFileBottomSheetOpen) return bottomSheetRef.current?.close();
+    // open the bottom sheet
+    openSheet();
   }, [isAttachFileBottomSheetOpen]);
 
   // Handle image picking
   const handlePickImage = async (msg: ChatMessage) => {
     try {
       const image = await pickImage();
-      if (image) {
-        // image message
-        const imageMessage: ChatMessage = {
-          ...msg,
-          fileName: image.fileName!,
-          fileSize: String(image.fileSize),
-          status: null,
-          content: image.uri,
-          type: MessagesTypes.PHOTO,
-          voiceNoteDuration: '',
-        };
-        // Handle the selected image (e.g., upload it or display it)
-        addMessageToChat(imageMessage);
-        setChatLastMessage({ msg: imageMessage, currentUserId: currentUsr!._id });
-      }
+      if (!image) return;
+
+      // image message
+      const imageMessage: ChatMessage = {
+        ...msg,
+        fileName: image.fileName!,
+        fileSize: String(image.fileSize),
+        status: null,
+        content: image.uri,
+        type: MessagesTypes.PHOTO,
+        voiceNoteDuration: '',
+      };
+
+      // Handle the selected image (e.g., upload it or display it)
+      addMessageToChat(imageMessage);
+
+      // set last chat message
+      setChatLastMessage({ msg: imageMessage, currentUserId: currentUsr!._id });
     } catch (error) {
       console.error('Error picking image:', error);
     }
@@ -70,21 +80,24 @@ const AttchFileBottomSheet = () => {
   const handlePickVideo = async (msg: ChatMessage) => {
     try {
       const video = await pickVideo();
-      if (video) {
-        // video message
-        const videoMessage: ChatMessage = {
-          ...msg,
-          fileName: video.fileName!,
-          fileSize: String(video.fileSize),
-          status: null,
-          content: video.uri,
-          type: MessagesTypes.VIDEO,
-          voiceNoteDuration: '',
-        };
-        // Dispatch the message to the chat (you can implement this function)
-        addMessageToChat(videoMessage);
-        setChatLastMessage({ msg: videoMessage, currentUserId: currentUsr!._id });
-      }
+      if (!video) return;
+
+      // video message
+      const videoMessage: ChatMessage = {
+        ...msg,
+        fileName: video.fileName!,
+        fileSize: String(video.fileSize),
+        status: null,
+        content: video.uri,
+        type: MessagesTypes.VIDEO,
+        voiceNoteDuration: '',
+      };
+
+      // Dispatch the message to the chat (you can implement this function)
+      addMessageToChat(videoMessage);
+
+      // set last chat message
+      setChatLastMessage({ msg: videoMessage, currentUserId: currentUsr!._id });
     } catch (error) {
       console.error('Error picking video:', error);
     }
@@ -94,21 +107,24 @@ const AttchFileBottomSheet = () => {
   const handlePickDocument = async (msg: ChatMessage) => {
     try {
       const doc = await pickFile();
-      if (doc) {
-        // image message
-        const docMessage: ChatMessage = {
-          ...msg,
-          fileName: doc.name,
-          fileSize: String(doc.size),
-          status: null,
-          content: doc.uri,
-          type: MessagesTypes.FILE,
-          voiceNoteDuration: '',
-        };
-        // Dispatch the message to the chat (you can implement this function)
-        addMessageToChat(docMessage);
-        setChatLastMessage({ msg: docMessage, currentUserId: currentUsr!._id });
-      }
+      if (!doc) return;
+
+      // image message
+      const docMessage: ChatMessage = {
+        ...msg,
+        fileName: doc.name,
+        fileSize: String(doc.size),
+        status: null,
+        content: doc.uri,
+        type: MessagesTypes.FILE,
+        voiceNoteDuration: '',
+      };
+
+      // Dispatch the message to the chat (you can implement this function)
+      addMessageToChat(docMessage);
+
+      // set last chat message
+      setChatLastMessage({ msg: docMessage, currentUserId: currentUsr!._id });
     } catch (error) {
       console.error('Error picking image:', error);
     }
@@ -118,6 +134,7 @@ const AttchFileBottomSheet = () => {
   const sendPickedFile = async (msgType: MessagesTypes) => {
     // chat id
     const chatId = urlSearchParams.get('chat_id')!;
+
     // chat message
     const message = {
       _id: uuid(),
@@ -135,6 +152,7 @@ const AttchFileBottomSheet = () => {
     if (msgType === MessagesTypes.VIDEO) handlePickVideo(message);
     // if file
     if (msgType === MessagesTypes.FILE) handlePickDocument(message);
+
     // close attach file menu
     openAttachFileBottomSheet(false);
     // place last updated chat to the top
@@ -153,25 +171,29 @@ const AttchFileBottomSheet = () => {
         backgroundStyle={styles.bottomSheetBackground}
       >
         <BottomSheetView style={styles.contentContainer}>
-          {/* icon container */}
+
+          {/* photo icon container */}
           <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.PHOTO)} style={styles.fileTypeContainer}>
             <IonicIcons name='image-outline' size={25} color='gold' style={styles.icon} />
-            <Text style={styles.fontFamily}>صورة</Text>
+            <Text style={styles.fontFamily}>{i18n.t('attachFileMenu.image')}</Text>
           </TouchableOpacity>
-          {/* icon container */}
+
+          {/* video icon container */}
           <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.VIDEO)} style={styles.fileTypeContainer}>
             <IonicIcons name='videocam-outline' size={28} color='lightgreen' style={styles.icon} />
-            <Text style={styles.fontFamily}>فديو</Text>
+            <Text style={styles.fontFamily}>{i18n.t('attachFileMenu.video')}</Text>
           </TouchableOpacity>
-          {/* icon container */}
+
+          {/* file icon container */}
           <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.FILE)} style={styles.fileTypeContainer}>
             <IonicIcons name='document-text-outline' size={28} color='blue' style={styles.icon} />
-            <Text style={styles.fontFamily}>ملف</Text>
+            <Text style={styles.fontFamily}>{i18n.t('attachFileMenu.file')}</Text>
           </TouchableOpacity>
-          {/* icon container */}
+
+          {/* voice note icon container */}
           <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.VIDEO)} style={styles.fileTypeContainer}>
             <IonicIcons name='musical-notes-outline' size={28} color='red' style={styles.icon} />
-            <Text style={styles.fontFamily}>صوتي</Text>
+            <Text style={styles.fontFamily}>{i18n.t('attachFileMenu.audio')}</Text>
           </TouchableOpacity>
           {/* Additional Content */}
         </BottomSheetView>
@@ -189,8 +211,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: '100%',
-    marginLeft: 7,
-    marginRight: 7,
   },
   bottomSheetBackground: {
     backgroundColor: '#eee',
@@ -202,10 +222,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 5,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     padding: 5,
+    paddingBottom: 20,
   },
 
   fileTypeContainer: {
