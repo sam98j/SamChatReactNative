@@ -171,7 +171,6 @@ const AttchFileBottomSheet = () => {
         backgroundStyle={styles.bottomSheetBackground}
       >
         <BottomSheetView style={styles.contentContainer}>
-
           {/* photo icon container */}
           <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.PHOTO)} style={styles.fileTypeContainer}>
             <IonicIcons name='image-outline' size={25} color='gold' style={styles.icon} />
