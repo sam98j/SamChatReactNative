@@ -24,11 +24,11 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView key={Math.random()}>
         <SafeAreaProvider>
-          <Slot />
+            <GestureHandlerRootView>
+                <Slot />
+            </GestureHandlerRootView>
         </SafeAreaProvider>
-      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }

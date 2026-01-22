@@ -5,7 +5,7 @@ import IonicIcons from 'react-native-vector-icons/Ionicons';
 import { useFilePicker } from '@/hooks/filesPicker';
 import { v4 as uuid } from 'uuid';
 import { ChatMessage, MessagesTypes } from '@/interfaces/chats';
-import { useSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams } from 'expo-router';
 import { useSystemStore } from '@/store/systemStore';
 import { useAuthStore } from '@/store/authStore';
 import { useChatsStore } from '@/store/chatsStore';
@@ -13,7 +13,7 @@ import i18n from '../../i18n';
 
 const AttchFileBottomSheet = () => {
   // url search params
-  const urlSearchParams = useSearchParams(); // Access the chat_id parameter
+  const { chat_id } = useLocalSearchParams<{ chat_id: string }>(); // Access the chat_id parameter
 
   // Bottom sheet ref
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -133,7 +133,7 @@ const AttchFileBottomSheet = () => {
   // send picked file
   const sendPickedFile = async (msgType: MessagesTypes) => {
     // chat id
-    const chatId = urlSearchParams.get('chat_id')!;
+    const chatId = chat_id!;
 
     // chat message
     const message = {

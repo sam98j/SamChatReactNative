@@ -17,6 +17,7 @@ export default {
       bundleIdentifier: 'com.sam-98j.samchat',
     },
     android: {
+      edgeToEdgeEnabled: true,
       adaptiveIcon: {
         foregroundImage: './assets/images/adaptive-icon/foreground.png',
         backgroundImage: './assets/images/adaptive-icon/background.png',

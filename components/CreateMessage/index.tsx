@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { v4 as uuid } from 'uuid';
-import { useSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams } from 'expo-router';
 import { ChatActionsTypes, ChatCard, ChatMessage, MessagesTypes } from '@/interfaces/chats';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useChatSounds } from '@/hooks/sounds';
@@ -18,13 +18,13 @@ import * as ImagePicker from 'expo-image-picker';
 
 const CreateMessage = () => {
   // url search params
-  const urlSearchParams = useSearchParams(); // Access the chat_id parameter
+  const { chat_id } = useLocalSearchParams<{ chat_id: string }>(); // Access the chat_id parameter
 
   // type message input ref
   const typeMessageInputRef = useRef<TextInput>(null);
 
   // chat id
-  const chatId = urlSearchParams.get('chat_id')!;
+  const chatId = chat_id!;
 
   //   current loggedIn user
   const currentUsr = useAuthStore().currentUser;

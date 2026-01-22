@@ -34,7 +34,7 @@ const SingleChat = () => {
         imageStyle={styles.backgroundImage}
         style={styles.backgroundContainer}
       >
-        <View style={styles.messagesContainer}>
+        <KeyboardAvoidingView style={styles.messagesContainer}>
           {chatMessages !== undefined && !chatMessages?.length && !isFetchingChatMessages && <NoMessages />}
 
           {/* loading messages */}
@@ -52,14 +52,14 @@ const SingleChat = () => {
             contentContainerStyle={styles.scrollContentContainer}
             keyExtractor={(item) => item._id}
             renderSectionHeader={({ section: { title } }) => <Text style={styles.messagesDate}>{title}</Text>}
-            renderItem={({ item }) => <ChatMessageViewer msg={item} key={item._id}/>}
+            renderItem={({ item }) => <ChatMessageViewer msg={item} />}
             removeClippedSubviews={false}
             stickySectionHeadersEnabled={true}
           />
 
           {/* chat actions */}
           {isChatUsrDoingAction.type !== null && <ChatActions />}
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
 
       {/* bottom sheet */}

@@ -1,7 +1,7 @@
 import { ChatTypes } from '@/interfaces/chats';
 import { useAuthStore } from '@/store/authStore';
 import { useChatsStore } from '@/store/chatsStore';
-import { Avatar, Icon, ListItem } from '@rneui/themed';
+import { Avatar, Icon } from '@rneui/themed';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import i18n from '@/i18n';
@@ -79,16 +79,16 @@ const ConversationDetails = () => {
       {/* Action Buttons (Call, Video, Search) */}
       <View style={[styles.actionButtonsContainer, isRTL && { flexDirection: 'row-reverse' }]}>
         <TouchableOpacity style={styles.actionButton}>
-           <Icon name='call-outline' type='ionicon' color='dodgerblue' size={24} />
-           <Text style={styles.actionText}>{i18n.t('conversationDetails.audio')}</Text>
+          <Icon name='call-outline' type='ionicon' color='dodgerblue' size={24} />
+          <Text style={styles.actionText}>{i18n.t('conversationDetails.audio')}</Text>
         </TouchableOpacity>
-         <TouchableOpacity style={styles.actionButton}>
-           <Icon name='videocam-outline' type='ionicon' color='dodgerblue' size={24} />
-           <Text style={styles.actionText}>{i18n.t('conversationDetails.video')}</Text>
+        <TouchableOpacity style={styles.actionButton}>
+          <Icon name='videocam-outline' type='ionicon' color='dodgerblue' size={24} />
+          <Text style={styles.actionText}>{i18n.t('conversationDetails.video')}</Text>
         </TouchableOpacity>
-         <TouchableOpacity style={styles.actionButton}>
-           <Icon name='search-outline' type='ionicon' color='dodgerblue' size={24} />
-           <Text style={styles.actionText}>{i18n.t('conversationDetails.search')}</Text>
+        <TouchableOpacity style={styles.actionButton}>
+          <Icon name='search-outline' type='ionicon' color='dodgerblue' size={24} />
+          <Text style={styles.actionText}>{i18n.t('conversationDetails.search')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -99,67 +99,67 @@ const ConversationDetails = () => {
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, isRTL && { textAlign: 'right' }]}>{i18n.t('conversationDetails.members', { count: chat.members.length })}</Text>
           {chat.members.map((member) => (
-            <ListItem key={member._id} bottomDivider containerStyle={[styles.listItem, isRTL && { flexDirection: 'row-reverse' }]}>
-               <Avatar
+            <View key={member._id} style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]}>
+              <Avatar
                 rounded
                 source={{ uri: member.avatar?.startsWith('http') ? member.avatar : `${apiUrl}${member.avatar}` }}
               />
-              <ListItem.Content style={isRTL && { alignItems: 'flex-end' }}>
-                <ListItem.Title style={styles.itemTitle}>{member.name}</ListItem.Title>
-                {member._id === currentUser?._id && <ListItem.Subtitle style={styles.itemSubtitle}>{i18n.t('conversationDetails.you')}</ListItem.Subtitle>}
-              </ListItem.Content>
-            </ListItem>
+              <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
+                <Text style={styles.itemTitle}>{member.name}</Text>
+                {member._id === currentUser?._id && <Text style={styles.itemSubtitle}>{i18n.t('conversationDetails.you')}</Text>}
+              </View>
+            </View>
           ))}
         </View>
       )}
 
       {/* Media & Docs */}
       <View style={styles.section}>
-         <ListItem bottomDivider containerStyle={[styles.listItem, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
-            <Icon name='images-outline' type='ionicon' color='#007AFF' size={22} />
-            <ListItem.Content style={isRTL && { alignItems: 'flex-end' }}>
-                <ListItem.Title style={styles.itemTitle}>{i18n.t('conversationDetails.mediaLinksDocs')}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron iconStyle={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
-        </ListItem>
-         <ListItem bottomDivider containerStyle={[styles.listItem, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
-            <Icon name='star-outline' type='ionicon' color='#FEC007' size={22} />
-            <ListItem.Content style={isRTL && { alignItems: 'flex-end' }}>
-                <ListItem.Title style={styles.itemTitle}>{i18n.t('conversationDetails.starredMessages')}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron iconStyle={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
-        </ListItem>
+        <TouchableOpacity style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+          <Icon name='images-outline' type='ionicon' color='#007AFF' size={22} />
+          <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
+            <Text style={styles.itemTitle}>{i18n.t('conversationDetails.mediaLinksDocs')}</Text>
+          </View>
+          <Icon name='chevron-forward' type='ionicon' color='#c7c7cc' size={20} style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+          <Icon name='star-outline' type='ionicon' color='#FEC007' size={22} />
+          <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
+            <Text style={styles.itemTitle}>{i18n.t('conversationDetails.starredMessages')}</Text>
+          </View>
+          <Icon name='chevron-forward' type='ionicon' color='#c7c7cc' size={20} style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
+        </TouchableOpacity>
       </View>
       
       <View style={styles.divider} />
 
       {/* Settings */}
       <View style={styles.section}>
-         <ListItem bottomDivider containerStyle={[styles.listItem, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
-            <Icon name='notifications-outline' type='ionicon' color='black' size={22} />
-            <ListItem.Content style={isRTL && { alignItems: 'flex-end' }}>
-                <ListItem.Title style={styles.itemTitle}>{i18n.t('conversationDetails.notifications')}</ListItem.Title>
-            </ListItem.Content>
-            <ListItem.Chevron iconStyle={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
-        </ListItem>
+        <TouchableOpacity style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+          <Icon name='notifications-outline' type='ionicon' color='black' size={22} />
+          <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
+            <Text style={styles.itemTitle}>{i18n.t('conversationDetails.notifications')}</Text>
+          </View>
+          <Icon name='chevron-forward' type='ionicon' color='#c7c7cc' size={20} style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.divider} />
 
       {/* Destructive Actions */}
       <View style={styles.section}>
-         <ListItem containerStyle={[styles.listItem, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
-            <Icon name='trash-outline' type='ionicon' color='red' size={22} />
-            <ListItem.Content style={isRTL && { alignItems: 'flex-end' }}>
-                <ListItem.Title style={[styles.itemTitle, { color: 'red' }]}>{i18n.t('conversationDetails.clearChat')}</ListItem.Title>
-            </ListItem.Content>
-        </ListItem>
-         <ListItem containerStyle={[styles.listItem, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
-            <Icon name='ban-outline' type='ionicon' color='red' size={22} />
-            <ListItem.Content style={isRTL && { alignItems: 'flex-end' }}>
-                <ListItem.Title style={[styles.itemTitle, { color: 'red' }]}>{chatDetails.isGroup ? i18n.t('conversationDetails.blockGroup') : i18n.t('conversationDetails.blockUser')}</ListItem.Title>
-            </ListItem.Content>
-        </ListItem>
+        <TouchableOpacity style={[styles.listItemContainer, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+          <Icon name='trash-outline' type='ionicon' color='red' size={22} />
+          <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
+            <Text style={[styles.itemTitle, { color: 'red' }]}>{i18n.t('conversationDetails.clearChat')}</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.listItemContainer, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+          <Icon name='ban-outline' type='ionicon' color='red' size={22} />
+          <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
+            <Text style={[styles.itemTitle, { color: 'red' }]}>{chatDetails.isGroup ? i18n.t('conversationDetails.blockGroup') : i18n.t('conversationDetails.blockUser')}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
     </ScrollView>
@@ -207,20 +207,20 @@ const styles = StyleSheet.create({
     fontFamily: 'BalooBhaijaan2',
   },
   actionButtonsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      paddingVertical: 10,
-      backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    backgroundColor: '#fff',
   },
   actionButton: {
-      alignItems: 'center',
-      marginHorizontal: 15,
-      width: 60,
+    alignItems: 'center',
+    marginHorizontal: 15,
+    width: 60,
   },
   actionText: {
-      color: 'dodgerblue',
-      marginTop: 5,
-      fontSize: 12,
+    color: 'dodgerblue',
+    marginTop: 5,
+    fontSize: 12,
   },
   section: {
     marginTop: 0,
@@ -231,23 +231,34 @@ const styles = StyleSheet.create({
     borderColor: '#e5e5e5',
   },
   divider: {
-      height: 20,
+    height: 20,
   },
   sectionTitle: {
-      padding: 15,
-      fontSize: 14,
-      color: 'gray',
-      textTransform: 'uppercase',
-  },
-  listItem: {
-      paddingVertical: 12,
+    padding: 15,
+    fontSize: 14,
+    color: 'gray',
+    textTransform: 'uppercase',
   },
   itemTitle: {
-      fontFamily: 'BalooBhaijaan2',
-      fontSize: 16,
+    fontFamily: 'BalooBhaijaan2',
+    fontSize: 16,
   },
   itemSubtitle: {
-       fontSize: 12,
-       color: 'gray',
+    fontSize: 12,
+    color: 'gray',
+  },
+  listItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: 'white',
+  },
+  listItemContent: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  bottomDivider: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#bcbbc1', // Typical iOS separator color
   },
 });

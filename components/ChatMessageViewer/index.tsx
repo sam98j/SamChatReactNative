@@ -11,10 +11,9 @@ import ReadCheckIcon from '@/assets/icons/check-read.png';
 import SentCheckIcon from '@/assets/icons/check.png';
 import DocMessage from '../DocMessage';
 import { getTime, TimeUnits } from '@/utils/time';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
@@ -46,28 +45,26 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
 
   // translate x value for swipe gesture
   const translateX = useSharedValue(0);
+  const startX = useSharedValue(0);
 
   // gesture handler
-  const gestureHandler = useAnimatedGestureHandler<any, { startX: number }>({
-    // on drag start
-    onStart: (_, ctx) => {
-        ctx.startX = translateX.value;
-    },
-
-    // on drag active
-    onActive: (event, ctx) => {
+  const pan = Gesture.Pan()
+    .onStart(() => {
+      startX.value = translateX.value;
+    })
+    .onUpdate((event) => {
       // Clamp the value between -MAX_DRAG and MAX_DRAG
-      let nextX = ctx.startX + event.translationX;
+      let nextX = startX.value + event.translationX;
       if (nextX > MAX_DRAG) nextX = MAX_DRAG;
       if (nextX < -MAX_DRAG) nextX = -MAX_DRAG;
       translateX.value = nextX;
-    },
-
-    // on drag end
-    onEnd: (event) => {
+    })
+    .onEnd((event) => {
+      // if translation is less than screen width / 3
       if (event.translationX < SCREEN_WIDTH / 3) return (translateX.value = 0);
 
       translateX.value = 0;
+
       // response to message
       const responseToMessageData: ResponseToMessageData = {
         sender,
@@ -82,8 +79,9 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
       runOnJS(setResponseToMessage)(responseToMessageData);
       // haptic feedback
       runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
-    },
-  });
+    })
+    .activeOffsetX([-10, 10])
+    .failOffsetY([-5, 5]);
 
   // animated style
   const animatedStyle = useAnimatedStyle(() => ({
@@ -97,8 +95,8 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
   const handleMsgLongPress = () => setMsgsActionsMenu(msg._id);
 
   return (
-    <PanGestureHandler onGestureEvent={gestureHandler}>
-      <Animated.View style={[styles.container, isFromMe ? styles.myMessage : styles.theirMessage, animatedStyle]} key={_id}>
+    <GestureDetector gesture={pan}>
+      <Animated.View style={[styles.container, isFromMe ? styles.myMessage : styles.theirMessage, animatedStyle]}>
         {/* forwarded icon */}
         {isForwarded && (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -144,7 +142,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
           {/* </View> */}
         </TouchableOpacity>
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 };
 

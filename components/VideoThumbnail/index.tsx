@@ -19,8 +19,8 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ videoUri, style }) => {
         if (isMounted) {
           setThumbnail(uri);
         }
-      } catch (e) {
-
+      } catch (error) {
+        console.log(error);
         setThumbnail(null);
       } finally {
         if (isMounted) setLoading(false);

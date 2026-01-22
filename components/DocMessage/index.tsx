@@ -72,9 +72,9 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
 
       // share the file
       await Sharing.shareAsync(localUri, {
-          mimeType: undefined,
-          dialogTitle: fileName || 'Open file',
-          UTI: undefined,
+        mimeType: undefined,
+        dialogTitle: fileName || 'Open file',
+        UTI: undefined,
       });
     } catch (error) {
       console.error('Error opening file:', error);

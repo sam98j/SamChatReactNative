@@ -4,12 +4,12 @@ import { useAuthStore } from '@/store/authStore';
 import { useChatsStore } from '@/store/chatsStore';
 import { groupChatMessagesByDate } from '@/utils/chats';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { v4 } from 'uuid';
 
 export const useSingleChat = () => {
-  const chat_id = useSearchParams().get('chat_id');
+  const { chat_id } = useLocalSearchParams<{ chat_id: string }>();
   const loggedInUser = useAuthStore((state) => state.currentUser);
 
   // Selectors
