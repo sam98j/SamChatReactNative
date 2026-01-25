@@ -57,6 +57,7 @@ export const getChatMessages = async (data: { chatId: string; msgBatch: number }
   const { chatId, msgBatch } = data;
   // access token
   const access_token = await SecureStore.getItemAsync('access_token');
+
   // req
   const response = await fetch(`${apiUrl}/messages/getchatmessages/${chatId}?msgs_batch=${msgBatch}`, {
     method: 'GET',

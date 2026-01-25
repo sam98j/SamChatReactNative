@@ -1,5 +1,6 @@
 import React, { useRef, useMemo, useCallback, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import IonicIcons from 'react-native-vector-icons/Ionicons';
 import { useFilePicker } from '@/hooks/filesPicker';
@@ -14,6 +15,9 @@ import i18n from '../../i18n';
 const AttchFileBottomSheet = () => {
   // url search params
   const { chat_id } = useLocalSearchParams<{ chat_id: string }>(); // Access the chat_id parameter
+  
+  // Safe area insets
+  const insets = useSafeAreaInsets();
 
   // Bottom sheet ref
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -25,7 +29,7 @@ const AttchFileBottomSheet = () => {
   const currentUsr = useAuthStore().currentUser;
 
   // Snap points for the bottom sheet
-  const snapPoints = useMemo(() => ['40%', '50%'], []);
+  const snapPoints = useMemo(() => ['25%'], []);
 
   // response to message
   const { responseToMessage, addMessageToChat, setChatLastMessage, placeLastUpdatedChatToTheTop } = useChatsStore();
@@ -40,11 +44,11 @@ const AttchFileBottomSheet = () => {
   }, []);
 
   // Open the bottom sheet
-  const openSheet = () => bottomSheetRef.current?.snapToIndex(1);
+  const openSheet = () => bottomSheetRef.current?.snapToIndex(0);
 
   // observe if the bottom sheet is open
   useEffect(() => {
-    if (!isAttachFileBottomSheetOpen) return bottomSheetRef.current?.close();
+    if (!isAttachFileBottomSheetOpen) return bottomSheetRef.current?.snapToIndex(-1);
     // open the bottom sheet
     openSheet();
   }, [isAttachFileBottomSheetOpen]);
@@ -170,7 +174,7 @@ const AttchFileBottomSheet = () => {
         onChange={handleSheetChanges} // Listen for index changes
         backgroundStyle={styles.bottomSheetBackground}
       >
-        <BottomSheetView style={styles.contentContainer}>
+        <BottomSheetView style={[styles.contentContainer, { paddingBottom: insets.bottom + 10 }]}>
           {/* photo icon container */}
           <TouchableOpacity onPress={() => sendPickedFile(MessagesTypes.PHOTO)} style={styles.fileTypeContainer}>
             <IonicIcons name='image-outline' size={25} color='gold' style={styles.icon} />

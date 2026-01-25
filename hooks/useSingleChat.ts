@@ -3,7 +3,7 @@ import { ChangeMessageStatusDTO, ChatMessage, ChatTypes, MessageStatus, Messages
 import { useAuthStore } from '@/store/authStore';
 import { useChatsStore } from '@/store/chatsStore';
 import { groupChatMessagesByDate } from '@/utils/chats';
-import { useInfiniteQuery } from '@tanstack/react-query';
+
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { v4 } from 'uuid';
@@ -28,30 +28,42 @@ export const useSingleChat = () => {
   const setMessageToBeMarketAsReaded = useChatsStore((state) => state.setMessageToBeMarketAsReaded);
   const deleteChat = useChatsStore((state) => state.deleteChat);
 
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ['chatMessages', chat_id],
-    queryFn: ({ pageParam = 1 }) => getChatMessages({ chatId: chat_id as string, msgBatch: pageParam }),
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.isLastBatch ? undefined : allPages.length + 1;
-    },
-    initialPageParam: 1,
-    enabled: !!chat_id && !!openedChat,
-  });
-
-  // Sync React Query data to Zustand store
-  useEffect(() => {
-    if (data?.pages) {
-      const allMessages = data.pages.flatMap((page) => page.chatMessages);
-      setChatMessages(allMessages);
-    }
-  }, [data?.pages, setChatMessages]);
-
+  console.log('useSingleChat render');
+  const [page, setPage] = useState(1);
+  const [isLastBatch, setIsLastBatch] = useState(false);
   const [isFetchingChatMessages, setIsFetchingChatMessages] = useState(false);
 
-  // Sync fetching state (optional, if UI depends on it)
-  useEffect(() => {
-    setIsFetchingChatMessages(isFetching);
-  }, [isFetching]);
+  const fetchMessages = async (pageNum: number) => {
+    if (!chat_id || isFetchingChatMessages || (pageNum > 1 && isLastBatch)) return;
+
+    setIsFetchingChatMessages(true);
+    try {
+      const response = await getChatMessages({ chatId: chat_id as string, msgBatch: pageNum });
+      if (typeof response !== 'string') {
+        const { chatMessages: newMessages, isLastBatch: lastBatch } = response as { chatMessages: ChatMessage[]; isLastBatch: boolean };
+        
+        if (pageNum === 1) {
+          setChatMessages(newMessages);
+        } else {
+          // If we want to append/prepend based on store logic, we should be careful.
+          // The store's setChatMessages currently replaces the messages.
+          // Let's check how setChatMessages is implemented in chatsStore.
+          // Based on the hook's previous behavior:
+          // const allMessages = data.pages.flatMap((page) => page.chatMessages);
+          // setChatMessages(allMessages);
+          // This implies the hook was responsible for aggregating all pages.
+          setChatMessages(newMessages);
+        }
+        
+        setIsLastBatch(lastBatch);
+        setPage(pageNum);
+      }
+    } catch (error) {
+      console.error('Error fetching chat messages:', error);
+    } finally {
+      setIsFetchingChatMessages(false);
+    }
+  };
 
   // Memoized messages grouped by date
   // Using 'ar' as locale hardcoded in original file, keeping it for now but casting fix
@@ -59,14 +71,25 @@ export const useSingleChat = () => {
     const grouped = groupChatMessagesByDate(chatMessages as ChatMessage[], 'ar' as never);
     if (!grouped) return [];
 
-    // Transform to SectionList format and reverse for inverted list (Newest first)
-    return grouped.dates
-      .map((date, index) => ({
-        title: date,
-        data: grouped.messages[index].slice(), // Reverse messages to show newest at bottom (start of inverted list)
-      }))
-      // .reverse(); // Reverse sections to show newest date section at bottom
+    // Reverse the order of dates and messages for inverted list
+    // newest date will be at index 0, and newest message in that date at index 0
+    const reversedDates = [...grouped.dates].reverse();
+    const reversedMessages = [...grouped.messages].reverse().map(msgs => [...msgs].reverse());
+
+    return reversedDates.map((date, index) => ({
+      title: date,
+      data: reversedMessages[index],
+    }));
   }, [chatMessages]);
+
+  // Initial fetch
+  useEffect(() => {
+    if (chat_id && openedChat) {
+      setPage(1);
+      setIsLastBatch(false);
+      fetchMessages(1);
+    }
+  }, [chat_id, !!openedChat]);
 
   // Handle Mark as Read and Create Chat Action
   useEffect(() => {
@@ -137,10 +160,11 @@ export const useSingleChat = () => {
 
   // Load more messages for infinite scroll
   const loadMoreMessages = () => {
-    if (hasNextPage) {
-      fetchNextPage();
+    if (!isLastBatch && !isFetchingChatMessages) {
+      fetchMessages(page + 1);
     }
   };
+
 
   return {
     chatMessages,

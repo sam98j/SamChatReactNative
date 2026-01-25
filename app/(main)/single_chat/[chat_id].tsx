@@ -10,10 +10,16 @@ import React, { useCallback, useRef } from 'react';
 import { ImageBackground, Keyboard, KeyboardAvoidingView, Platform, SectionList, StyleSheet, Text, View } from 'react-native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import chatBackground from '../../../assets/images/chat_background.png';
+import { useSystemStore } from '@/store/systemStore';
 
 const SingleChat = () => {
   const { chatMessages, sections, isFetchingChatMessages, isChatUsrDoingAction, messagesToBeForwared, loadMoreMessages } = useSingleChat();
+  const sectionListRef = useRef<SectionList>(null);
 
+  // isAttachFileBottomSheetOpen
+  const { isAttachFileBottomSheetOpen } = useSystemStore();
+
+  console.log(isAttachFileBottomSheetOpen);
   const onBackPress = useCallback(() => {}, []);
 
   const createMessageContainerRef = useRef<View>(null);
@@ -38,6 +44,9 @@ const SingleChat = () => {
       hideSubscription.remove();
     };
   }, []);
+
+  // Scroll when sections or fetching state changes - REMOVED for inverted list
+  // inverted lists handle this naturally by staying at "index 0" (the bottom)
 
   // TODO: implement auto scroll to bottom when new message is added
 
@@ -74,14 +83,21 @@ const SingleChat = () => {
 
           {/* messages list */}
           <SectionList
+            ref={sectionListRef}
             sections={sections}
-            onRefresh={loadMoreMessages}
+            onEndReached={loadMoreMessages}
+            onEndReachedThreshold={0.5}
             refreshing={isFetchingChatMessages}
+            inverted
+            initialNumToRender={15}
+            windowSize={5}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={50}
+            removeClippedSubviews={Platform.OS === 'android'}
             contentContainerStyle={styles.scrollContentContainer}
             keyExtractor={(item) => item._id}
             renderSectionHeader={({ section: { title } }) => <Text style={styles.messagesDate}>{title}</Text>}
             renderItem={({ item }) => <ChatMessageViewer msg={item} />}
-            removeClippedSubviews={false}
             stickySectionHeadersEnabled={true}
           />
 
@@ -124,7 +140,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContentContainer: {
-    flexGrow: 1,
     paddingBottom: 10,
     paddingHorizontal: 15,
   },

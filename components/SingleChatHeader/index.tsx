@@ -26,20 +26,28 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   const loggedInUser = useAuthStore().currentUser?._id;
 
   // chat name
-  const [chatUser] = useState(() => openedChat!.members.filter((member) => member._id !== loggedInUser)[0]);
+  const chatUser = React.useMemo(() => {
+    if (!openedChat || !loggedInUser) return null;
+    return openedChat.members.find((member) => member._id !== loggedInUser) || null;
+  }, [openedChat, loggedInUser]);
 
   // chat avatar
-  const [chatAvatar] = useState(() => {
-    // get chat member
-    const chatMember = openedChat!.members.filter((member) => member._id !== loggedInUser)[0];
-    // return chat avatar if it's contain https
-    if (chatMember.avatar?.startsWith('https://')) return chatMember.avatar;
-    // return
-    return `${apiUrl}${openedChat!.type === ChatTypes.GROUP ? openedChat!.avatar : chatMember.avatar}`;
-  });
+  const chatAvatar = React.useMemo(() => {
+    if (!openedChat || !loggedInUser || !chatUser) return undefined;
+    
+    // return chat avatar if it contains https
+    if (chatUser.avatar?.startsWith('https://')) return chatUser.avatar;
+    
+    // return full api url if local
+    const avatarPath = openedChat.type === ChatTypes.GROUP ? openedChat.avatar : chatUser.avatar;
+    return avatarPath ? `${apiUrl}${avatarPath}` : undefined;
+  }, [openedChat, loggedInUser, chatUser, apiUrl]);
 
   // chatName
-  const [chatName] = useState(() => (openedChat!.name ? openedChat!.name : chatUser.name));
+  const chatName = React.useMemo(() => {
+    if (!openedChat) return '';
+    return openedChat.name || chatUser?.name || '';
+  }, [openedChat, chatUser]);
 
   // is chat usr online
   const [isChatUsrOnline, setIsChatUsrOnline] = useState('');
