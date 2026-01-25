@@ -6,21 +6,49 @@ import NoMessages from '@/components/NoMessages';
 import SingleChatHeader from '@/components/SingleChatHeader';
 import ForwardMsgMenu from '../forwordMsgReciversList';
 import { useSingleChat } from '@/hooks/useSingleChat';
-import React, { useCallback } from 'react';
-import { ImageBackground, KeyboardAvoidingView, SectionList, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { ImageBackground, Keyboard, KeyboardAvoidingView, Platform, SectionList, StyleSheet, Text, View } from 'react-native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import chatBackground from '../../../assets/images/chat_background.png';
 
 const SingleChat = () => {
-  const { chatMessages, sections, isFetchingChatMessages, isChatUsrDoingAction, messagesToBeForwared, loadMoreMessages } =
-    useSingleChat();
+  const { chatMessages, sections, isFetchingChatMessages, isChatUsrDoingAction, messagesToBeForwared, loadMoreMessages } = useSingleChat();
 
   const onBackPress = useCallback(() => {}, []);
+
+  const createMessageContainerRef = useRef<View>(null);
+
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false);
+  const [inputHeight, setInputHeight] = React.useState(0);
+
+
+  React.useEffect(() => {
+    // measure create message container height
+    createMessageContainerRef.current?.measure((x, y, width, height) => {
+      setInputHeight(height / 2);
+    });
+
+    // keyboard show and hide listeners
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => setIsKeyboardOpen(true));
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => setIsKeyboardOpen(false));
+
+    // remove listeners on unmount
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   // TODO: implement auto scroll to bottom when new message is added
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={[
+        styles.container,
+        isKeyboardOpen && { paddingBottom: Platform.OS === 'ios' ? 0 : inputHeight },
+      ]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       {/* forward messages menu */}
       {messagesToBeForwared && <ForwardMsgMenu />}
 
@@ -34,7 +62,7 @@ const SingleChat = () => {
         imageStyle={styles.backgroundImage}
         style={styles.backgroundContainer}
       >
-        <KeyboardAvoidingView style={styles.messagesContainer}>
+        <View style={styles.messagesContainer}>
           {chatMessages !== undefined && !chatMessages?.length && !isFetchingChatMessages && <NoMessages />}
 
           {/* loading messages */}
@@ -59,17 +87,17 @@ const SingleChat = () => {
 
           {/* chat actions */}
           {isChatUsrDoingAction.type !== null && <ChatActions />}
-        </KeyboardAvoidingView>
+        </View>
       </ImageBackground>
 
       {/* bottom sheet */}
       <AttchFileBottomSheet />
 
-      {/* messages container */}
-      <KeyboardAvoidingView style={styles.createMessageContainer}>
+      {/* messages input container */}
+      <View style={styles.createMessageContainer} ref={createMessageContainerRef}>
         <CreateMessage />
-      </KeyboardAvoidingView>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -77,21 +105,17 @@ export default SingleChat;
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
-    position: 'relative',
+    flex: 1,
     backgroundColor: '#fff',
   },
+  // Removed containerKeyboardOpen since we're using dynamic height now
   messagesContainer: {
     flex: 1, 
     backgroundColor: 'transparent',
-    marginBottom: 70, 
   },
   // create message container
   createMessageContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    backgroundColor: '#fff',
   },
   backgroundImage: {
     opacity: 0.1,

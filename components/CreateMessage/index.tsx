@@ -294,7 +294,7 @@ const CreateMessage = () => {
   }, [openedChat]);
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <View style={styles.container}>
       {/* response to message pop up */}
       <ResponseToMsgPopUp />
 
@@ -357,7 +357,7 @@ const CreateMessage = () => {
           </TouchableOpacity>
         )}
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

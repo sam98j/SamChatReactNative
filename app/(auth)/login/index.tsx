@@ -16,6 +16,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const prefLang = i18n.locale;
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const router = useRouter();
 
   const handleFormSubmition = () => {
@@ -30,8 +31,17 @@ export default function LoginScreen() {
 
   // handle Google Sign In
   const handleGoogleSignIn = async () => {
-    const token = await startSignInFlow();
-    await googleOAuth(token!);
+    setIsGoogleLoading(true);
+    try {
+      const token = await startSignInFlow();
+      if (token) {
+        await googleOAuth(token);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
   return (
@@ -48,9 +58,21 @@ export default function LoginScreen() {
 
       {/* Sign in with Google */}
       <View style={styles.signInWithGoogleContainer}>
-        <TouchableOpacity style={styles.signInWithGoogleBtn} onPress={handleGoogleSignIn}>
-          <Text style={styles.signInWithGoogleText}>{i18n.t('login.sign_in_with_google')}</Text>
-          <FontAwesome name='google' size={20} />
+        <TouchableOpacity
+          style={[styles.signInWithGoogleBtn, isGoogleLoading && styles.signinBtnLoading]}
+          onPress={handleGoogleSignIn}
+          disabled={isGoogleLoading}
+        >
+          {/* if not loading */}
+          {!isGoogleLoading && (
+            <>
+              <Text style={styles.signInWithGoogleText}>{i18n.t('login.sign_in_with_google')}</Text>
+              <FontAwesome name='google' size={20} />
+            </>
+          )}
+
+          {/* Loading */}
+          {isGoogleLoading && <UIActivityIndicator size={20} color='#000' />}
         </TouchableOpacity>
       </View>
 

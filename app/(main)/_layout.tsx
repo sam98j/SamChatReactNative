@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useChatsStore } from '@/store/chatsStore';
 import sentSound from '@/assets/sounds/imessage_send.mp3';
 import recieve_msg_sound from '@/assets/sounds/imessage_recieve.mp3';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MainLayout = () => {
   // api url
@@ -195,26 +196,28 @@ const MainLayout = () => {
   }, [messagesToBeForwared]);
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="single_chat/[chat_id]"
-        options={{
-          headerShown: false,
-          presentation: 'pageSheet',
-          animation: 'ios_from_right',
-          animationDuration: 50,
-          gestureEnabled: true,
-        }}
-      />
-      <Stack.Screen
-        name="conversation_details/[chat_id]"
-        options={{
-          headerShown: false,
-          presentation: 'modal',
-        }}
-      />
-    </Stack>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="single_chat/[chat_id]"
+          options={{
+            headerShown: false,
+            presentation: 'pageSheet',
+            animation: 'ios_from_right',
+            animationDuration: 50,
+            gestureEnabled: true,
+          }}
+        />
+        <Stack.Screen
+          name="conversation_details/[chat_id]"
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+          }}
+        />
+      </Stack>
+    </SafeAreaView>
   );
 };
 
