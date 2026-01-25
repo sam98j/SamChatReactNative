@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "914925743575",
+    "project_id": "samchatrndev",
+    "storage_bucket": "samchatrndev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914925743575:android:2627b016b4c9b30dcdaf92",
+        "android_client_info": {
+          "package_name": "com.sam_98j.samchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914925743575-8qi0mcd1lccreo58r97fcqjeublvbcmm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sam_98j.samchat",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "914925743575-oa7ahu92llt1capcljsjaqib7j30tluq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sam_98j.samchat",
+            "certificate_hash": "6e4c58e5961c29167ec6dfc7a186ca50acba7f5e"
+          }
+        },
+        {
+          "client_id": "914925743575-pnoequ2solu8tjd05hje6repgilaerr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPF2ChknWCObDNyiacqD_sJ9xasCznCdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "914925743575-pnoequ2solu8tjd05hje6repgilaerr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

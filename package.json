@@ -11,7 +11,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "build:android:dev": "eas build --platform android --local --profile development",
-    "build:android:prod": "eas build --platform android --local --profile production"
+    "build:android:prod": "eas build --platform android --local --profile production",
+    "build:android:prev": "eas build --platform android --local --profile preview --clear-cache"
   },
   "jest": {
     "preset": "jest-expo"

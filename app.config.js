@@ -24,26 +24,7 @@ export default {
         backgroundColor: '#ffffff',
       },
       package: 'com.sam_98j.samchat',
-    },
-    build: {
-      development: {
-        developmentClient: true,
-        distribution: 'internal',
-        android: {
-          buildType: 'apk',
-        },
-      },
-      preview: {
-        distribution: 'internal',
-        android: {
-          buildType: 'apk',
-        },
-      },
-      production: {
-        android: {
-          buildType: 'apk',
-        },
-      },
+      googleServicesFile: './google-services.json',
     },
     web: {
       bundler: 'metro',

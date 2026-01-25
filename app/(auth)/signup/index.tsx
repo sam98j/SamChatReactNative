@@ -1,6 +1,6 @@
 import { Link, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, StatusBar } from 'react-native';
 import { useEffect, useState } from 'react';
 import i18n from '../../../i18n';
 import { UIActivityIndicator } from 'react-native-indicators';
@@ -78,6 +78,10 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView>
+      {/* status bar */}
+      <StatusBar barStyle='dark-content' />
+
+      {/* scroll view */}
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
         <View style={styles.pageHeader}>

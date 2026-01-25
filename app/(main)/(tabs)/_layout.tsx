@@ -7,23 +7,24 @@ import { StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 
 export default function TabLayout() {
+
   // get curentUser state zustand zuAuth
   const { currentUser } = useAuthStore();
+
   // check if currentUser is truthy
   const isUserLoggedIn = currentUser !== null ? true : false;
+
   return (
     <Tabs
       screenOptions={() => ({
-        tabBarActiveTintColor: 'dodgerblue',
         headerStyle: { shadowColor: 'transparent', elevation: 0 },
+        headerStatusBarHeight: 0,
         headerTitleAlign: 'center',
-        headerTitleStyle: { fontFamily: 'BalooBhaijaan2', display: isUserLoggedIn ? 'flex' : 'none' },
-        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 13, marginTop: 5 },
+        headerTitleStyle: { fontFamily: 'BalooBhaijaan2' },
         headerShown: isUserLoggedIn ? true : false, // Dynamically control header visibility
-        tabBarStyle: {
-          display: isUserLoggedIn ? 'flex' : 'none',
-          ...styles.tapBarStyle,
-        },
+        tabBarActiveTintColor: 'dodgerblue',
+        tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 13, marginTop: 5 },
+        tabBarStyle: {display: isUserLoggedIn ? 'flex' : 'none',...styles.tapBarStyle},
         tabBarBackground: () => (
           <BlurView
             intensity={100}

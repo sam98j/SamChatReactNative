@@ -13,10 +13,12 @@ export default function WelcomeScreen() {
   const router = useRouter();
   return (
     <View style={styles.container}>
+      <StatusBar translucent={true} backgroundColor="transparent" />
+
+      {/* gradient container */}
       <LinearGradient colors={['#1ecefa', '#4fccd5']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+        {/* image container */}
         <SafeAreaView edges={['top', 'left', 'right']}>
-          <StatusBar barStyle='light-content' backgroundColor={'transparent'} translucent={true} />
-          {/* image container */}
           <View>
             <View style={styles.logoContainer}>
               <Image source={SamChatLogo} style={{ width: 60, height: 60, tintColor: 'white' }} />
@@ -25,11 +27,14 @@ export default function WelcomeScreen() {
           </View>
         </SafeAreaView>
       </LinearGradient>
+
       {/*text container  */}
       <View style={styles.discriptionTextContainer}>
         <Text style={[styles.fontFamily, styles.welcomeText]}>{i18n.t('welcome.welcome')}</Text>
         <Text style={[styles.fontFamily, styles.discriptionText]}>{i18n.t('welcome.description')}</Text>
       </View>
+
+      {/* button container */}
       <View style={styles.buttonArea}>
         {/* login btn */}
         <Button radius={'md'} onPress={() => router.navigate('/(auth)/login')}>

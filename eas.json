@@ -5,11 +5,14 @@
   },
   "build": {
     "development": {
-      "developmentClient": false,
+      "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://samchat.onrender.com"
+      }
     },
     "production": {
       "autoIncrement": true,

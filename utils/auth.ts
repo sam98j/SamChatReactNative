@@ -3,13 +3,16 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 const startSignInFlow = async () => {
   try {
     GoogleSignin.configure({
-      webClientId: '899317260521-1j3t0v34151gn89o7erjpsc8ei89psrk.apps.googleusercontent.com',
+      webClientId: '914925743575-pnoequ2solu8tjd05hje6repgilaerr6.apps.googleusercontent.com',
     }); // move this to after your app starts
     GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+
     // await GoogleSignin.();
     const signInResponse = await GoogleSignin.signIn();
     if (signInResponse.type === 'success') {
       const tokens = await GoogleSignin.getTokens();
+
+      console.log(tokens);
       const apiUrl = process.env.EXPO_PUBLIC_API_URL;
       // google auth method from zuAuth
       // fetch request
@@ -22,6 +25,8 @@ const startSignInFlow = async () => {
       });
       // use signInResponse.data
       const data = await response.json();
+
+      console.log(data);
       return data;
     }
     // the else branches correspond to the user canceling the sign in

@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
   },
   // chats container
   chatsConainerStyle: {
