@@ -37,13 +37,35 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   // set current user
   setCurrentUser: async () => {
-    const { chats, loggedInUser } = await getUserChats();
+    // 1. Try to load from cache first for offline-first
+    try {
+      const cachedUser = await SecureStore.getItemAsync('user_data');
+      if (cachedUser) {
+        set({ currentUser: JSON.parse(cachedUser) });
+      }
+    } catch (e) {
+      console.error('Failed to load cached user', e);
+    }
 
-    // set currentUser
-    set({ currentUser: loggedInUser });
+    // 2. Fetch fresh data from API
+    try {
+      const resp = await getUserChats();
+      if (typeof resp === 'string') {
+        console.error(resp);
+        return;
+      }
 
-    // set chats in zuChats
-    useChatsStore.getState().setCurrentUserChats(chats);
+      const { chats, loggedInUser } = resp;
+
+      // set currentUser and cache it
+      set({ currentUser: loggedInUser });
+      await SecureStore.setItemAsync('user_data', JSON.stringify(loggedInUser));
+
+      // set chats in zuChats
+      useChatsStore.getState().setCurrentUserChats(chats);
+    } catch (e) {
+      console.error('Failed to fetch fresh user data', e);
+    }
   },
 
   // login user (use the mehod in api/auth.ts)
@@ -51,10 +73,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     const { access_token, loggedInUser } = await loginUser(loginDto);
     // set currentUser
     set({ currentUser: loggedInUser });
+    // cache user
+    await SecureStore.setItemAsync('user_data', JSON.stringify(loggedInUser));
     // set chats in zuChats
     useChatsStore.setState({ chats: [] });
     // store the user access token in the localstorage
-    SecureStore.setItem('access_token', `Bearer ${access_token}`);
+    await SecureStore.setItemAsync('access_token', `Bearer ${access_token}`);
     return loggedInUser;
   },
 
@@ -63,10 +87,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     const { access_token, loggedInUser } = await signupUser(userCred);
     // set currentUser
     set({ currentUser: loggedInUser });
+    // cache user
+    await SecureStore.setItemAsync('user_data', JSON.stringify(loggedInUser));
     // set chats in zuChats
     useChatsStore.setState({ chats: [] });
     // store the user access token in the localstorage
-    SecureStore.setItem('access_token', `Bearer ${access_token}`);
+    await SecureStore.setItemAsync('access_token', `Bearer ${access_token}`);
     return loggedInUser;
   },
 
@@ -76,22 +102,24 @@ export const useAuthStore = create<AuthState>((set) => ({
     const { loggedInUser, access_token } = loggedInUserApiRes;
     // set currentUser
     set({ currentUser: loggedInUser });
+    // cache user
+    await SecureStore.setItemAsync('user_data', JSON.stringify(loggedInUser));
     // set chats in zuChats
     useChatsStore.setState({ chats: [] });
     // store the user access token in the localstorage
-    SecureStore.setItem('access_token', `Bearer ${access_token}`);
+    await SecureStore.setItemAsync('access_token', `Bearer ${access_token}`);
     return loggedInUser;
   },
 
   // logout
-  logout: () => {
+  logout: async () => {
     // clear auth state
     set({ currentUser: null, apiResponse: null });
     // google sign out
-    if (GoogleSignin.hasPreviousSignIn()) GoogleSignin.signOut();
+    if (await GoogleSignin.hasPreviousSignIn()) await GoogleSignin.signOut();
     // clear chats state
     useChatsStore.setState({ chats: [] });
-    // Remove access token from SecureStore
-    SecureStore.deleteItemAsync('access_token');
+    // Remove access token and user data from SecureStore
+    await Promise.all([SecureStore.deleteItemAsync('access_token'), SecureStore.deleteItemAsync('user_data')]);
   },
 }));

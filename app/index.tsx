@@ -5,20 +5,31 @@ import { View } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
 const App = () => {
-  // get auth zustand zuAuth
   const { setCurrentUser } = useAuthStore();
-  //   get access token from expo secure store
-  const accessToken = SecureStore.getItem('access_token');
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [hasToken, setHasToken] = React.useState(false);
 
-  //   get current user when component mount
   useEffect(() => {
-    setCurrentUser();
+    const init = async () => {
+      try {
+        const token = await SecureStore.getItemAsync('access_token');
+        setHasToken(!!token);
+        // Start loading user data (offline-first will load cache immediately)
+        setCurrentUser();
+      } catch (e) {
+        console.error('Initial load failed', e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    init();
   }, []);
-  return (
-    <View>
-      <Redirect href={`${accessToken ? '/(main)/(tabs)/chats' : '/(onboarding)'}`} />
-    </View>
-  );
+
+  if (isLoading) {
+    return <View className="flex-1 bg-white" />;
+  }
+
+  return <Redirect href={hasToken ? '/(main)/(tabs)/chats' : '/(onboarding)'} />;
 };
 
 export default App;
