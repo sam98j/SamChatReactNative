@@ -1,5 +1,5 @@
 import ChatCardContainer from '@/components/ChatCard';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, StatusBar } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import CustomBottomSheet from '@/components/BottomSheet';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -47,6 +47,9 @@ export default function Chats() {
   // log chat
   return (
     <View style={styles.container}>
+      {/* status bar */}
+      <StatusBar barStyle={'dark-content'} />
+
       {/* search bar */}
       <SearchBar
         placeholder={`${i18n.t('chatsListScreen.search-bar-placeholder')}`}

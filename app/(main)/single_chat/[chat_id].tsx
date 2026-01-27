@@ -6,47 +6,32 @@ import NoMessages from '@/components/NoMessages';
 import SingleChatHeader from '@/components/SingleChatHeader';
 import ForwardMsgMenu from '../forwordMsgReciversList';
 import { useSingleChat } from '@/hooks/useSingleChat';
-import React, { useCallback, useRef } from 'react';
-import { ImageBackground, Keyboard, KeyboardAvoidingView, Platform, SectionList, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { FlatList, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import chatBackground from '../../../assets/images/chat_background.png';
 import { useSystemStore } from '@/store/systemStore';
+import ChatMessagesLoadOldMsgSpin from '@/components/ChatMessagesLoadOldMsgSpin';
+import { StatusBar } from 'react-native';
 
 const SingleChat = () => {
-  const { chatMessages, sections, isFetchingChatMessages, isChatUsrDoingAction, messagesToBeForwared, loadMoreMessages } = useSingleChat();
-  const sectionListRef = useRef<SectionList>(null);
+  const { 
+    chatMessages, 
+    flattenedMessages, 
+    isFetchingChatMessages, 
+    isChatUsrDoingAction, 
+    messagesToBeForwared, 
+    loadMoreMessages,
+    isKeyboardOpen,
+    inputHeight,
+    createMessageContainerRef,
+  } = useSingleChat();
 
   // isAttachFileBottomSheetOpen
   const { isAttachFileBottomSheetOpen } = useSystemStore();
 
   console.log(isAttachFileBottomSheetOpen);
   const onBackPress = useCallback(() => {}, []);
-
-  const createMessageContainerRef = useRef<View>(null);
-
-  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false);
-  const [inputHeight, setInputHeight] = React.useState(0);
-
-
-  React.useEffect(() => {
-    // measure create message container height
-    createMessageContainerRef.current?.measure((x, y, width, height) => {
-      setInputHeight(height / 2);
-    });
-
-    // keyboard show and hide listeners
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => setIsKeyboardOpen(true));
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => setIsKeyboardOpen(false));
-
-    // remove listeners on unmount
-    return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
-    };
-  }, []);
-
-  // Scroll when sections or fetching state changes - REMOVED for inverted list
-  // inverted lists handle this naturally by staying at "index 0" (the bottom)
 
   // TODO: implement auto scroll to bottom when new message is added
 
@@ -58,6 +43,8 @@ const SingleChat = () => {
       ]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+      {/* status bar */}
+      <StatusBar barStyle={'dark-content'}/>
       {/* forward messages menu */}
       {messagesToBeForwared && <ForwardMsgMenu />}
 
@@ -82,23 +69,25 @@ const SingleChat = () => {
           )}
 
           {/* messages list */}
-          <SectionList
-            ref={sectionListRef}
-            sections={sections}
-            onEndReached={loadMoreMessages}
-            onEndReachedThreshold={0.5}
-            refreshing={isFetchingChatMessages}
+          <FlatList
+            data={flattenedMessages}
             inverted
-            initialNumToRender={15}
-            windowSize={5}
+            onEndReached={loadMoreMessages}
+            onEndReachedThreshold={0.5} // Increased to trigger loading earlier
+            ListFooterComponent={<ChatMessagesLoadOldMsgSpin isFetchingChatMessages={isFetchingChatMessages} />}
+            contentContainerStyle={styles.scrollContentContainer}
+            keyExtractor={(item) => item._id}
+            initialNumToRender={20}
+            windowSize={10}
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={50}
             removeClippedSubviews={Platform.OS === 'android'}
-            contentContainerStyle={styles.scrollContentContainer}
-            keyExtractor={(item) => item._id}
-            renderSectionHeader={({ section: { title } }) => <Text style={styles.messagesDate}>{title}</Text>}
-            renderItem={({ item }) => <ChatMessageViewer msg={item} />}
-            stickySectionHeadersEnabled={true}
+            renderItem={({ item }) => {
+              if ('type' in item && item.type === 'date') {
+                return <Text style={styles.messagesDate}>{item.date}</Text>;
+              }
+              return <ChatMessageViewer msg={item as any} />;
+            }}
           />
 
           {/* chat actions */}

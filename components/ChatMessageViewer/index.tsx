@@ -22,7 +22,7 @@ import RepliedToMessage from '../RepliedToMessage';
 import * as Haptics from 'expo-haptics';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
+const ChatMessageViewer: FC<{ msg: ChatMessage }> = React.memo(({ msg }) => {
   const { sender, content, _id, status, type, date, voiceNoteDuration, fileName, msgReplyedTo, isForwarded } = msg;
 
   // screen width
@@ -144,7 +144,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = ({ msg }) => {
       </Animated.View>
     </GestureDetector>
   );
-};
+});
 
 export default ChatMessageViewer;
 
