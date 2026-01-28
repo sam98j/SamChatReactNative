@@ -9,6 +9,9 @@ import { secondsToDurationConverter } from '@/utils/time';
 // component props
 type Props = { msg: ChatMessage };
 
+// intervalId
+let intervalId: number;
+
 const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -21,61 +24,68 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
 
   // voice note url
   const voiceNoteUrl = content.startsWith('file') ? content : apiUrl + content;
+
   // expo audio imports
   const player = useAudioPlayer(voiceNoteUrl);
-
-
 
   // is audio playing state
   const [isPlaying, setIsPlaying] = useState(false);
 
   // handle audio play/pause
   const handlePress = () => {
+
     // if it's playing, pause it
     if (isPlaying) {
       player.pause();
       setIsPlaying(false);
       return;
     }
+
     // if it's not playing, play it
+    player.seekTo(0);
     player.play();
     setIsPlaying(true);
-  };
 
-  // intervalId
-  let intervalId: number;
+  };
 
   // observe isPlaying
   useEffect(() => {
-    if (!isPlaying) return;
-    let counter = 0;
-    // terminate if it's not playing
+
+    // if it's not playing, clear interval and reset isPlaying
+    if (!isPlaying) {
+      clearInterval(intervalId);
+      setIsPlaying(false);
+      return;
+    };
+
     // interval
     intervalId = setInterval(() => {
-      counter++;
-      // log counter
 
-      // log isPlaying
-      const progressWidth = `${(counter / Number(voiceNoteDuration)) * 100}%`;
+      // player current time
+      const currentTime = player.currentStatus.currentTime;
 
+      // calculate progress width
+      const progressWidth = `${(currentTime / Number(voiceNoteDuration)) * 100}%`;
+
+      // update progress bar width
       progressRef.current?.setNativeProps({ style: { width: progressWidth } });
-      // check if counter is greater than or eqaul to voiceNoteDuration
-      if (!(counter >= Number(voiceNoteDuration))) return;
+
+      // check if currentTime is greater than or eqaul to voiceNoteDuration
+      if (!(currentTime >= Number(voiceNoteDuration))) return;
+
+      // reset all
       clearInterval(intervalId);
       setIsPlaying(false);
       progressRef.current?.setNativeProps({ style: { width: '0%' } });
-      // update progress bar width
-      // calculate progress width;
     }, 1000);
   }, [isPlaying]);
 
   return (
     <View style={styles.container}>
+
       {/* play / pause button */}
       <TouchableOpacity style={styles.playButton}>
-        {isPlaying && <Icon name='pause' size={30} color='gray' />}
-        {/* if it's not playing */}
-        {!isPlaying && <Icon name='play' size={30} color='gray' onPress={handlePress} />}
+        <Icon name={isPlaying ? 'pause' : 'play'} size={30} color='gray' onPress={handlePress} />
       </TouchableOpacity>
 
       {/* progress bar */}
@@ -120,7 +130,7 @@ const styles = StyleSheet.create({
   },
   progress: {
     height: '100%',
-    backgroundColor: '#007bff',
+    backgroundColor: 'dodgerblue',
     width: '0%',
   },
 });
