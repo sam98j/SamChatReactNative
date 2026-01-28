@@ -8,21 +8,26 @@ const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 // get user chats
 export const getUserChats = async () => {
   const access_token = await SecureStore.getItemAsync('access_token');
+
   // request parmas
   const requestInit = {
     method: 'GET',
     headers: { authorization: access_token },
   } as FetchRequestInit;
+
   // fetch request
   const response = await fetch(`${apiUrl}/chats`, requestInit);
+
   // check for internal serval error
   if (response.status >= 500) {
     return 'Internal Server Error';
   }
+
   // if the login failed
   if (response.status >= 400) {
     return 'You Are Not Authente. Yet';
   }
+
   const resp = await response.json();
   // there is no error
   return resp;

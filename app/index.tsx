@@ -1,29 +1,31 @@
 import { useAuthStore } from '@/store/authStore';
 import { Redirect } from 'expo-router';
 import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import { ToastAndroid, View } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import { Alert } from 'react-native';
 
 const App = () => {
   const { setCurrentUser } = useAuthStore();
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasToken, setHasToken] = React.useState(false);
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const token = await SecureStore.getItemAsync('access_token');
-        setHasToken(!!token);
-        // Start loading user data (offline-first will load cache immediately)
-        setCurrentUser();
-      } catch (e) {
-        console.error('Initial load failed', e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    init();
-  }, []);
+  // init function
+  const init = async () => {
+    try {
+      const token = await SecureStore.getItemAsync('access_token');
+      setHasToken(!!token);
+      // Start loading user data (offline-first will load cache immediately)
+      setCurrentUser();
+    } catch (e) {
+      console.error('Initial load failed', e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // init effect
+  useEffect(() => {init()}, []);
 
   if (isLoading) {
     return <View className="flex-1 bg-white" />;

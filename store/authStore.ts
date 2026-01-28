@@ -5,6 +5,7 @@ import { loginUser, signupUser } from '@/api/auth';
 import * as SecureStore from 'expo-secure-store';
 import { LoggedInApiResponse, LoginDto, SignUpDto } from '@/interfaces/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { clearChatsDB, getChatsFromDB, initDatabase, saveChatsToDB } from '@/services/database';
 
 // Login Successfly Response
 export interface LoggedInUserData {
@@ -35,6 +36,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   apiResponse: null,
   isOAuthActive: false,
 
+  // TODO: handle 400 and 500 api responses
   // set current user
   setCurrentUser: async () => {
     // 1. Try to load from cache first for offline-first
@@ -43,13 +45,24 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (cachedUser) {
         set({ currentUser: JSON.parse(cachedUser) });
       }
+      
+      // Initialize DB and load cached chats
+      await initDatabase();
+      // load cached chats
+      const cachedChats = await getChatsFromDB();
+      // set cached chats in zuChats
+      if (cachedChats && cachedChats.length > 0) useChatsStore.getState().setCurrentUserChats(cachedChats);
     } catch (e) {
-      console.error('Failed to load cached user', e);
+      console.error('Failed to load cached user or chats', e);
+      // set api response
+      set({ apiResponse: { err: true, msg: 'Failed to load cached user or chats' } });
     }
 
     // 2. Fetch fresh data from API
     try {
+      // get user chats from api
       const resp = await getUserChats();
+
       if (typeof resp === 'string') {
         console.error(resp);
         return;
@@ -61,11 +74,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ currentUser: loggedInUser });
       await SecureStore.setItemAsync('user_data', JSON.stringify(loggedInUser));
 
-      // set chats in zuChats
+      // set chats in zuChats and cache them
       useChatsStore.getState().setCurrentUserChats(chats);
-    } catch (e) {
-      console.error('Failed to fetch fresh user data', e);
-    }
+      // save chats to db
+      if (Array.isArray(chats)) await saveChatsToDB(chats);
+    } catch (e) {set({ apiResponse: { err: true, msg: 'Failed to fetch fresh user data' } })}
   },
 
   // login user (use the mehod in api/auth.ts)
@@ -119,7 +132,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (await GoogleSignin.hasPreviousSignIn()) await GoogleSignin.signOut();
     // clear chats state
     useChatsStore.setState({ chats: [] });
-    // Remove access token and user data from SecureStore
-    await Promise.all([SecureStore.deleteItemAsync('access_token'), SecureStore.deleteItemAsync('user_data')]);
+    // Remove access token and user data from SecureStore, and clear DB
+    await Promise.all([
+      SecureStore.deleteItemAsync('access_token'),
+      SecureStore.deleteItemAsync('user_data'),
+      clearChatsDB()
+    ]);
   },
 }));

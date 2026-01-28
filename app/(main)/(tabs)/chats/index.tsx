@@ -1,5 +1,5 @@
 import ChatCardContainer from '@/components/ChatCard';
-import { View, StyleSheet, FlatList, StatusBar } from 'react-native';
+import { View, StyleSheet, FlatList, StatusBar, ToastAndroid } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import CustomBottomSheet from '@/components/BottomSheet';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -15,7 +15,7 @@ export default function Chats() {
   const { chats } = useChatsStore();
 
   // current user
-  const { currentUser } = useAuthStore();
+  const { currentUser, apiResponse } = useAuthStore();
 
   // filtered chats state
   const [filteredChats, setFilteredChats] = useState<ChatCard[] | null>(() => chats!);
@@ -41,6 +41,10 @@ export default function Chats() {
     // set filtered chats
     setFilteredChats(filteredChats);
   }, [chats, searchQuery]);
+
+  // if the api response is error
+  // TODO: api response msgs localization
+  useEffect(() => {apiResponse?.err && ToastAndroid.show(apiResponse.msg, ToastAndroid.SHORT)}, [apiResponse]);
 
   // handle search
   const handleSearch = (text: string) => setSearchQuery(text);

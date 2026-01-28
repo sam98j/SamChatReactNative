@@ -55,6 +55,7 @@ export default {
       'expo-localization',
       'expo-audio',
       'expo-video',
+      'expo-sqlite',
     ],
     experiments: {
       typedRoutes: true,

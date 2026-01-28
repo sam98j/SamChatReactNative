@@ -9,6 +9,7 @@ import {
   SingleChat,
 } from '@/interfaces/chats';
 import { createChat, deleteChat, getChatMessages, getUsrOnlineStatus } from '@/api/chats';
+import { deleteChatFromDB, updateChatInDB } from '@/services/database';
 
 export type ResponseToMessageData = Pick<
   ChatMessage,
@@ -135,6 +136,12 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     const updatedChatMessages = chatMessages?.map((msg) => (msgIDs.includes(msg._id) ? { ...msg, status: msgStatus } : msg));
     // set chats
     set({ chats: updatedChats, chatMessages: updatedChatMessages });
+
+    // Sync with DB
+    if (updatedChats) {
+      const updatedChat = updatedChats.find(c => c._id === chatId);
+      if (updatedChat) updateChatInDB(updatedChat);
+    }
   },
 
   // method to place the last updated chat to the top
@@ -156,6 +163,10 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     if (!chats) return {};
     const updatedChats = chats.map((chat) => (chat._id === msg.receiverId ? { ...chat, lastMessage: msg } : chat));
     set({ chats: updatedChats });
+    
+    // Sync with DB
+    const updatedChat = updatedChats.find(c => c._id === msg.receiverId);
+    if (updatedChat) updateChatInDB(updatedChat);
   },
 
   // method to set the unreaded messages count of the chat
@@ -171,6 +182,9 @@ export const useChatsStore = create<ChatState>((set, get) => ({
       unReadedMsgs: clear ? 0 : (chats[chatIndex].unReadedMsgs || 0) + 1,
     };
     set({ chats });
+    
+    // Sync with DB
+    updateChatInDB(chats[chatIndex]);
   },
 
   // method to set the chat user status
@@ -187,6 +201,9 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     const res = await createChat({ chat });
     if (typeof res === 'string') return;
     set({ createChatAPIres: res, chats: [chat, ...chats!] });
+    
+    // Sync with DB
+    updateChatInDB(chat);
   },
 
   // method to set the current user chats
@@ -234,6 +251,9 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     // remove chat from chats
     const updatedChats = chats.filter((chat) => chat._id !== _id);
     set({ chats: updatedChats });
+    
+    // Sync with DB
+    deleteChatFromDB(_id);
   },
 
   // open close msg actions menu
