@@ -42,7 +42,7 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
     }
 
     // if it's not playing, play it
-    player.seekTo(0);
+    if(player.currentStatus.didJustFinish) return player.seekTo(0);
     player.play();
     setIsPlaying(true);
 
@@ -79,6 +79,11 @@ const VoiceMsgPlayer: FC<Props> = ({ msg }) => {
       progressRef.current?.setNativeProps({ style: { width: '0%' } });
     }, 1000);
   }, [isPlaying]);
+
+  // clean up
+  useEffect(() => {
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <View style={styles.container}>
