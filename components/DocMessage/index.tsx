@@ -85,24 +85,30 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
   // render
   return (
     <View style={styles.container}>
+
       {/* file data container */}
       <TouchableOpacity onPress={handlePress} style={{ width: '100%' }}>
+
         {/* icon container */}
         <View style={styles.iconContainer}>
           <Ionicons name='document-text-outline' size={25} color='dodgerblue' />
           <Text style={[styles.title, styles.fontFamily]}>{fileName}</Text>
         </View>
+
         {/* file type and size container*/}
         <View style={styles.fileInfoContainer}>
           <Text style={[styles.description, styles.fontFamily]}>{fileType}</Text>
           <Text>-</Text>
           <Text style={[styles.description, styles.fontFamily]}>{fileSize}KB</Text>
         </View>
+
       </TouchableOpacity>
+
       {/* file uplaod indicator container */}
       <View style={styles.fileMsgUploadIndicatorContainer}>
         <FileMsgUploadIndicator _id={msg._id} isFile={true} />
       </View>
+
     </View>
   );
 };

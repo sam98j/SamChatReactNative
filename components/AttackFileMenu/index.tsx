@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useCallback, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import IonicIcons from 'react-native-vector-icons/Ionicons';
@@ -56,8 +56,13 @@ const AttchFileBottomSheet = () => {
   // Handle image picking
   const handlePickImage = async (msg: ChatMessage) => {
     try {
+
+      // pick image
       const image = await pickImage();
-      if (!image) return;
+
+      // TODO: need string localization
+      // terminate if it's cancled
+      if (!image) return ToastAndroid.show('Cancel image picking', ToastAndroid.SHORT);
 
       // image message
       const imageMessage: ChatMessage = {
@@ -77,14 +82,21 @@ const AttchFileBottomSheet = () => {
       setChatLastMessage({ msg: imageMessage, currentUserId: currentUsr!._id });
     } catch (error) {
       console.error('Error picking image:', error);
+      // TODO: need string localization
+      ToastAndroid.show('Error picking image', ToastAndroid.SHORT);
     }
   };
 
   // Handle video picking
   const handlePickVideo = async (msg: ChatMessage) => {
     try {
+
+      // pick video
       const video = await pickVideo();
-      if (!video) return;
+
+      // TODO: need string localization
+      // terminate if it's cancled
+      if (!video) return ToastAndroid.show('Cancel video picking', ToastAndroid.SHORT);
 
       // video message
       const videoMessage: ChatMessage = {
@@ -104,14 +116,21 @@ const AttchFileBottomSheet = () => {
       setChatLastMessage({ msg: videoMessage, currentUserId: currentUsr!._id });
     } catch (error) {
       console.error('Error picking video:', error);
+      // TODO: need string localization
+      ToastAndroid.show('Error picking video', ToastAndroid.SHORT);
     }
   };
 
   // Handle image picking
   const handlePickDocument = async (msg: ChatMessage) => {
     try {
+
+      // pick file
       const doc = await pickFile();
-      if (!doc) return;
+
+      // TODO: need string localization
+      // terminate if it's cancled
+      if (!doc) return ToastAndroid.show('Cancel file picking', ToastAndroid.SHORT);
 
       // image message
       const docMessage: ChatMessage = {
@@ -130,7 +149,9 @@ const AttchFileBottomSheet = () => {
       // set last chat message
       setChatLastMessage({ msg: docMessage, currentUserId: currentUsr!._id });
     } catch (error) {
-      console.error('Error picking image:', error);
+      console.error('Error picking file:', error);
+      // TODO: need string localization
+      ToastAndroid.show('Error picking file', ToastAndroid.SHORT);
     }
   };
 
