@@ -18,13 +18,10 @@ import * as ImagePicker from 'expo-image-picker';
 
 const CreateMessage = () => {
   // url search params
-  const { chat_id } = useLocalSearchParams<{ chat_id: string }>(); // Access the chat_id parameter
+  const { chat_id: chatId } = useLocalSearchParams<{ chat_id: string }>();
 
   // type message input ref
   const typeMessageInputRef = useRef<TextInput>(null);
-
-  // chat id
-  const chatId = chat_id!;
 
   //   current loggedIn user
   const currentUsr = useAuthStore().currentUser;
@@ -62,27 +59,42 @@ const CreateMessage = () => {
   //   is recording
   const [isRec, setIsRec] = useState(false);
 
+  // typing timeout ref
+  const typingTimeoutRef = useRef<number | null>(null);
+
+  // is typing ref
+  const isTypingRef = useRef(false);
+
   // chat action
   const [chatAction, setChatAction] = useState<ChatActions | null>(null);
-
-  // handleInputFocus
-  const handleInputFocus = () =>
-    setCurrentUsrDoingAction({
-      ...chatAction!,
-      type: ChatActionsTypes.TYPEING,
-    });
-
-  // handleInputBlur
-  const handleInputBlur = () => {
-
-    setCurrentUsrDoingAction({ ...chatAction!, type: null });
-  };
 
   //  check if it's recording
   const showSendMsgBtn = isRec || textMessage;
 
   //   input change handler
-  const inputChangeHandler = (text: string) => setTextMessage(text);
+  const inputChangeHandler = (text: string) => {
+    setTextMessage(text)
+
+    // 1. If not already marked as typing, tell the server
+    if (!isTypingRef.current) {
+      isTypingRef.current = true;
+      setCurrentUsrDoingAction({
+        ...chatAction!,
+        type: ChatActionsTypes.TYPEING,
+      });
+    }
+
+    // 2. Clear any existing timer to reset the "stopped typing" countdown
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // 3. Set a timer to flip the status back after 2 seconds of silence
+    typingTimeoutRef.current = setTimeout(() => {
+      isTypingRef.current = false;
+      setCurrentUsrDoingAction({ ...chatAction!, type: null });
+    }, 2000);
+  };
 
   // send text message
   const sendTextMessage = (message: ChatMessage) => {
@@ -324,8 +336,6 @@ const CreateMessage = () => {
               placeholder={i18n.t('openedChat.create-message-input.type-message-input-placeholder')}
               cursorColor={'dodgerblue'}
               value={textMessage}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
               onChangeText={(e) => inputChangeHandler(e)}
             />
             {/* attach file and stickers icons */}

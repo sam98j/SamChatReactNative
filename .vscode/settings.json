@@ -5,7 +5,7 @@
   "prettier.bracketSameLine": false,
   "editor.renderWhitespace": "boundary",
   "workbench.colorCustomizations": {
-    "editorWhitespace.foreground": "#a3a3a3"
+    "editorWhitespace.foreground": "#000000"
   },
   "whitespacepp.renderEOF": false,
   "todoist.projectId": "2307184890"
