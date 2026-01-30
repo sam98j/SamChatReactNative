@@ -48,6 +48,7 @@ const ChatActions = () => {
     ).start();
   }, [fadeAnim]);
 
+  // TODO: enhance this animations
   // observe first bullet animation
   useEffect(() => {
     const animations = anims.map((anim, i) =>
