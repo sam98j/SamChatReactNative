@@ -169,7 +169,20 @@ const MainLayout = () => {
       // emit the received chat's message as delevered
       socketClient.emit('message_status_changed', changeMessageStatusData);
     });
-  }, [socketClient]);
+
+    // listen for messages delivered
+    socketClient?.removeAllListeners('messages_delivered');
+
+    // listen for messages delivered
+    socketClient?.on('messages_delivered', ({senderId}) => {
+      console.log('messages_delivered', openedChat);
+      // terminate if the sender is not the a member of the current chat
+      if (!openedChat?.members.some((member) => member._id === senderId)) return;
+      // set messages status
+      setMessageStatus({msgIDs: [], msgStatus: MessageStatus.DELEVERED, chatId: openedChat._id});
+      console.log('opened chat');
+    });
+  }, [socketClient, openedChat]);
 
   // listen to isCurrentUsrDoingAction
   useEffect(() => {

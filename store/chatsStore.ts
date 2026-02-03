@@ -5,6 +5,7 @@ import {
   ChatCard,
   ChatMessage,
   ChatProfile,
+  MessageStatus,
   MessagesToBeForwarded,
   SingleChat,
 } from '@/interfaces/chats';
@@ -104,11 +105,11 @@ export const useChatsStore = create<ChatState>((set, get) => ({
 
   // method to add a message to the chat
   addMessageToChat: (msg) => {
-    if (!msg) return {};
+    if (!msg) return;
     // chat messages
     const chatMessages = get().chatMessages;
     // check if the message is already in the chat messages
-    if (chatMessages?.some((m) => m._id === msg._id)) return {};
+    if (chatMessages?.some((m) => m._id === msg._id)) return;
     // set chat messages
     set({ chatMessages: [...chatMessages!, msg] });
   },
@@ -128,12 +129,25 @@ export const useChatsStore = create<ChatState>((set, get) => ({
   // method to set the message status
   setMessageStatus: ({ chatId, msgStatus, msgIDs }) => {
     const { chats, chatMessages } = get();
+
     // update chats
     const updatedChats = chats?.map((chat) =>
       chat._id === chatId ? { ...chat, lastMessage: { ...chat.lastMessage, status: msgStatus } } : chat
     );
+
     // update chatMessages
-    const updatedChatMessages = chatMessages?.map((msg) => (msgIDs.includes(msg._id) ? { ...msg, status: msgStatus } : msg));
+    const { DELEVERED, SENT, READED } = MessageStatus;
+    let updatedChatMessages;
+
+    // if msg status is delivered, update all msgs status to delivered
+    if (msgStatus === DELEVERED) {
+      updatedChatMessages = chatMessages?.map((msg) => (msg.status === SENT ? { ...msg, status: msgStatus } : msg));
+    }
+
+    // if msg status is readed, update all msgs status to readed
+    if (msgStatus === READED || msgStatus === SENT) {
+      updatedChatMessages = chatMessages?.map((msg) => (msgIDs.includes(msg._id) ? { ...msg, status: msgStatus } : msg));
+    }
     // set chats
     set({ chats: updatedChats, chatMessages: updatedChatMessages });
 

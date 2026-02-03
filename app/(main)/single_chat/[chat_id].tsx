@@ -27,10 +27,6 @@ const SingleChat = () => {
     createMessageContainerRef,
   } = useSingleChat();
 
-  // isAttachFileBottomSheetOpen
-  const { isAttachFileBottomSheetOpen } = useSystemStore();
-
-  console.log(isAttachFileBottomSheetOpen);
   const onBackPress = useCallback(() => {}, []);
 
   // TODO: implement auto scroll to bottom when new message is added
