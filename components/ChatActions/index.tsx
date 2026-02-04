@@ -7,7 +7,6 @@ import { View, StyleSheet, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const ChatActions = () => {
-
   // is current usr doing action
   const { isChatUsrDoingAction } = useChatsStore();
 
@@ -44,7 +43,7 @@ const ChatActions = () => {
           duration: 500,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   }, [fadeAnim]);
 
@@ -65,8 +64,8 @@ const ChatActions = () => {
             duration: DURATION,
             useNativeDriver: true,
           }),
-        ])
-      )
+        ]),
+      ),
     );
     animations.forEach((anim) => anim.start());
     return () => animations.forEach((anim) => anim.stop());
@@ -88,8 +87,8 @@ const ChatActions = () => {
             duration: 300,
             useNativeDriver: true,
           }),
-        ])
-      )
+        ]),
+      ),
     );
     animations.forEach((anim) => anim.start());
     return () => animations.forEach((anim) => anim.stop());
@@ -97,7 +96,6 @@ const ChatActions = () => {
 
   return (
     <View style={styles.container}>
-
       {/* typing indicator */}
       <View style={[styles.typingIndicator, styles.typing, type !== TYPEING && styles.hideElement]}>
         {anims.map((anim, i) => (
@@ -112,7 +110,6 @@ const ChatActions = () => {
           <Animated.View key={i} style={[styles.bar, { transform: [{ scaleY: anim }] }]} />
         ))}
       </View>
-
     </View>
   );
 };
@@ -150,7 +147,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
 
-  // typing 
+  // typing
   typing: {
     paddingVertical: 10,
   },

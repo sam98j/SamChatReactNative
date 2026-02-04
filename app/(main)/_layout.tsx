@@ -10,7 +10,7 @@ import { useChatsStore } from '@/store/chatsStore';
 import sentSound from '@/assets/sounds/imessage_send.mp3';
 import recieve_msg_sound from '@/assets/sounds/imessage_recieve.mp3';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid';
 
 const MainLayout = () => {
   // api url
@@ -63,12 +63,15 @@ const MainLayout = () => {
       // all conditions passed
       setChatUsrStatus(data.status);
     });
+
     // clear listener
     socketClient?.removeAllListeners('message_status_changed');
+
     // receive message status
     socketClient?.on('message_status_changed', (data: ChangeMessageStatusDTO) => {
       // set message status
       setMessageStatus(data);
+
       // check for message sent status
       if (data.msgStatus === MessageStatus.SENT) {
         sentMsgAudioPlayer.play();
@@ -82,12 +85,15 @@ const MainLayout = () => {
   useEffect(() => {
     // clear listener
     socketClient?.removeAllListeners('message');
+
     // receive message
     socketClient?.on('message', (message: ChatMessage) => {
       // place last updated chat to the top
       placeLastUpdatedChatToTheTop({ chatId: message.receiverId });
+
       // set chat's last message
       setChatLastMessage({ msg: message, currentUserId: currentUser!._id });
+
       // mark received message as delevered if there is no opened chat
       if (!openedChat || openedChat._id !== message.receiverId) {
         // change message status dto
@@ -97,18 +103,21 @@ const MainLayout = () => {
           chatId: message.receiverId,
           msgStatus: MessageStatus.DELEVERED,
         };
+
         // inform the server that the message is delevered
         socketClient?.emit('message_status_changed', data);
         setChatUnReadedMessagesCount(message.receiverId, false);
         return;
       }
+
       // chatUser
       const chatUserId = openedChat!.members.filter((member) => member._id !== currentUser!._id)[0]._id;
+
       // check if the msg releated to current chat
       if (message.sender._id !== chatUserId && message.receiverId !== chatUserId) return;
       // if the message is not a multichunk message, add it to the chat messages
       addMessageToChat(message);
-      // expo audio
+
       // play sound
       recieveMsgAudioPlayer.play();
       recieveMsgAudioPlayer.seekTo(0);
@@ -119,10 +128,13 @@ const MainLayout = () => {
   useEffect(() => {
     // disconnect the web socket when usr logged out
     if (currentUser === undefined) socketClient?.disconnect();
+
     // terminate if usr is logged out
     if (!currentUser) return;
+
     // make socket io connection
-    const socket = io(`${apiUrl}`, { query: { client_id: currentUser._id } });
+    const socket = io(`${apiUrl}`, { query: { client_id: currentUser._id }, transports: ['websocket'] });
+
     // set socket
     setSocket(socket);
   }, [currentUser]);
@@ -131,10 +143,12 @@ const MainLayout = () => {
   useEffect(() => {
     // terminate if chat's messages not fetched yet
     if (!chatMessages) return;
+
     // msgs  to sent
     const messagesToSent = chatMessages.filter((msg: ChatMessage) => msg.status === null);
     // terminate if there is no message waiting for send
     if (!messagesToSent[0]) return;
+
     // send
     sendChatMessage(messagesToSent[0]);
   }, [chatMessages]);
@@ -143,6 +157,7 @@ const MainLayout = () => {
   useEffect(() => {
     // terminate if there is no message
     if (!messageToBeMarketAsReaded) return;
+
     // tell the server about readed message
     socketClient?.emit('message_status_changed', messageToBeMarketAsReaded);
   }, [messageToBeMarketAsReaded]);
@@ -174,13 +189,11 @@ const MainLayout = () => {
     socketClient?.removeAllListeners('messages_delivered');
 
     // listen for messages delivered
-    socketClient?.on('messages_delivered', ({senderId}) => {
-      console.log('messages_delivered', openedChat);
+    socketClient?.on('messages_delivered', ({ senderId }) => {
       // terminate if the sender is not the a member of the current chat
       if (!openedChat?.members.some((member) => member._id === senderId)) return;
       // set messages status
-      setMessageStatus({msgIDs: [], msgStatus: MessageStatus.DELEVERED, chatId: openedChat._id});
-      console.log('opened chat');
+      setMessageStatus({ msgIDs: [], msgStatus: MessageStatus.DELEVERED, chatId: openedChat._id });
     });
   }, [socketClient, openedChat]);
 
@@ -212,9 +225,9 @@ const MainLayout = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen
-          name="single_chat/[chat_id]"
+          name='single_chat/[chat_id]'
           options={{
             headerShown: false,
             presentation: 'pageSheet',
@@ -224,7 +237,7 @@ const MainLayout = () => {
           }}
         />
         <Stack.Screen
-          name="conversation_details/[chat_id]"
+          name='conversation_details/[chat_id]'
           options={{
             headerShown: false,
             presentation: 'modal',

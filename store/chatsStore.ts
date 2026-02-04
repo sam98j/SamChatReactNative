@@ -10,7 +10,7 @@ import {
   SingleChat,
 } from '@/interfaces/chats';
 import { createChat, deleteChat, getChatMessages, getUsrOnlineStatus } from '@/api/chats';
-import { deleteChatFromDB, updateChatInDB } from '@/services/database';
+import { deleteChatFromDB, updateChatInDB, getChatsFromDB } from '@/services/database';
 
 export type ResponseToMessageData = Pick<
   ChatMessage,
@@ -132,7 +132,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
 
     // update chats
     const updatedChats = chats?.map((chat) =>
-      chat._id === chatId ? { ...chat, lastMessage: { ...chat.lastMessage, status: msgStatus } } : chat
+      chat._id === chatId ? { ...chat, lastMessage: { ...chat.lastMessage, status: msgStatus } } : chat,
     );
 
     // update chatMessages
@@ -153,7 +153,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
 
     // Sync with DB
     if (updatedChats) {
-      const updatedChat = updatedChats.find(c => c._id === chatId);
+      const updatedChat = updatedChats.find((c) => c._id === chatId);
       if (updatedChat) updateChatInDB(updatedChat);
     }
   },
@@ -177,28 +177,35 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     if (!chats) return {};
     const updatedChats = chats.map((chat) => (chat._id === msg.receiverId ? { ...chat, lastMessage: msg } : chat));
     set({ chats: updatedChats });
-    
+
     // Sync with DB
-    const updatedChat = updatedChats.find(c => c._id === msg.receiverId);
+    const updatedChat = updatedChats.find((c) => c._id === msg.receiverId);
     if (updatedChat) updateChatInDB(updatedChat);
   },
 
   // method to set the unreaded messages count of the chat
-  setChatUnReadedMessagesCount: (chatId, clear) => {
+  setChatUnReadedMessagesCount: async (chatId, clear) => {
     // get chats
     const chats = get().chats;
-    if (!chats) return {};
-    const chatIndex = chats.findIndex((chat) => chat._id === chatId);
-    if (chatIndex === -1) return {};
 
-    chats[chatIndex] = {
+    if (!chats) return;
+
+    const chatIndex = chats.findIndex((chat) => chat._id === chatId);
+
+    if (chatIndex === -1) return;
+
+    // updated chat card
+    const updatedChatCard = {
       ...chats[chatIndex],
       unReadedMsgs: clear ? 0 : (chats[chatIndex].unReadedMsgs || 0) + 1,
     };
-    set({ chats });
-    
+
+    const updatedChats = [...chats];
+    updatedChats[chatIndex] = updatedChatCard;
+    set({ chats: updatedChats });
+
     // Sync with DB
-    updateChatInDB(chats[chatIndex]);
+    updateChatInDB(updatedChatCard);
   },
 
   // method to set the chat user status
@@ -215,7 +222,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     const res = await createChat({ chat });
     if (typeof res === 'string') return;
     set({ createChatAPIres: res, chats: [chat, ...chats!] });
-    
+
     // Sync with DB
     updateChatInDB(chat);
   },
@@ -265,7 +272,7 @@ export const useChatsStore = create<ChatState>((set, get) => ({
     // remove chat from chats
     const updatedChats = chats.filter((chat) => chat._id !== _id);
     set({ chats: updatedChats });
-    
+
     // Sync with DB
     deleteChatFromDB(_id);
   },

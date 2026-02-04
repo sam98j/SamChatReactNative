@@ -34,10 +34,10 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
   // chat avatar
   const chatAvatar = React.useMemo(() => {
     if (!openedChat || !loggedInUser || !chatUser) return undefined;
-    
+
     // return chat avatar if it contains https
     if (chatUser.avatar?.startsWith('https://')) return chatUser.avatar;
-    
+
     // return full api url if local
     const avatarPath = openedChat.type === ChatTypes.GROUP ? openedChat.avatar : chatUser.avatar;
     return avatarPath ? `${apiUrl}${avatarPath}` : undefined;
@@ -83,7 +83,6 @@ const SingleChatHeader: React.FC<SingleChatHeaderProps> = () => {
 
     // set chat usr online status
     setIsChatUsrOnline(chatUsrStatus === 'online' ? i18n.t('chatHeader.online') : lastSeen);
-
   }, [chatUsrStatus]);
 
   // handle header press

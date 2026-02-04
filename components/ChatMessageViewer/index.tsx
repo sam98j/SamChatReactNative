@@ -12,11 +12,7 @@ import SentCheckIcon from '@/assets/icons/check.png';
 import DocMessage from '../DocMessage';
 import { getTime, TimeUnits } from '@/utils/time';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useChatsStore } from '@/store/chatsStore';
 import RepliedToMessage from '../RepliedToMessage';
 import * as Haptics from 'expo-haptics';
@@ -106,7 +102,10 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = React.memo(({ msg }) => {
         )}
 
         {/* container */}
-        <TouchableOpacity onLongPress={handleMsgLongPress} style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+        <TouchableOpacity
+          onLongPress={handleMsgLongPress}
+          style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}
+        >
           {/* replied to message */}
           {msgReplyedTo && <RepliedToMessage msgData={msgReplyedTo as ResponseToMessageData} />}
           {/* Text */}
@@ -122,7 +121,17 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = React.memo(({ msg }) => {
 
           {/* message data */}
           {/* <View style={{width: '20%',  flexGrow: 1}}> */}
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', position: 'absolute', bottom: 5, right: 5 }}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              position: 'absolute',
+              bottom: 5,
+              right: 5,
+            }}
+          >
             {/* message status */}
             {isFromMe && (
               <View>

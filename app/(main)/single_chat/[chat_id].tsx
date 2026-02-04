@@ -10,17 +10,16 @@ import React, { useCallback } from 'react';
 import { FlatList, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import chatBackground from '../../../assets/images/chat_background.png';
-import { useSystemStore } from '@/store/systemStore';
 import ChatMessagesLoadOldMsgSpin from '@/components/ChatMessagesLoadOldMsgSpin';
 import { StatusBar } from 'react-native';
 
 const SingleChat = () => {
-  const { 
-    chatMessages, 
-    flattenedMessages, 
-    isFetchingChatMessages, 
-    isChatUsrDoingAction, 
-    messagesToBeForwared, 
+  const {
+    chatMessages,
+    flattenedMessages,
+    isFetchingChatMessages,
+    isChatUsrDoingAction,
+    messagesToBeForwared,
     loadMoreMessages,
     isKeyboardOpen,
     inputHeight,
@@ -33,14 +32,11 @@ const SingleChat = () => {
 
   return (
     <KeyboardAvoidingView
-      style={[
-        styles.container,
-        isKeyboardOpen && { paddingBottom: Platform.OS === 'ios' ? 0 : inputHeight },
-      ]}
+      style={[styles.container, isKeyboardOpen && { paddingBottom: Platform.OS === 'ios' ? 0 : inputHeight }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       {/* status bar */}
-      <StatusBar barStyle={'dark-content'}/>
+      <StatusBar barStyle={'dark-content'} />
       {/* forward messages menu */}
       {messagesToBeForwared && <ForwardMsgMenu />}
 
@@ -111,7 +107,7 @@ const styles = StyleSheet.create({
   },
   // Removed containerKeyboardOpen since we're using dynamic height now
   messagesContainer: {
-    flex: 1, 
+    flex: 1,
     backgroundColor: 'transparent',
   },
   // create message container

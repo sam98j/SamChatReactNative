@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (cachedUser) {
         set({ currentUser: JSON.parse(cachedUser) });
       }
-      
+
       // Initialize DB and load cached chats
       await initDatabase();
       // load cached chats
@@ -78,7 +78,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       useChatsStore.getState().setCurrentUserChats(chats);
       // save chats to db
       if (Array.isArray(chats)) await saveChatsToDB(chats);
-    } catch (e) {set({ apiResponse: { err: true, msg: 'Failed to fetch fresh user data' } })}
+    } catch (e) {
+      set({ apiResponse: { err: true, msg: 'Failed to fetch fresh user data' } });
+    }
   },
 
   // login user (use the mehod in api/auth.ts)
@@ -136,7 +138,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     await Promise.all([
       SecureStore.deleteItemAsync('access_token'),
       SecureStore.deleteItemAsync('user_data'),
-      clearChatsDB()
+      clearChatsDB(),
     ]);
   },
 }));

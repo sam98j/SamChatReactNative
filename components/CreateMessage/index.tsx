@@ -73,7 +73,7 @@ const CreateMessage = () => {
 
   //   input change handler
   const inputChangeHandler = (text: string) => {
-    setTextMessage(text)
+    setTextMessage(text);
 
     // 1. If not already marked as typing, tell the server
     if (!isTypingRef.current) {

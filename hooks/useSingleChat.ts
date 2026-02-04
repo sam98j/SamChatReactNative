@@ -28,6 +28,7 @@ export const useSingleChat = () => {
   const setChatUsrStatus = useChatsStore((state) => state.setChatUsrStatus);
   const setMessageToBeMarketAsReaded = useChatsStore((state) => state.setMessageToBeMarketAsReaded);
   const deleteChat = useChatsStore((state) => state.deleteChat);
+  const setChatUnReadedMessagesCount = useChatsStore((state) => state.setChatUnReadedMessagesCount);
 
   console.log('useSingleChat render');
   const [page, setPage] = useState(1);
@@ -38,6 +39,7 @@ export const useSingleChat = () => {
   const [inputHeight, setInputHeight] = useState(0);
   const createMessageContainerRef = useRef<View>(null);
 
+  // keyboard show and hide listeners
   useEffect(() => {
     // measure create message container height
     createMessageContainerRef.current?.measure((x, y, width, height) => {
@@ -68,16 +70,19 @@ export const useSingleChat = () => {
       // TODO: error need to handle
       if (typeof response === 'string') return;
 
-      const { chatMessages: newMessages, isLastBatch: lastBatch } = response as { chatMessages: ChatMessage[]; isLastBatch: boolean };
-      
+      const { chatMessages: newMessages, isLastBatch: lastBatch } = response as {
+        chatMessages: ChatMessage[];
+        isLastBatch: boolean;
+      };
+
       // if it's first page, set messages
       if (pageNum === 1) return setChatMessages(newMessages);
-      
+
       // Append new messages to the existing ones
       // Since it's an inverted list, newer messages are at the "bottom" of the array (index 0 usually for flat lists, but here it's just a chronological list in the store)
       // The store should probably append them to the end of the array.
       setChatMessages([...newMessages]);
-      
+
       setIsLastBatch(lastBatch);
       setPage(pageNum);
     } catch (error) {
@@ -109,9 +114,12 @@ export const useSingleChat = () => {
     // loop through sections and reverse each section's data
     sections.forEach((section) => {
       // reverse section messages
-      section.data.slice().reverse().forEach((msg) => {
-        result.push(msg);
-      });
+      section.data
+        .slice()
+        .reverse()
+        .forEach((msg) => {
+          result.push(msg);
+        });
       // add section title which is the date
       result.push({ type: 'date', date: section.title, _id: `date-${section.title}` });
     });
@@ -142,7 +150,7 @@ export const useSingleChat = () => {
 
       // if no messages to be marked as read, return
       if (!messagesToBeMarkedAsRead.length) return;
-      
+
       // Only trigger update if it's not already being processed for these messages
       const changeMessageStatusData: ChangeMessageStatusDTO = {
         chatId: chat_id as string,
@@ -202,7 +210,6 @@ export const useSingleChat = () => {
       fetchMessages(page + 1);
     }
   };
-
 
   return {
     chatMessages,
