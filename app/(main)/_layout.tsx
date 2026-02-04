@@ -230,10 +230,9 @@ const MainLayout = () => {
           name='single_chat/[chat_id]'
           options={{
             headerShown: false,
-            presentation: 'pageSheet',
-            animation: 'ios_from_right',
-            animationDuration: 50,
-            gestureEnabled: true,
+            presentation: 'containedModal',
+            animation: 'slide_from_right',
+            animationDuration: 10,
           }}
         />
         <Stack.Screen
