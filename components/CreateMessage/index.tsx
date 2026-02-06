@@ -1,6 +1,6 @@
 // basic imports
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { v4 as uuid } from 'uuid';
 import { useLocalSearchParams } from 'expo-router';

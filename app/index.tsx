@@ -1,9 +1,8 @@
 import { useAuthStore } from '@/store/authStore';
 import { Redirect } from 'expo-router';
 import React, { useEffect } from 'react';
-import { ToastAndroid, View } from 'react-native';
+import { View } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { Alert } from 'react-native';
 
 const App = () => {
   const { setCurrentUser } = useAuthStore();
@@ -25,10 +24,12 @@ const App = () => {
   };
 
   // init effect
-  useEffect(() => {init()}, []);
+  useEffect(() => {
+    init();
+  }, []);
 
   if (isLoading) {
-    return <View className="flex-1 bg-white" />;
+    return <View className='flex-1 bg-white' />;
   }
 
   return <Redirect href={hasToken ? '/(main)/(tabs)/chats' : '/(onboarding)'} />;

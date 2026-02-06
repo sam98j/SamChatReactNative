@@ -3,6 +3,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import i18n from '@/i18n';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useAuthStore } from '@/store/authStore';
+import MessageStatusIcon from '../MessageStatusIcon';
 
 type ChatCardLastMsgPreviewProps = {
   lastMsg: Omit<ChatMessage, 'fileSize'>;
@@ -10,14 +12,25 @@ type ChatCardLastMsgPreviewProps = {
 
 const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg }) => {
   // destruct last message
-  const { content, type, fileName } = lastMsg;
+  const { content, type, fileName, status } = lastMsg;
+
+  // check if the message is sended by the current user
+  const isSendedByCurrentUser = lastMsg.sender._id === useAuthStore().currentUser?._id;
+
   //   destruct messages types
   const { TEXT, VOICENOTE, PHOTO, VIDEO, FILE } = MessagesTypes;
+
+  //   destruct messages status
+  // const { DELEVERED, READED, SENT } = MessageStatus;
+
   //   last message container
   return (
     <View style={styles.container}>
+      {/* message status */}
+      {isSendedByCurrentUser && <MessageStatusIcon status={status} />}
       {/* if it's text message */}
       {type === TEXT && <Text style={styles.text}>{content}</Text>}
+
       {/* if it's voice note message */}
       {type === VOICENOTE && (
         <View style={styles.voice_note_container}>
@@ -25,6 +38,7 @@ const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg
           <Text style={styles.voice_note_text}>{i18n.t('chatCard.voice-note-preview-text')}</Text>
         </View>
       )}
+
       {/* if it's image message */}
       {type === PHOTO && (
         <View style={styles.voice_note_container}>
@@ -32,6 +46,7 @@ const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg
           <Text style={styles.voice_note_text}>{i18n.t('chatCard.image-preview-text')}</Text>
         </View>
       )}
+
       {/* if it's video message */}
       {type === VIDEO && (
         <View style={styles.voice_note_container}>
@@ -39,6 +54,7 @@ const ChatCardLastMsgPreview: React.FC<ChatCardLastMsgPreviewProps> = ({ lastMsg
           <Text style={styles.voice_note_text}>{i18n.t('chatCard.video-preview-text')}</Text>
         </View>
       )}
+
       {/* if it's file message */}
       {type === FILE && (
         <View style={styles.voice_note_container}>
@@ -56,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     marginTop: 2,
   },
   text: {
@@ -77,4 +93,21 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontFamily: 'BalooBhaijaan2',
   },
+  // message status sent styles
+  // messageSent: {
+  //   width: 20,
+  //   height: 20,
+  //   tintColor: 'gray',
+  // },
+  // // message delevered styles
+  // messageDelevered: {
+  //   width: 20,
+  //   height: 20,
+  //   tintColor: 'gray',
+  // },
+  // messageReaded: {
+  //   width: 20,
+  //   height: 20,
+  //   tintColor: 'dodgerblue',
+  // },
 });

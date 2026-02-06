@@ -1,15 +1,13 @@
 // basic imports
 import React, { FC } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ChatMessage, MessageStatus, MessagesTypes, ResponseToMessageData } from '@/interfaces/chats';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { ChatMessage, MessagesTypes, ResponseToMessageData } from '@/interfaces/chats';
 import VoiceMsgPlayer from '../VoiceMsgPlayer';
 import ImageMsgViewer from '../ImageMsgViewer';
 import { useAuthStore } from '@/store/authStore';
 import VideoScreen from '../VideoMsgViewer';
-import ReadCheckIcon from '@/assets/icons/check-read.png';
-import SentCheckIcon from '@/assets/icons/check.png';
 import DocMessage from '../DocMessage';
+import MessageStatusIcon from '../MessageStatusIcon';
 import { getTime, TimeUnits } from '@/utils/time';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
@@ -37,7 +35,7 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = React.memo(({ msg }) => {
   const { setResponseToMessage, setMsgsActionsMenu } = useChatsStore();
 
   // deconstruct messages status
-  const { DELEVERED, READED, SENT } = MessageStatus;
+  // const { DELEVERED, READED, SENT } = MessageStatus;
 
   // translate x value for swipe gesture
   const translateX = useSharedValue(0);
@@ -135,14 +133,8 @@ const ChatMessageViewer: FC<{ msg: ChatMessage }> = React.memo(({ msg }) => {
             {/* message status */}
             {isFromMe && (
               <View>
-                {/* svg icon from assets as image */}
-                {status === DELEVERED && <Image source={ReadCheckIcon} style={styles.messageDelevered} />}
-                {/* check or msg status readed */}
-                {status === READED && <Image source={ReadCheckIcon} style={styles.messageReaded} />}
-                {/* check or msg status sent */}
-                {status === SENT && <Image source={SentCheckIcon} style={styles.messageSent} />}
-                {/* check for msg status null */}
-                {msg.status === null && <MaterialIcon name='clock-time-nine-outline' color={'dodgerblue'} size={15} />}
+                {/* message status icon */}
+                <MessageStatusIcon status={status} />
               </View>
             )}
             {/* message time */}
@@ -186,20 +178,20 @@ const styles = StyleSheet.create({
     marginRight: '20%',
   },
   // message status sent styles
-  messageSent: {
-    width: 20,
-    height: 20,
-    tintColor: 'gray',
-  },
-  // message delevered styles
-  messageDelevered: {
-    width: 20,
-    height: 20,
-    tintColor: 'gray',
-  },
-  messageReaded: {
-    width: 20,
-    height: 20,
-    tintColor: 'dodgerblue',
-  },
+  // messageSent: {
+  //   width: 20,
+  //   height: 20,
+  //   tintColor: 'gray',
+  // },
+  // // message delevered styles
+  // messageDelevered: {
+  //   width: 20,
+  //   height: 20,
+  //   tintColor: 'gray',
+  // },
+  // messageReaded: {
+  //   width: 20,
+  //   height: 20,
+  //   tintColor: 'dodgerblue',
+  // },
 });

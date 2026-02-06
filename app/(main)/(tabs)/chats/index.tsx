@@ -44,7 +44,13 @@ export default function Chats() {
 
   // if the api response is error
   // TODO: api response msgs localization
-  useEffect(() => {apiResponse?.err && ToastAndroid.show(apiResponse.msg, ToastAndroid.SHORT)}, [apiResponse]);
+  useEffect(() => {
+    // terminate if there is no api response
+    if (!apiResponse) return;
+
+    // show toast
+    ToastAndroid.show(apiResponse.msg, ToastAndroid.SHORT);
+  }, [apiResponse]);
 
   // handle search
   const handleSearch = (text: string) => setSearchQuery(text);

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
 import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 // import font baloo
 import BalooBhaijaan2 from '@/assets/fonts/BalooBhaijaan2-Regular.ttf';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -24,11 +24,11 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
   return (
     <QueryClientProvider client={queryClient}>
-        <SafeAreaProvider>
-          <GestureHandlerRootView>
-              <Slot />
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
+      <SafeAreaProvider>
+        <GestureHandlerRootView>
+          <Slot />
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
     </QueryClientProvider>
   );
 }

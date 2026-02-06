@@ -17,14 +17,19 @@ type Props = {
 export const ChatCardContainer: FC<Props> = ({ chat }) => {
   // api url
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
   // zustand zuAuhtStore
   const loggedInUser = useAuthStore().currentUser?._id;
+
   // get zustand zuChats
   const { setOpenedChat, setChatUnReadedMessagesCount } = useChatsStore();
+
   // router
   const router = useRouter();
+
   // chat name
   const [chatUser] = useState(() => chat.members.filter((member) => member._id !== loggedInUser)[0]);
+
   // chat avatar
   const [chatAvatar] = useState(() => {
     // get chat member
@@ -34,10 +39,13 @@ export const ChatCardContainer: FC<Props> = ({ chat }) => {
     // return
     return `${apiUrl}${chat.type === ChatTypes.GROUP ? chat.avatar : chatMember.avatar}`;
   });
+
   // language
   const prefLang = i18n.locale;
+
   // chatName
   const [chatName] = useState(() => (chat.name ? chat.name : chatUser.name));
+
   // handle card press
   const handleCardPress = () => {
     // dispatch
@@ -49,11 +57,13 @@ export const ChatCardContainer: FC<Props> = ({ chat }) => {
   };
 
   if (!chat.lastMessage) return;
+
   return (
     <TouchableOpacity onPress={handleCardPress}>
       <View style={[styles.chatCardContainer, { direction: prefLang === 'ar' ? 'rtl' : 'ltr' }]}>
         {/* chat avatar */}
         <Avatar size={50} rounded containerStyle={{ backgroundColor: 'blue' }} source={{ uri: `${chatAvatar}` }} />
+
         {/* chat name */}
         <View style={{ flex: 1, display: 'flex', height: '100%', paddingHorizontal: 10 }}>
           {/* chat name */}
@@ -61,22 +71,15 @@ export const ChatCardContainer: FC<Props> = ({ chat }) => {
           {/* last message content*/}
           <ChatCardLastMsgPreview lastMsg={chat.lastMessage} />
         </View>
+
         {/* right section */}
         <View style={styles.chatCardRightSection}>
+          {/* chat's last message time */}
           <Text style={[styles.textFontFamily, { color: 'gray' }]}>{getTime(chat.lastMessage.date, TimeUnits.time)}</Text>
+
           {/*unreaded messages badge  */}
           <View style={[styles.chatCardUnreadedBadge]}>
-            <View
-              style={{
-                backgroundColor: 'dodgerblue',
-                borderRadius: 50,
-                width: 25,
-                height: 25,
-                display: chat.unReadedMsgs > 0 ? 'flex' : 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <View style={[styles.chatCardUnreadedBadgeView, !chat.unReadedMsgs && styles.hideItem]}>
               <Text style={[styles.textFontFamily, { color: 'white' }]}>{chat.unReadedMsgs}</Text>
             </View>
           </View>
@@ -115,7 +118,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     width: '100%',
   },
+  chatCardUnreadedBadgeView: {
+    backgroundColor: 'dodgerblue',
+    borderRadius: 50,
+    width: 25,
+    height: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   textFontFamily: {
     fontFamily: 'BalooBhaijaan2',
+  },
+  hideItem: {
+    display: 'none',
   },
 });

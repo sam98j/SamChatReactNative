@@ -78,7 +78,7 @@ const SingleChat = () => {
               if ('type' in item && item.type === 'date') {
                 return <Text style={styles.messagesDate}>{item.date}</Text>;
               }
-              return <ChatMessageViewer msg={item as any} />;
+              return <ChatMessageViewer msg={item} />;
             }}
           />
 
