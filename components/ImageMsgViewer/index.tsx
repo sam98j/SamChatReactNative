@@ -10,11 +10,12 @@ import { Image } from 'expo-image';
 import { useAuthStore } from '@/store/authStore';
 import { getTime, TimeUnits } from '@/utils/time';
 import i18n from '@/i18n';
+import * as FileSystem from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';
+import ImageOptionsDropdown from './ImageOptionsDropdown';
 
 // props
-type Props = {
-  msg: ChatMessage;
-};
+type Props = { msg: ChatMessage };
 
 const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
   // destructure message
@@ -31,16 +32,58 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
   const isSendedByCurrentUser = msg.sender._id === currentUser?._id;
 
   // format message time
-  const messageTime = getTime(date, TimeUnits.fullTime);
+  const messageTime = getTime(date, TimeUnits.fullTime, i18n.locale as never);
 
   // message sender name
   const messageSenderName = isSendedByCurrentUser ? i18n.t('openedChat.media-viewer.you') : senderName;
 
   // is image viewer open useState
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   // handle click to open image viewer and close it if it is already open
-  const handleClick = () => setIsImageViewerOpen(!isImageViewerOpen);
+  const handleClick = () => {
+    setIsImageViewerOpen(!isImageViewerOpen);
+    setShowMenu(false); // Close menu when closing viewer
+  };
+
+  // toggle menu
+  const toggleMenu = () => setShowMenu(!showMenu);
+
+  // handle share
+  const handleShare = async () => {
+    try {
+      setShowMenu(false);
+      const fileUrl = content.startsWith('file') ? content : `${process.env.EXPO_PUBLIC_API_URL}${content}`;
+
+      let fileUri = fileUrl;
+
+      // If it's a remote URL, download it first
+      if (!fileUrl.startsWith('file')) {
+        const fileName = content.split('/').pop() || 'image.jpg';
+        const downloadRes = await FileSystem.downloadAsync(fileUrl, FileSystem.documentDirectory + fileName);
+        fileUri = downloadRes.uri;
+      }
+
+      await shareAsync(fileUri);
+    } catch (error) {
+      console.error('Error sharing image', error);
+    }
+  };
+
+  // handle save
+  const handleSave = async () => {
+    // TODO: Implement save logic
+    console.log('Save to gallery');
+    setShowMenu(false);
+  };
+
+  // handle delete
+  const handleDelete = async () => {
+    // TODO: Implement delete logic
+    console.log('Delete message');
+    setShowMenu(false);
+  };
 
   // swipe up detection
   const swipeUpGesture = Gesture.Pan().onEnd((event) => {
@@ -85,14 +128,25 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
 
             {/* image options */}
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+              {/* forward image */}
               <TouchableOpacity>
                 <Icon name='return-up-forward' size={28} color='white' />
               </TouchableOpacity>
-              {/* image options */}
-              <TouchableOpacity>
+
+              {/* image options menu*/}
+              <TouchableOpacity onPress={toggleMenu}>
                 <EnTypoIcon name='dots-three-vertical' size={20} color='white' />
               </TouchableOpacity>
             </View>
+
+            {/* Menu Dropdown */}
+            <ImageOptionsDropdown
+              visible={showMenu}
+              onClose={() => setShowMenu(false)}
+              onShare={handleShare}
+              onSave={handleSave}
+              onDelete={handleDelete}
+            />
           </View>
 
           <View style={styles.modalImageContainer}>

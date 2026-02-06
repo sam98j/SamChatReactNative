@@ -16,6 +16,11 @@
     "messages-forwarded-successfully": "تمت إعادة توجيه الرسائل بنجاح"
   },
   "media-viewer": {
-    "you": "أنت"
+    "you": "أنت",
+    "options-menu": {
+      "share": "مشاركة",
+      "save-to-gallery": "حفظ في المعرض",
+      "delete": "حذف"
+    }
   }
 }

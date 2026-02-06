@@ -16,6 +16,11 @@
     "messages-forwarded-successfully": "Messages forwarded successfully"
   },
   "media-viewer": {
-    "you": "You"
+    "you": "You",
+    "options-menu": {
+      "share": "Share",
+      "save-to-gallery": "Save to gallery",
+      "delete": "Delete"
+    }
   }
 }
