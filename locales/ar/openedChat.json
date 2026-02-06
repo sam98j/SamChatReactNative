@@ -14,5 +14,8 @@
   "messages-forwarding-menu": {
     "forward-to": "إعادة توجيه إلى",
     "messages-forwarded-successfully": "تمت إعادة توجيه الرسائل بنجاح"
+  },
+  "media-viewer": {
+    "you": "أنت"
   }
 }

@@ -7,6 +7,9 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-g
 import { runOnJS } from 'react-native-reanimated';
 import FileMsgUploadIndicator from '../FileMsgUploadIndicator';
 import { Image } from 'expo-image';
+import { useAuthStore } from '@/store/authStore';
+import { getTime, TimeUnits } from '@/utils/time';
+import i18n from '@/i18n';
 
 // props
 type Props = {
@@ -15,12 +18,30 @@ type Props = {
 
 const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
   // destructure message
-  const { content } = msg;
+  const {
+    content,
+    sender: { name: senderName },
+    date,
+  } = msg;
+
+  // current user
+  const { currentUser } = useAuthStore();
+
+  // is msg sended by current user
+  const isSendedByCurrentUser = msg.sender._id === currentUser?._id;
+
+  // format message time
+  const messageTime = getTime(date, TimeUnits.fullTime);
+
+  // message sender name
+  const messageSenderName = isSendedByCurrentUser ? i18n.t('openedChat.media-viewer.you') : senderName;
+
   // is image viewer open useState
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
 
   // handle click to open image viewer and close it if it is already open
   const handleClick = () => setIsImageViewerOpen(!isImageViewerOpen);
+
   // swipe up detection
   const swipeUpGesture = Gesture.Pan().onEnd((event) => {
     const { velocityY, translationY } = event;
@@ -29,6 +50,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
       runOnJS(setIsImageViewerOpen)(false);
     }
   });
+
   // dimentinos
   // api url  expo e  nv variable
   const apiHost = process.env.EXPO_PUBLIC_API_URL;
@@ -36,11 +58,17 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
   // is image viewer open
   // file url
   const fileUrl = content.startsWith('file') ? content : `${apiHost}${content}`;
+
   return (
     <View>
       {/* status bar */}
-      <Modal animationType='fade' transparent={true} visible={isImageViewerOpen} onRequestClose={handleClick}>
-        <StatusBar backgroundColor={'black'} animated={true} barStyle='light-content' />
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={isImageViewerOpen}
+        onRequestClose={handleClick}
+        hardwareAccelerated={true}
+      >
         <GestureHandlerRootView>
           {/* moadal header */}
           <View style={styles.modalHeader}>
@@ -48,11 +76,13 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
             <TouchableOpacity onPress={handleClick}>
               <Icon name='chevron-back' size={35} color='white' />
             </TouchableOpacity>
+
             {/* image sender and msg time */}
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <Text style={{ color: 'white', fontFamily: 'BalooBhaijaan2' }}>HosamAlden Mustafa</Text>
-              <Text style={{ color: 'white', fontFamily: 'BalooBhaijaan2', fontSize: 12 }}>today at 12:00 PM</Text>
+              <Text style={styles.messageSenderName}>{messageSenderName}</Text>
+              <Text style={styles.messageTime}>{messageTime}</Text>
             </View>
+
             {/* image options */}
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
               <TouchableOpacity>
@@ -64,13 +94,18 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
               </TouchableOpacity>
             </View>
           </View>
+
           <View style={styles.modalImageContainer}>
             <GestureDetector gesture={swipeUpGesture}>
               <Image source={{ uri: fileUrl }} style={styles.imageOpen} />
             </GestureDetector>
           </View>
         </GestureHandlerRootView>
+
+        {/* modal end */}
       </Modal>
+
+      {/* image container */}
       <TouchableOpacity onPress={handleClick} style={styles.imageContainer}>
         <FileMsgUploadIndicator _id={msg._id} />
         <Image source={fileUrl} style={styles.image} autoplay={true} />
@@ -121,5 +156,18 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '50%',
     resizeMode: 'contain',
+  },
+
+  // modal header content color
+  messageSenderName: {
+    color: 'white',
+    fontFamily: 'BalooBhaijaan2',
+  },
+
+  // message time
+  messageTime: {
+    color: 'white',
+    fontSize: 12,
+    fontFamily: 'BalooBhaijaan2',
   },
 });
