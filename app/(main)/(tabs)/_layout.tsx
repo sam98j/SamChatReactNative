@@ -3,13 +3,17 @@ import { Tabs } from 'expo-router';
 import ChatsHeaderBtns from '@/components/ChatsHeaderBtns';
 import i18n from '../../../i18n';
 import { useAuthStore } from '@/store/authStore';
+import { useChatsStore } from '@/store/chatsStore';
 import { StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 
 export default function TabLayout() {
-
   // get curentUser state zustand zuAuth
   const { currentUser } = useAuthStore();
+  const { chats } = useChatsStore();
+
+  // calculate total unread messages
+  const totalUnreadMessages = chats?.reduce((acc, chat) => acc + (chat.unReadedMsgs || 0), 0) || 0;
 
   // check if currentUser is truthy
   const isUserLoggedIn = currentUser !== null ? true : false;
@@ -24,7 +28,7 @@ export default function TabLayout() {
         headerShown: isUserLoggedIn ? true : false, // Dynamically control header visibility
         tabBarActiveTintColor: 'dodgerblue',
         tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 13, marginTop: 5 },
-        tabBarStyle: {display: isUserLoggedIn ? 'flex' : 'none',...styles.tapBarStyle},
+        tabBarStyle: { display: isUserLoggedIn ? 'flex' : 'none', ...styles.tapBarStyle },
         tabBarBackground: () => (
           <BlurView
             intensity={100}
@@ -41,6 +45,7 @@ export default function TabLayout() {
           href: null,
         }}
       />
+
       {/* home screen */}
       <Tabs.Screen
         name='profile/index'
@@ -49,6 +54,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Icon size={30} name='person-circle-outline' color={color} />,
         }}
       />
+
       {/* chats screen */}
       <Tabs.Screen
         name='chats/index'
@@ -56,8 +62,12 @@ export default function TabLayout() {
           title: i18n.t('tabsLayout.chats'),
           tabBarIcon: ({ color }) => <Icon size={30} name='chatbubbles-outline' color={color} />,
           headerRight: () => isUserLoggedIn && <ChatsHeaderBtns />,
+          tabBarBadge: totalUnreadMessages > 0 ? totalUnreadMessages : undefined,
+          tabBarBadgeStyle: styles.tabbarBadgeStyle,
         }}
       />
+
+      {/* calls screen */}
       <Tabs.Screen
         name='calls/index'
         options={{
@@ -65,6 +75,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Icon size={30} name='call-outline' color={color} />,
         }}
       />
+
       {/* setting screen */}
       <Tabs.Screen
         name='settings/index'
@@ -97,5 +108,12 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  },
+
+  // tabbar badge style
+  tabbarBadgeStyle: {
+    backgroundColor: 'dodgerblue',
+    fontFamily: 'BalooBhaijaan2',
+    lineHeight: 23,
   },
 });

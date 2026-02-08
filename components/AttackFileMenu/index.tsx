@@ -15,7 +15,7 @@ import i18n from '../../i18n';
 const AttchFileBottomSheet = () => {
   // url search params
   const { chat_id } = useLocalSearchParams<{ chat_id: string }>(); // Access the chat_id parameter
-  
+
   // Safe area insets
   const insets = useSafeAreaInsets();
 
@@ -56,7 +56,6 @@ const AttchFileBottomSheet = () => {
   // Handle image picking
   const handlePickImage = async (msg: ChatMessage) => {
     try {
-
       // pick image
       const image = await pickImage();
 
@@ -90,7 +89,6 @@ const AttchFileBottomSheet = () => {
   // Handle video picking
   const handlePickVideo = async (msg: ChatMessage) => {
     try {
-
       // pick video
       const video = await pickVideo();
 
@@ -124,7 +122,6 @@ const AttchFileBottomSheet = () => {
   // Handle image picking
   const handlePickDocument = async (msg: ChatMessage) => {
     try {
-
       // pick file
       const doc = await pickFile();
 
