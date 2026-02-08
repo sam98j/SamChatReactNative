@@ -1,6 +1,6 @@
 // basic imports
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { v4 as uuid } from 'uuid';
 import { useLocalSearchParams } from 'expo-router';
@@ -15,6 +15,7 @@ import SoundIcon from '@/assets/icons/sound.png';
 import i18n from '@/i18n';
 import ResponseToMsgPopUp from '../ResponseToMsgPopUp';
 import * as ImagePicker from 'expo-image-picker';
+import { PasteEventPayload, TextInputWrapper } from 'expo-paste-input';
 
 const CreateMessage = () => {
   // url search params
@@ -305,6 +306,44 @@ const CreateMessage = () => {
     setChatAction(chatAction);
   }, [openedChat]);
 
+  // handle paste
+  const handlePaste = (payload: any) => {
+    try {
+      // pick image
+      const data = payload;
+
+      // TODO: need string localization
+      // terminate if it's cancled
+      if (!data) return ToastAndroid.show('Cancel image picking', ToastAndroid.SHORT);
+
+      // image message
+      const imageMessage = {
+        fileName: `gif_element${uuid()}`,
+        fileSize: null,
+        status: null,
+        content: data.uris[0],
+        type: MessagesTypes.PHOTO,
+        voiceNoteDuration: '',
+        _id: uuid(),
+        receiverId: chatId,
+        sender: currentUsr,
+        date: new Date().toISOString(),
+        replyTo: responseToMessage?._id || null,
+        msgReplyedTo: responseToMessage,
+      } as ChatMessage;
+
+      // Handle the selected image (e.g., upload it or display it)
+      addMessageToChat(imageMessage);
+
+      // set last chat message
+      setChatLastMessage({ msg: imageMessage, currentUserId: currentUsr!._id });
+    } catch (error) {
+      console.error('Error picking image:', error);
+      // TODO: need string localization
+      ToastAndroid.show('Error picking image', ToastAndroid.SHORT);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* response to message pop up */}
@@ -329,15 +368,19 @@ const CreateMessage = () => {
             <TouchableOpacity onPress={openCamera}>
               <Icon name='camera-outline' size={26} color='dodgerblue' />
             </TouchableOpacity>
-            {/* input field */}
-            <TextInput
-              style={styles.input}
-              ref={typeMessageInputRef}
-              placeholder={i18n.t('openedChat.create-message-input.type-message-input-placeholder')}
-              cursorColor={'dodgerblue'}
-              value={textMessage}
-              onChangeText={(e) => inputChangeHandler(e)}
-            />
+
+            <TextInputWrapper onPaste={handlePaste} style={styles.textInputWrapper}>
+              {/* input field */}
+              <TextInput
+                style={styles.input}
+                ref={typeMessageInputRef}
+                placeholder={i18n.t('openedChat.create-message-input.type-message-input-placeholder')}
+                cursorColor={'dodgerblue'}
+                value={textMessage}
+                onChangeText={(e) => inputChangeHandler(e)}
+              />
+            </TextInputWrapper>
+
             {/* attach file and stickers icons */}
             <MIcon name='sticker-circle-outline' size={26} color='dodgerblue' />
             {/* attach file bottom sheet */}
@@ -400,6 +443,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     flexGrow: 1,
   },
+
+  // text input wraper
+  textInputWrapper: {
+    flexGrow: 1,
+  },
+
+  // text input
   input: {
     flex: 1,
     fontFamily: 'BalooBhaijaan2',
