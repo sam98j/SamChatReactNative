@@ -36,7 +36,7 @@ const SingleChat = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       {/* status bar */}
-      <StatusBar barStyle={'dark-content'} />
+      <StatusBar barStyle={'dark-content'} backgroundColor={'transparent'} />
       {/* forward messages menu */}
       {messagesToBeForwared && <ForwardMsgMenu />}
 
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   backgroundImage: {
-    opacity: 0.1,
+    opacity: 0.2,
   },
   backgroundContainer: {
     flex: 1,

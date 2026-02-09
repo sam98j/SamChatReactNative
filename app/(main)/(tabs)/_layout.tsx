@@ -6,17 +6,39 @@ import { useAuthStore } from '@/store/authStore';
 import { useChatsStore } from '@/store/chatsStore';
 import { StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import { useEffect, useState } from 'react';
 
 export default function TabLayout() {
   // get curentUser state zustand zuAuth
   const { currentUser } = useAuthStore();
   const { chats } = useChatsStore();
 
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+  // avatar url state
+  const [avatarUri, setAvatarUrl] = useState<string>('');
+
   // calculate total unread messages
   const totalUnreadMessages = chats?.reduce((acc, chat) => acc + (chat.unReadedMsgs || 0), 0) || 0;
 
   // check if currentUser is truthy
   const isUserLoggedIn = currentUser !== null ? true : false;
+
+  // check if the user is logged in
+  useEffect(() => {
+    // check if the user is not logged in
+    if (!currentUser) return;
+
+    // get avatar from currentUser
+    const { avatar } = currentUser;
+
+    // Placeholder avatar and user info
+    const avatarUri = avatar.startsWith('http') ? avatar : `${apiUrl}${avatar}`;
+
+    // set avatar url
+    setAvatarUrl(avatarUri);
+  }, [currentUser]);
 
   return (
     <Tabs
@@ -47,12 +69,12 @@ export default function TabLayout() {
         }}
       />
 
-      {/* home screen */}
+      {/* profile screen */}
       <Tabs.Screen
         name='profile/index'
         options={{
           title: i18n.t('tabsLayout.profile'),
-          tabBarIcon: ({ color }) => <Icon size={30} name='person-circle-outline' color={color} />,
+          tabBarIcon: () => <Image source={{ uri: avatarUri }} style={styles.profileAvatarStyle} />,
         }}
       />
 
@@ -116,5 +138,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'dodgerblue',
     fontFamily: 'BalooBhaijaan2',
     lineHeight: 23,
+  },
+
+  // profile avatar style
+  profileAvatarStyle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
   },
 });
