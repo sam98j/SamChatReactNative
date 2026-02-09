@@ -27,6 +27,7 @@ export default function TabLayout() {
         headerTitleStyle: { fontFamily: 'BalooBhaijaan2' },
         headerShown: isUserLoggedIn ? true : false, // Dynamically control header visibility
         tabBarActiveTintColor: 'dodgerblue',
+        tabBarInactiveTintColor: '#747474ff',
         tabBarLabelStyle: { fontFamily: 'BalooBhaijaan2', fontSize: 13, marginTop: 5 },
         tabBarStyle: { display: isUserLoggedIn ? 'flex' : 'none', ...styles.tapBarStyle },
         tabBarBackground: () => (
