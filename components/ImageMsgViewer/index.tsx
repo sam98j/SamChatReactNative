@@ -106,7 +106,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
     <View>
       {/* status bar */}
       <Modal
-        animationType='slide'
+        animationType='fade'
         transparent={true}
         visible={isImageViewerOpen}
         onRequestClose={handleClick}

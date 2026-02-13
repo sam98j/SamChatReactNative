@@ -6,11 +6,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import i18n from '@/i18n';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { getTime, TimeUnits } from '@/utils/time';
 
 const ConversationDetails = () => {
   const { chat_id } = useLocalSearchParams();
   const router = useRouter();
-  const { openedChat } = useChatsStore();
+  const { openedChat, chatUsrStatus } = useChatsStore();
   const { currentUser } = useAuthStore();
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const isRTL = i18n.locale === 'ar';
@@ -27,15 +28,11 @@ const ConversationDetails = () => {
 
     if (!isGroup) {
       const otherMember = chat.members.find((m) => m._id !== currentUser._id);
-      if (otherMember) {
-        name = otherMember.name;
-        avatar = otherMember.avatar;
-        info = i18n.t('conversationDetails.personal'); // Assuming email might be relevant or just status
-        // Note: otherMember only has _id, avatar, name based on ChatMember interface usually. 
-        // If email is needed, we might need to fetch it or check if it's there. 
-        // For now, use "Personal".
-        info = i18n.t('conversationDetails.available'); // Placeholder status
-      }
+      if (!otherMember) return;
+      name = otherMember.name;
+      avatar = otherMember.avatar;
+      const lastSeen = `${i18n.t('chatHeader.last_seen')} ${getTime(chatUsrStatus!, TimeUnits.fullTime, i18n.locale as never)}`;
+      info = chatUsrStatus === 'online' ? i18n.t('conversationDetails.available') : lastSeen;
     }
 
     // Process avatar URL
@@ -66,14 +63,23 @@ const ConversationDetails = () => {
 
       {/* Profile Info */}
       <View style={styles.profileContainer}>
+        {/* avatar */}
         <Avatar
           size={100}
           rounded
           source={{ uri: chatDetails.avatarUrl }}
           containerStyle={{ backgroundColor: '#ccc', marginBottom: 10 }}
         />
+
+        {/* chat name */}
         <Text style={styles.name}>{chatDetails.name}</Text>
-        <Text style={styles.info}>{chatDetails.isGroup ? `${i18n.t('conversationDetails.group')} · ${i18n.t('conversationDetails.members', { count: chat.members.length })}` : chatDetails.info}</Text>
+
+        {/* chat info */}
+        <Text style={styles.info}>
+          {chatDetails.isGroup
+            ? `${i18n.t('conversationDetails.group')} · ${i18n.t('conversationDetails.members', { count: chat.members.length })}`
+            : chatDetails.info}
+        </Text>
       </View>
 
       {/* Action Buttons (Call, Video, Search) */}
@@ -97,16 +103,25 @@ const ConversationDetails = () => {
       {/* Members Section for Group */}
       {chatDetails.isGroup && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, isRTL && { textAlign: 'right' }]}>{i18n.t('conversationDetails.members', { count: chat.members.length })}</Text>
+          <Text style={[styles.sectionTitle, isRTL && { textAlign: 'right' }]}>
+            {i18n.t('conversationDetails.members', { count: chat.members.length })}
+          </Text>
           {chat.members.map((member) => (
-            <View key={member._id} style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]}>
+            <View
+              key={member._id}
+              style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]}
+            >
               <Avatar
                 rounded
                 source={{ uri: member.avatar?.startsWith('http') ? member.avatar : `${apiUrl}${member.avatar}` }}
               />
-              <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
+              <View
+                style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}
+              >
                 <Text style={styles.itemTitle}>{member.name}</Text>
-                {member._id === currentUser?._id && <Text style={styles.itemSubtitle}>{i18n.t('conversationDetails.you')}</Text>}
+                {member._id === currentUser?._id && (
+                  <Text style={styles.itemSubtitle}>{i18n.t('conversationDetails.you')}</Text>
+                )}
               </View>
             </View>
           ))}
@@ -115,32 +130,59 @@ const ConversationDetails = () => {
 
       {/* Media & Docs */}
       <View style={styles.section}>
-        <TouchableOpacity style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+        <TouchableOpacity
+          style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]}
+          onPress={() => {}}
+        >
           <Icon name='images-outline' type='ionicon' color='#007AFF' size={22} />
           <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
             <Text style={styles.itemTitle}>{i18n.t('conversationDetails.mediaLinksDocs')}</Text>
           </View>
-          <Icon name='chevron-forward' type='ionicon' color='#c7c7cc' size={20} style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
+          <Icon
+            name='chevron-forward'
+            type='ionicon'
+            color='#c7c7cc'
+            size={20}
+            style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined}
+          />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+        <TouchableOpacity
+          style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]}
+          onPress={() => {}}
+        >
           <Icon name='star-outline' type='ionicon' color='#FEC007' size={22} />
           <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
             <Text style={styles.itemTitle}>{i18n.t('conversationDetails.starredMessages')}</Text>
           </View>
-          <Icon name='chevron-forward' type='ionicon' color='#c7c7cc' size={20} style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
+          <Icon
+            name='chevron-forward'
+            type='ionicon'
+            color='#c7c7cc'
+            size={20}
+            style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined}
+          />
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.divider} />
 
       {/* Settings */}
       <View style={styles.section}>
-        <TouchableOpacity style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
+        <TouchableOpacity
+          style={[styles.listItemContainer, styles.bottomDivider, isRTL && { flexDirection: 'row-reverse' }]}
+          onPress={() => {}}
+        >
           <Icon name='notifications-outline' type='ionicon' color='black' size={22} />
           <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
             <Text style={styles.itemTitle}>{i18n.t('conversationDetails.notifications')}</Text>
           </View>
-          <Icon name='chevron-forward' type='ionicon' color='#c7c7cc' size={20} style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined} />
+          <Icon
+            name='chevron-forward'
+            type='ionicon'
+            color='#c7c7cc'
+            size={20}
+            style={isRTL ? { transform: [{ rotate: '180deg' }] } : undefined}
+          />
         </TouchableOpacity>
       </View>
 
@@ -157,11 +199,12 @@ const ConversationDetails = () => {
         <TouchableOpacity style={[styles.listItemContainer, isRTL && { flexDirection: 'row-reverse' }]} onPress={() => {}}>
           <Icon name='ban-outline' type='ionicon' color='red' size={22} />
           <View style={[styles.listItemContent, isRTL ? { paddingRight: 15, alignItems: 'flex-end' } : { paddingLeft: 15 }]}>
-            <Text style={[styles.itemTitle, { color: 'red' }]}>{chatDetails.isGroup ? i18n.t('conversationDetails.blockGroup') : i18n.t('conversationDetails.blockUser')}</Text>
+            <Text style={[styles.itemTitle, { color: 'red' }]}>
+              {chatDetails.isGroup ? i18n.t('conversationDetails.blockGroup') : i18n.t('conversationDetails.blockUser')}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
-
     </ScrollView>
   );
 };
@@ -226,7 +269,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 0,
     backgroundColor: '#fff',
-    borderTopWidth: 1, 
+    borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#e5e5e5',
   },
