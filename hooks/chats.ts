@@ -29,6 +29,8 @@ const useChatMessagesSender = (socket: Socket) => {
     setChunkIndex(0);
     // set message to send
     setChatMessage({ ...message });
+
+    console.log('message content', message.content);
     // make chunks from message content
     const messageContentChunks = await chunkFile(message.content);
     // set chunks

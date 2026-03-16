@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system';
 
 export async function chunkFile(msgContent: string) {
   // file as daat url
@@ -33,9 +33,8 @@ export function getFileSize(dataUrl: string) {
 
 export async function readFileAsDataURL(uri: string, mimeType = 'audio/m4a') {
   try {
-    const base64 = await FileSystem.readAsStringAsync(uri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
+    const file = new File(uri);
+    const base64 = await file.base64();
 
     const dataUrl = `data:${mimeType};base64,${base64}`;
     return dataUrl;

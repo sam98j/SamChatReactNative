@@ -1,6 +1,6 @@
 import { ChatMessage } from '@/interfaces/chats';
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Modal, StatusBar } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Modal, StatusBar, ToastAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EnTypoIcon from 'react-native-vector-icons/Entypo';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -10,9 +10,10 @@ import { Image } from 'expo-image';
 import { useAuthStore } from '@/store/authStore';
 import { getTime, TimeUnits } from '@/utils/time';
 import i18n from '@/i18n';
-import * as FileSystem from 'expo-file-system';
+import { File, Paths } from 'expo-file-system';
 import { shareAsync } from 'expo-sharing';
 import ImageOptionsDropdown from './ImageOptionsDropdown';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // props
 type Props = { msg: ChatMessage };
@@ -39,6 +40,8 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
 
   // is image viewer open useState
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+
+  // show menu useState
   const [showMenu, setShowMenu] = useState(false);
 
   // handle click to open image viewer and close it if it is already open
@@ -53,6 +56,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
   // handle share
   const handleShare = async () => {
     try {
+      // close menu
       setShowMenu(false);
       const fileUrl = content.startsWith('file') ? content : `${process.env.EXPO_PUBLIC_API_URL}${content}`;
 
@@ -61,13 +65,26 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
       // If it's a remote URL, download it first
       if (!fileUrl.startsWith('file')) {
         const fileName = content.split('/').pop() || 'image.jpg';
-        const downloadRes = await FileSystem.downloadAsync(fileUrl, FileSystem.documentDirectory + fileName);
-        fileUri = downloadRes.uri;
+
+        // handle if destination already exists
+        const destination = new File(Paths.document, fileName);
+
+        // handle if file already exists
+        if (destination.exists) {
+          fileUri = destination.uri;
+        } else {
+          // download file
+          const file = await File.downloadFileAsync(fileUrl, destination);
+          fileUri = file.uri;
+        }
       }
 
+      // share file
       await shareAsync(fileUri);
     } catch (error) {
       console.error('Error sharing image', error);
+      // show error toast
+      ToastAndroid.show('Error sharing image', ToastAndroid.SHORT);
     }
   };
 
@@ -114,7 +131,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
       >
         <GestureHandlerRootView>
           {/* moadal header */}
-          <View style={styles.modalHeader}>
+          <SafeAreaView style={styles.modalHeader}>
             {/* back button */}
             <TouchableOpacity onPress={handleClick}>
               <Icon name='chevron-back' size={35} color='white' />
@@ -147,7 +164,7 @@ const ImageMsgViewer: React.FC<Props> = ({ msg }) => {
               onSave={handleSave}
               onDelete={handleDelete}
             />
-          </View>
+          </SafeAreaView>
 
           <View style={styles.modalImageContainer}>
             <GestureDetector gesture={swipeUpGesture}>
@@ -186,9 +203,10 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 50,
+    // height: 50, // Remove fixed height
     backgroundColor: 'black', // or any color you prefer
     paddingHorizontal: 10,
+    paddingBottom: 10, // Add some bottom padding
     zIndex: 1000,
     display: 'flex',
     flexDirection: 'row',

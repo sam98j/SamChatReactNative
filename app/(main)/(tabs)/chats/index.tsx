@@ -68,12 +68,11 @@ export default function Chats() {
         textAlign={`${lang === 'ar' ? 'right' : 'left'}`}
         containerStyle={styles.searchInputContainerStyle}
         cursorColor={'dodgerblue'}
-        inputContainerStyle={{ backgroundColor: '#eee' }}
-        inputStyle={{ backgroundColor: '#eee', fontFamily: 'BalooBhaijaan2' }}
+        inputContainerStyle={{ height: '100%' }}
+        inputStyle={{ height: '100%' }}
         searchIcon={<FeatherIcon name='search' size={20} color='gray' />}
         clearIcon={{ color: 'gray' }}
-        platform='default'
-        round
+        platform='android'
       />
 
       {/* chats list */}
@@ -117,5 +116,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     marginHorizontal: 15,
     borderRadius: 15,
+    height: 50,
+    lineHeight: 20,
   },
 });

@@ -4,6 +4,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform } from 'react
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FileMsgUploadIndicator from '../FileMsgUploadIndicator';
 import * as FileSystem from 'expo-file-system';
+// We need to keep the namespace import for types or other exports if necessary,
+// but based on previous files, we can just import specific parts.
+// However, looking at the previous file content, it was `import * as FileSystem`.
+// I will change it to named imports for the new API.
+import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as IntentLauncher from 'expo-intent-launcher';
 
@@ -32,23 +37,24 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
 
       // If it's a remote URL, download it first
       if (!fileUrl.startsWith('file://')) {
-        const destinationPath = `${FileSystem.cacheDirectory}${fileName || 'downloaded_file'}`;
-        const downloadResult = await FileSystem.downloadAsync(fileUrl, destinationPath);
-        localUri = downloadResult.uri;
+        const destination = new File(Paths.cache, fileName || 'downloaded_file');
+        const file = await File.downloadFileAsync(fileUrl, destination);
+        localUri = file.uri;
       }
 
       // open file on android
       if (Platform.OS === 'android') {
-        const cUri = await FileSystem.getContentUriAsync(localUri);
-        
+        const file = new File(localUri);
+        const cUri = file.contentUri;
+
         // Simple MIME type resolution
         const mimeMap: { [key: string]: string } = {
-          'PDF': 'application/pdf',
-          'EPUB': 'application/epub+zip',
-          'JPG': 'image/jpeg',
-          'JPEG': 'image/jpeg',
-          'PNG': 'image/png',
-          'TXT': 'text/plain',
+          PDF: 'application/pdf',
+          EPUB: 'application/epub+zip',
+          JPG: 'image/jpeg',
+          JPEG: 'image/jpeg',
+          PNG: 'image/png',
+          TXT: 'text/plain',
         };
 
         // Get the MIME type based on the file extension
@@ -62,8 +68,8 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
         });
         // terminate
         return;
-      } 
-      
+      }
+
       // Other platforms (iOS) or fallback
       const isSharingAvailable = await Sharing.isAvailableAsync();
 
@@ -85,10 +91,8 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
   // render
   return (
     <View style={styles.container}>
-
       {/* file data container */}
       <TouchableOpacity onPress={handlePress} style={{ width: '100%' }}>
-
         {/* icon container */}
         <View style={styles.iconContainer}>
           <Ionicons name='document-text-outline' size={25} color='dodgerblue' />
@@ -101,14 +105,12 @@ const DocMessage: React.FC<DocMessageProps> = ({ msg }) => {
           <Text>-</Text>
           <Text style={[styles.description, styles.fontFamily]}>{fileSize}KB</Text>
         </View>
-
       </TouchableOpacity>
 
       {/* file uplaod indicator container */}
       <View style={styles.fileMsgUploadIndicatorContainer}>
         <FileMsgUploadIndicator _id={msg._id} isFile={true} />
       </View>
-
     </View>
   );
 };
